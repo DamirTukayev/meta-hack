@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import AreaPicker from './AreaPicker'
 import MapView, { IterationTabs } from './MapView'
 import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
@@ -14,6 +15,7 @@ function RequestPanel(props: {
   samples: Sample[]
   sample?: Sample
   onSample: (n: string) => void
+  onPickArea: () => void
   request: string
   onRequest: (r: string) => void
   onPlan: () => void
@@ -29,6 +31,7 @@ function RequestPanel(props: {
       <select value={sample?.name} onChange={(e) => props.onSample(e.target.value)} disabled={running}>
         {props.samples.map((s) => <option key={s.name} value={s.name}>{s.label}</option>)}
       </select>
+      <button className="link" onClick={props.onPickArea} disabled={running}>＋ Choose another area on the map</button>
       <label>What should the trucks do?</label>
       <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="40 orders, 3 trucks, by 18:00, avoid the industrial zone" />
       <div className="examples">
@@ -146,6 +149,7 @@ export default function App() {
   const [relax, setRelax] = useState<number | null>(null)
   const { state, start, reset } = useRun()
   const [mode, setMode] = useState<Mode>('browse')
+  const [picking, setPicking] = useState(false)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
 
   useEffect(() => {
@@ -162,6 +166,17 @@ export default function App() {
 
   const sample = samples.find((s) => s.name === name)
   const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('browse'); reset() }
+  const onArea = (s: Sample) => {
+    setSamples((list) => (list.some((x) => x.name === s.name) ? list : [...list, s]))
+    setName(s.name)
+    setRequest(s.examples[0] ?? '')
+    setCustom(emptyCustom)
+    setMode('browse')
+    setPinned(null)
+    setRelax(null)
+    reset()
+    setPicking(false)
+  }
   const onPlan = () => {
     setPinned(null)
     setRelax(null)
@@ -206,7 +221,7 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} />
         <div className="center">
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
           <MapView
@@ -222,6 +237,7 @@ export default function App() {
           <AgentLog log={state.log} running={state.status === 'running'} />
         </aside>
       </main>
+      {picking && <AreaPicker onClose={() => setPicking(false)} onChosen={onArea} />}
       <footer>Imagery: USGS NAIP (public domain). Built solo for the Meta Global AI Developer Hackathon.</footer>
     </div>
   )

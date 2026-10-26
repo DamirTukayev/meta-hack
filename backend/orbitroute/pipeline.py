@@ -44,9 +44,17 @@ def list_samples() -> list[Sample]:
 
 
 def get_sample(name: str) -> Sample:
+    """A bundled sample, or an area the user picked on the map (stored under data/areas)."""
     for s in list_samples():
         if s.name == name:
             return s
+    from orbitroute.areas import AREAS_DIR, PREFIX
+
+    if name.startswith(PREFIX) and name.replace("-", "").isalnum():
+        jpg = AREAS_DIR / f"{name}.jpg"
+        meta = AREAS_DIR / f"{name}.json"
+        if jpg.exists() and meta.exists():
+            return Sample(name, jpg, json.loads(meta.read_text()))
     raise KeyError(name)
 
 

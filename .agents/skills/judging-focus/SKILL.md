@@ -37,3 +37,7 @@ description: Judging criteria, bonus targets and agent-design priorities for Orb
 4. Then bonuses (voice, QAOA) — only if everything above is solid.
 
 Cut anything that does not improve the 3-minute demo or a judged criterion.
+
+## Design matters
+
+The user considers how the product looks a top priority (Demo is 25% and a virality bonus needs a striking visual). Treat UI quality as a feature: consistent design tokens, clear hierarchy, real empty/loading/error states, motion that explains what the agent is doing, and responsive layouts. After any UI change, look at screenshots of it (several states and widths) before calling it done. See the "Design and interface" section of the local PLAN.md.

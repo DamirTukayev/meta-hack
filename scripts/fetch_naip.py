@@ -6,19 +6,9 @@ Usage: uv run python scripts/fetch_naip.py NAME LON LAT [--span-m 1500] [--px 15
 from __future__ import annotations
 
 import argparse
-import math
 from pathlib import Path
 
-import httpx
-
-URL = "https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage"
-
-
-def bbox_around(lon: float, lat: float, span_m: float) -> tuple[float, float, float, float]:
-    half = span_m / 2
-    dlat = half / 111_320
-    dlon = half / (111_320 * math.cos(math.radians(lat)))
-    return lon - dlon, lat - dlat, lon + dlon, lat + dlat
+from orbitroute.naip import fetch_tile
 
 
 def main() -> None:
@@ -31,23 +21,11 @@ def main() -> None:
     p.add_argument("--out", type=Path, default=Path("data/samples"))
     a = p.parse_args()
 
-    bbox = bbox_around(a.lon, a.lat, a.span_m)
-    params = {
-        "bbox": ",".join(f"{v:.6f}" for v in bbox),
-        "bboxSR": 4326,
-        "imageSR": 4326,
-        "size": f"{a.px},{a.px}",
-        "format": "jpgpng",
-        "f": "image",
-    }
-    resp = httpx.get(URL, params=params, timeout=90)
-    resp.raise_for_status()
-    if not resp.headers.get("content-type", "").startswith("image"):
-        raise SystemExit(f"unexpected response: {resp.text[:300]}")
+    data, bbox = fetch_tile(a.lon, a.lat, span_m=a.span_m, px=a.px)
     a.out.mkdir(parents=True, exist_ok=True)
     path = a.out / f"{a.name}.jpg"
-    path.write_bytes(resp.content)
-    print(f"{path}  {len(resp.content) // 1024} KB  bbox(lon/lat)={params['bbox']}")
+    path.write_bytes(data)
+    print(f"{path}  {len(data) // 1024} KB  bbox(lon/lat)={','.join(f'{v:.6f}' for v in bbox)}")
 
 
 if __name__ == "__main__":

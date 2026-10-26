@@ -10,16 +10,19 @@ from pathlib import Path
 
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from orbitroute.agent.events import Event
+from orbitroute.areas import AREAS_DIR, area_id, ensure_area
 from orbitroute.config import ROOT, Settings
 from orbitroute.custom import CustomInputs
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard
+from orbitroute.limits import RateLimiter
 from orbitroute.llm.client import ApiError, MetaClient
+from orbitroute.naip import NoImagery
 from orbitroute.pipeline import get_sample, list_samples, run_pipeline
 
 EXAMPLES = {
@@ -32,6 +35,10 @@ EXAMPLES = {
 }
 LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphis": "Memphis, TN — logistics district"}
 MAX_REQUEST_CHARS = 400
+AREA_EXAMPLES = ["30 orders, 3 trucks, by 12:00, avoid the industrial zone", "30 orders, 3 trucks, by 12:00, avoid the residential area"]
+# New map areas cost a download plus (on first use) about $0.035 of model calls, so they are rate limited.
+area_limit_ip = RateLimiter(max_events=6, window_s=3600)
+area_limit_all = RateLimiter(max_events=40, window_s=3600)
 
 settings = Settings.load()
 guard = BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, settings.paid_calls_enabled)
@@ -66,21 +73,45 @@ def health() -> dict:
     return {"ok": True, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4), "reasoning_provider": settings.reasoning_provider}
 
 
+def sample_dict(s) -> dict:
+    return {
+        "name": s.name,
+        "label": s.meta.get("label") or LABELS.get(s.name, s.name),
+        "width": s.meta["width_px"],
+        "height": s.meta["height_px"],
+        "m_per_px": s.meta["m_per_px"],
+        "examples": EXAMPLES.get(s.name, AREA_EXAMPLES),
+        "image": f"/api/samples/{s.name}/image",
+        "credit": "Imagery: USGS NAIP (public domain)",
+    }
+
+
 @app.get("/api/samples")
 def samples() -> list[dict]:
-    return [
-        {
-            "name": s.name,
-            "label": LABELS.get(s.name, s.name),
-            "width": s.meta["width_px"],
-            "height": s.meta["height_px"],
-            "m_per_px": s.meta["m_per_px"],
-            "examples": EXAMPLES.get(s.name, []),
-            "image": f"/api/samples/{s.name}/image",
-            "credit": "Imagery: USGS NAIP (public domain)",
-        }
-        for s in list_samples()
-    ]
+    return [sample_dict(s) for s in list_samples()]
+
+
+class AreaRequest(BaseModel):
+    lat: float = Field(ge=-90, le=90, allow_inf_nan=False)
+    lon: float = Field(ge=-180, le=180, allow_inf_nan=False)
+
+
+@app.post("/api/areas")
+def choose_area(body: AreaRequest, request: Request) -> dict:
+    """Fetch (once) the aerial image around a point picked on the map and register it as a sample."""
+    name = area_id(body.lat, body.lon)
+    if not (AREAS_DIR / f"{name}.jpg").exists():  # only new downloads count against the limits
+        ip = request.client.host if request.client else "unknown"
+        wait = max(area_limit_ip.check(ip), area_limit_all.check("all"))
+        if wait:
+            raise HTTPException(429, f"Too many new areas right now. Try again in {int(wait // 60) + 1} min, or pick one of the ready-made areas.")
+    try:
+        area = ensure_area(body.lat, body.lon)
+    except NoImagery as exc:
+        raise HTTPException(422, str(exc))
+    except Exception:
+        raise HTTPException(502, "The imagery service did not answer. Try again in a moment.")
+    return sample_dict(get_sample(area.name))
 
 
 @app.get("/api/samples/{name}/image")
