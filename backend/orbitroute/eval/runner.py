@@ -8,6 +8,7 @@ from statistics import mean
 
 from orbitroute.agent.loop import run_agent
 from orbitroute.agent.repair import ModelDecider, PolicyDecider
+from orbitroute.custom import CustomInputs, apply_custom
 from orbitroute.eval.parse_cases import CASES
 from orbitroute.eval.scenarios import SCENARIOS, EvalScenario
 from orbitroute.llm.budget import BudgetGuard
@@ -38,7 +39,11 @@ def build_scenario(world: World, sc: EvalScenario):
         n_orders=sc.n_orders, n_vehicles=sc.n_vehicles, deadline=sc.deadline, shift_start=sc.shift_start,
         vehicle_capacity=sc.capacity, avoid_zone_kinds=list(sc.avoid),
     )
-    return make_scenario(world.graph, world.scene, resolve(parsed), seed=sc.seed)
+    problem = resolve(parsed)
+    if sc.zone:
+        scenario, *_ = apply_custom(world.graph, world.scene, problem, CustomInputs(zone=list(sc.zone)), seed=sc.seed)
+        return scenario
+    return make_scenario(world.graph, world.scene, problem, seed=sc.seed)
 
 
 def run_scenarios(client: MetaClient, guard: BudgetGuard, *, time_limit_s: float = 2.0, model_decider_on: int = 6, log=print) -> list[dict]:
@@ -54,7 +59,7 @@ def run_scenarios(client: MetaClient, guard: BudgetGuard, *, time_limit_s: float
         first = res.iterations[0]
         row = {
             "id": sc.id, "sample": sc.sample, "orders": sc.n_orders, "trucks": sc.n_vehicles, "deadline": sc.deadline,
-            "avoid": list(sc.avoid), "expect": sc.expect,
+            "avoid": list(sc.avoid) or (["drawn zone"] if sc.zone else []), "expect": sc.expect,
             # baseline = the first solve, exactly what the pipeline would return without a verifier
             "baseline_solver_feasible": first.plan.feasible,
             "baseline_audit_ok": first.report.ok,

@@ -42,7 +42,7 @@ def _in_bounds(p: Point, scene: Scene) -> bool:
 def _snap(graph: RoadGraph, p: Point, what: str) -> tuple[int, float]:
     node, dist_m = graph.nearest_node(*p)
     if dist_m > MAX_SNAP_M:
-        raise ValueError(f"The {what} is {dist_m:.0f} m from the nearest road; place it closer to a road (limit {MAX_SNAP_M:.0f} m).")
+        raise ValueError(f"The {what} is {dist_m:.0f} m from the nearest road the agent found (limit {MAX_SNAP_M:.0f} m). Place it closer to a road; the Graph layer shows the roads it found.")
     return node, dist_m
 
 

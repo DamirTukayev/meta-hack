@@ -23,28 +23,26 @@ class EvalScenario:
     shift_start: str = "08:00"
     expect: str | None = None  # "infeasible" when arithmetic proves it
     note: str = ""
+    zone: tuple[tuple[float, float], ...] = ()  # an avoided zone drawn as a polygon, like a user would on the map
+
+
+def square(x: float, y: float, size: float = 350) -> tuple[tuple[float, float], ...]:
+    return ((x, y), (x + size, y), (x + size, y + size), (x, y + size))
 
 
 SCENARIOS: list[EvalScenario] = [
-    # Columbus, OH: avoid residential (the first pass tends to cut through it)
-    EvalScenario("col-res-30-3-a", "columbus", 30, 3, "12:00", ("residential",), seed=0),
-    EvalScenario("col-res-30-3-b", "columbus", 30, 3, "12:00", ("residential",), seed=1),
-    EvalScenario("col-res-30-3-c", "columbus", 30, 3, "12:00", ("residential",), seed=2),
-    EvalScenario("col-res-20-2", "columbus", 20, 2, "10:00", ("residential",), seed=3),
-    EvalScenario("col-res-45-3", "columbus", 45, 3, "11:00", ("residential",), seed=4),
-    EvalScenario("col-res-30-1-tight", "columbus", 30, 1, "09:00", ("residential",), seed=0, note="one truck cannot finish"),
-    # Columbus, OH: other zones
-    EvalScenario("col-ind-40-3-a", "columbus", 40, 3, "12:00", ("industrial",), seed=0),
-    EvalScenario("col-ind-40-3-b", "columbus", 40, 3, "12:00", ("industrial",), seed=1),
-    EvalScenario("col-ind-25-2", "columbus", 25, 2, "10:00", ("industrial",), seed=2),
+    # Zones drawn across the road network (squares of ~340 m, as a user would draw them). The solver does not know
+    # about them on its first pass; whether its shortest paths cross them depends on the geometry.
+    *[EvalScenario(f"mem-draw-A-{s}", "memphis", 30, 3, "13:00", (), seed=s, zone=square(200, 550)) for s in range(4)],
+    *[EvalScenario(f"mem-draw-B-{s}", "memphis", 30, 3, "13:00", (), seed=s, zone=square(550, 200)) for s in range(3)],
+    *[EvalScenario(f"col-draw-{s}", "columbus", 30, 3, "13:00", (), seed=s, zone=square(200, 550)) for s in range(3)],
+    # Zones found by Muse Spark from the image ("avoid the industrial zone", ...)
+    EvalScenario("col-ind-40-3", "columbus", 40, 3, "12:00", ("industrial",), seed=0),
     EvalScenario("col-com-20-2", "columbus", 20, 2, "11:00", ("commercial",), seed=0),
-    EvalScenario("col-resind-30-3", "columbus", 30, 3, "12:00", ("residential", "industrial"), seed=0),
-    # Memphis, TN: a logistics district where industrial covers ~44% of the tile
-    EvalScenario("mem-ind-30-3-a", "memphis", 30, 3, "12:00", ("industrial",), seed=0),
-    EvalScenario("mem-ind-30-3-b", "memphis", 30, 3, "12:00", ("industrial",), seed=1),
-    EvalScenario("mem-ind-30-3-c", "memphis", 30, 3, "12:00", ("industrial",), seed=2),
-    EvalScenario("mem-ind-20-2", "memphis", 20, 2, "09:30", ("industrial",), seed=3),
+    EvalScenario("mem-ind-30-3", "memphis", 30, 3, "12:00", ("industrial",), seed=0),
     EvalScenario("mem-res-25-2", "memphis", 25, 2, "11:00", ("residential",), seed=1),
+    EvalScenario("col-res-30-3", "columbus", 30, 3, "12:00", ("residential",), seed=0, note="the residential zone cuts off most streets"),
+    EvalScenario("col-res-30-1-tight", "columbus", 30, 1, "09:00", ("residential",), seed=0, note="cut off, and one truck cannot finish anyway"),
     # Provably infeasible requests
     EvalScenario("inf-time-12-1", "columbus", 12, 1, "08:30", ("residential",), expect="infeasible", note="12 stops x 4 min = 48 min > 30 min"),
     EvalScenario("inf-time-50-3", "memphis", 50, 3, "09:00", ("industrial",), expect="infeasible", note="50 x 4 min / 3 trucks = 67 min > 60 min"),

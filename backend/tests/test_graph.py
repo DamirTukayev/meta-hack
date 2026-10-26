@@ -61,3 +61,15 @@ def test_nearest_node_snaps_to_road():
 
 def test_wider_roads_are_faster():
     assert speed_for_width(16) > speed_for_width(10) > speed_for_width(5)
+
+
+def test_tiles_cover_the_whole_image_with_overlap():
+    from orbitroute.perception.segment import tile_windows
+
+    wins = tile_windows(1536, 1536, 6, 48)
+    assert len(wins) == 36
+    covered = np.zeros((1536, 1536), int)
+    for l, t, r, b in wins:
+        covered[t:b, l:r] += 1
+    assert covered.min() >= 1 and covered.max() >= 2  # no gaps, and neighbours overlap
+    assert all(r - l <= 256 + 96 and b - t <= 256 + 96 for l, t, r, b in wins)

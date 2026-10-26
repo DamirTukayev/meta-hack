@@ -9,34 +9,34 @@ Baseline = the first solve of the same solver, returned as is (what a pipeline w
 | | Solver only (no verifier) | OrbitRoute agent |
 |---|---|---|
 | Plans the solver reports as feasible | 15/20 | — |
-| Of those, plans that break a constraint on independent audit | **6** (40%) | 0 — every plan returned as verified passed the audit |
-| Scenarios with a first-pass violation → ended verified | — | 6/11 (the other 5 are infeasible as stated and were flagged with verified fixes) |
+| Of those, plans that break a constraint on independent audit | **9** (60%) | 0 — every plan returned as verified passed the audit |
+| Scenarios with a first-pass violation → ended verified | — | 8/14 (the other 6 cannot be met as stated; see the table) |
 | Provably infeasible requests flagged with a verified fix | 0/4 (solver returns a plan anyway) | 4/4 |
-| Final status | — | needs_relaxation: 5, verified: 15 |
-| Mean iterations / mean wall time | 1 | 1.5 / 5.1 s |
+| Final status | — | needs_relaxation: 6, verified: 14 |
+| Mean iterations / mean wall time | 1 | 1.6 / 7.5 s |
 
-Violation kinds seen in first-pass plans (scenarios affected): zones 7, deadline 3, capacity 2.
+Violation kinds seen in first-pass plans (scenarios affected): zones 10, deadline 3, capacity 2.
 
-Muse Spark as the repair planner (instead of the deterministic policy), on the 6 scenarios with a first-pass violation: it chose exactly the policy's actions in 6/6 runs, 5/6 ended verified (the other one is the infeasible request, flagged correctly), mean cost $0.003 per run. In this suite the model adds readable reasons, not different decisions.
+Muse Spark as the repair planner (instead of the deterministic policy), on 6 scenarios with a first-pass violation: it chose exactly the policy's actions in 6/6 runs and 6/6 ended verified; mean cost $0.0022 per run. In this suite the model adds readable reasons, not different decisions.
 
 | Scenario | Request | Solver only | Agent | Iterations | Repairs |
 |---|---|---|---|---|---|
-| col-res-30-3-a | 30 orders, 3 trucks, by 12:00, avoid residential | violates zones | verified | 2 | ban_violating_edges |
-| col-res-30-3-b | 30 orders, 3 trucks, by 12:00, avoid residential | violates zones | verified | 2 | ban_violating_edges |
-| col-res-30-3-c | 30 orders, 3 trucks, by 12:00, avoid residential | violates zones | verified | 2 | ban_violating_edges |
-| col-res-20-2 | 20 orders, 2 trucks, by 10:00, avoid residential | violates zones | verified | 2 | ban_violating_edges |
-| col-res-45-3 | 45 orders, 3 trucks, by 11:00, avoid residential | violates zones | verified | 2 | ban_violating_edges |
-| col-res-30-1-tight | 30 orders, 1 trucks, by 09:00, avoid residential | violates deadline+zones | needs_relaxation | 3 | ban_violating_edges, resolve_longer, propose_relaxation |
-| col-ind-40-3-a | 40 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
-| col-ind-40-3-b | 40 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
-| col-ind-25-2 | 25 orders, 2 trucks, by 10:00, avoid industrial | ok | verified | 1 | — |
+| mem-draw-A-0 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| mem-draw-A-1 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| mem-draw-A-2 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| mem-draw-A-3 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| mem-draw-B-0 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| mem-draw-B-1 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| mem-draw-B-2 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| col-draw-0 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
+| col-draw-1 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
+| col-draw-2 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
+| col-ind-40-3 | 40 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
 | col-com-20-2 | 20 orders, 2 trucks, by 11:00, avoid commercial | ok | verified | 1 | — |
-| col-resind-30-3 | 30 orders, 3 trucks, by 12:00, avoid residential+industrial | violates zones | verified | 2 | ban_violating_edges |
-| mem-ind-30-3-a | 30 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
-| mem-ind-30-3-b | 30 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
-| mem-ind-30-3-c | 30 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
-| mem-ind-20-2 | 20 orders, 2 trucks, by 09:30, avoid industrial | ok | verified | 1 | — |
+| mem-ind-30-3 | 30 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
 | mem-res-25-2 | 25 orders, 2 trucks, by 11:00, avoid residential | ok | verified | 1 | — |
+| col-res-30-3 | 30 orders, 3 trucks, by 12:00, avoid residential | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
+| col-res-30-1-tight | 30 orders, 1 trucks, by 09:00, avoid residential | violates deadline+zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
 | inf-time-12-1 | 12 orders, 1 trucks, by 08:30, avoid residential | violates deadline | needs_relaxation | 2 | resolve_longer, propose_relaxation |
 | inf-time-50-3 | 50 orders, 3 trucks, by 09:00, avoid industrial | violates deadline | needs_relaxation | 2 | resolve_longer, propose_relaxation |
 | inf-capacity-40 | 40 orders, 3 trucks, by 12:00, avoid industrial | violates capacity | needs_relaxation | 1 | propose_relaxation |
@@ -49,4 +49,4 @@ Muse Spark as the repair planner (instead of the deterministic policy), on the 6
 - Mean latency 4.2 s, total cost $0.1074
 - Limitation: the cases are written by the project author, so this measures robustness to paraphrase, not to the wild.
 
-Evaluation cost: $0.0179
+Evaluation cost: $0.0129

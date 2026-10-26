@@ -9,6 +9,8 @@ from orbitroute.llm.budget import BudgetExceeded, RunBudget
 from orbitroute.llm.client import ApiError, MetaClient
 from orbitroute.verifier.checks import Report
 
+MAX_EXCLUDED_SHARE = 0.2  # leaving out more than this share of the orders is not a plan, it is a refusal
+
 ACTIONS = {
     "ban_violating_edges": "Forbid exactly the road segments that entered an avoided zone, then re-solve.",
     "ban_all_zone_edges": "Forbid every road segment inside the avoided zones, then re-solve.",
@@ -32,6 +34,7 @@ class DecisionContext:
     history: list[str]  # actions already taken, oldest first
     unreachable_orders: list[int] = field(default_factory=list)
     all_zone_edges_banned: bool = False
+    total_orders: int = 0
 
 
 def allowed_actions(ctx: DecisionContext) -> list[str]:
@@ -39,6 +42,7 @@ def allowed_actions(ctx: DecisionContext) -> list[str]:
     allowed: list[str] = []
     if ctx.unreachable_orders:
         allowed.append("exclude_unreachable")
+        allowed.append("propose_relaxation")
     if "zones" in kinds:
         allowed.append("ban_violating_edges")
         if not ctx.all_zone_edges_banned:
@@ -61,6 +65,12 @@ class PolicyDecider:
         allowed = allowed_actions(ctx)
         kinds = set(ctx.report.summary())
         if "exclude_unreachable" in allowed:
+            if ctx.total_orders and len(ctx.unreachable_orders) > MAX_EXCLUDED_SHARE * ctx.total_orders:
+                return Decision(
+                    "propose_relaxation",
+                    f"{len(ctx.unreachable_orders)} of {ctx.total_orders} orders can only be reached through the avoided zone; dropping that many would not be a plan.",
+                    "policy",
+                )
             return Decision("exclude_unreachable", "Some orders cannot be reached without entering an avoided zone.", "policy")
         if "zones" in kinds:
             tried = ctx.history.count("ban_violating_edges")
@@ -101,6 +111,8 @@ class ModelDecider:
             "violations": [{"kind": v.kind, "message": v.message} for v in ctx.report.violations][:8],
             "actions_already_taken": ctx.history,
             "orders_unreachable_without_entering_the_zone": ctx.unreachable_orders[:10],
+            "total_orders": ctx.total_orders,
+            "rule": f"Leaving out more than {int(MAX_EXCLUDED_SHARE * 100)}% of the orders is not acceptable; choose propose_relaxation then.",
             "allowed_actions": {a: ACTIONS[a] for a in allowed},
         }
         import json

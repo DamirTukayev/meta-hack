@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
-from orbitroute.routing.matrix import CostMatrix
+from orbitroute.routing.matrix import CostMatrix, build_matrix
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan, solve_vrp
+from orbitroute.routing.zones import edge_key
 from orbitroute.understanding.constraints import seconds_to_hhmm
-from orbitroute.verifier.checks import Report, verify
+from orbitroute.verifier.checks import Check, Report, verify
 
 DEADLINE_STEP_S = 15 * 60
 MAX_EXTRA_VEHICLES = 3
@@ -31,6 +32,21 @@ def _try(scenario: Scenario, matrix: CostMatrix, excluded: dict[int, str], insid
     return plan, report
 
 
+def _through_m(scenario: Scenario, plan: Plan, inside: dict) -> float:
+    """Metres of the plan's roads that lie inside the zones the request wanted avoided."""
+    g = scenario.graph.to_networkx()
+    return sum(inside.get(edge_key(a, b), 0.0) for r in plan.routes for leg in r.legs for a, b in zip(leg, leg[1:]) if g.has_edge(a, b))
+
+
+def _mark_zone_relaxed(report: Report, through_m: float) -> Report:
+    """In a plan that stopped avoiding the zone the zone check is vacuous: say so instead of showing a green tick."""
+    report.checks = [
+        Check(c.kind, c.title + " (relaxed)", False, f"avoidance switched off in this option: the plan drives {through_m:.0f} m through the zone") if c.kind == "zones" else c
+        for c in report.checks
+    ]
+    return report
+
+
 def find_relaxations(
     scenario: Scenario,
     matrix: CostMatrix,
@@ -39,8 +55,9 @@ def find_relaxations(
     *,
     time_limit_s: float = 1.5,
     seed: int = 0,
+    zone_edges: set | None = None,
 ) -> list[RelaxationOption]:
-    """Smallest verified relaxations, one per dimension: more trucks, or a later deadline."""
+    """Smallest verified relaxations, one per dimension: more trucks, a later deadline, or entering the zone."""
     options: list[RelaxationOption] = []
     p = scenario.problem
 
@@ -82,4 +99,24 @@ def find_relaxations(
                 report,
             )
         )
+
+    # stop avoiding the zones: the only fix when orders are reachable solely through them
+    if p.avoid_zone_kinds and zone_edges:
+        free_problem = p.model_copy(update={"avoid_zone_kinds": []})
+        sc = replace(scenario, problem=free_problem)
+        free_matrix = build_matrix(sc.graph, sc.location_nodes)
+        plan = solve_vrp(sc, free_matrix, time_limit_s=time_limit_s, seed=seed)
+        report = verify(sc, plan, excluded={}, inside={})
+        kinds = " and ".join("drawn" if k == "custom" else k for k in p.avoid_zone_kinds)
+        if report.ok:
+            m = _through_m(scenario, plan, inside)
+            options.append(RelaxationOption("allow_zone", int(m), f"stop avoiding the {kinds} zone (the plan drives {m:.0f} m through it)", sc, plan, _mark_zone_relaxed(report, m)))
+        else:
+            # the zone is not the only problem: combine with the smallest other relaxation in the zone-free world
+            for other in find_relaxations(sc, free_matrix, {}, {}, time_limit_s=time_limit_s, seed=seed, zone_edges=None):
+                m = _through_m(scenario, other.plan, inside)
+                options.append(
+                    RelaxationOption(f"allow_zone+{other.kind}", other.amount, f"stop avoiding the {kinds} zone and {other.description} (the plan drives {m:.0f} m through the zone)", other.scenario, other.plan, _mark_zone_relaxed(other.report, m))
+                )
+                break
     return options
