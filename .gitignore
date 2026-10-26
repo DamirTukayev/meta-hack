@@ -45,3 +45,8 @@ PLAN.md
 
 # Cached model outputs
 data/cache/
+
+# Local tooling config
+.claude/launch.json
+frontend/node_modules/
+frontend/dist/
