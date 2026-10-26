@@ -1,0 +1,27 @@
+[project]
+name = "orbitroute"
+version = "0.1.0"
+description = "Agent that turns a satellite image and a natural-language request into a verified delivery plan."
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27",
+    "python-dotenv>=1.0",
+    "pydantic>=2.7",
+    "numpy>=1.26",
+    "pillow>=10.3",
+    "meta-sam-parser",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/orbitroute"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
