@@ -27,6 +27,10 @@ export default function MapView(props: {
   onClick: (xy: XY, unit: number) => void
   onCloseZone: () => void
   onClear: () => void
+  auto: boolean
+  autoCount: number
+  onAuto: (v: boolean) => void
+  onAutoCount: (n: number) => void
 }) {
   const { sample, state, plan, report, mode, custom } = props
   const svgRef = useRef<SVGSVGElement>(null)
@@ -58,19 +62,32 @@ export default function MapView(props: {
         ))}
       </div>
       {state.status !== 'running' && (
-        <div className="map-toolbar edit">
-          <span className="edit-label">Place on the map:</span>
-          {([['browse', 'Off'], ['depot', 'Depot'], ['order', 'Orders'], ['zone', 'Avoid zone']] as [Mode, string][]).map(([m, label]) => (
-            <button key={m} className={'chip ' + (mode === m ? 'on' : '')} onClick={() => props.onMode(m)}>{label}</button>
-          ))}
-          {mode === 'zone' && custom.zone.length >= 3 && !custom.zoneClosed && <button className="chip accent" onClick={props.onCloseZone}>Close zone</button>}
-          {(custom.depot || custom.orders.length > 0 || custom.zone.length > 0) && <button className="chip" onClick={props.onClear}>Clear mine</button>}
-          <span className="edit-hint">
-            {mode === 'depot' && 'Click to set the depot.'}
-            {mode === 'order' && `Click to add an order, click an order to remove it (${custom.orders.length} placed).`}
-            {mode === 'zone' && (custom.zoneClosed ? 'Zone drawn. Click “Clear mine” to redraw.' : 'Click corners; click the first corner or “Close zone” to finish.')}
-            {mode === 'browse' && !custom.depot && custom.orders.length === 0 && custom.zone.length === 0 && 'Optional: choose your own depot, orders and a zone to avoid.'}
-          </span>
+        <div className="steps-wrap">
+          <div className="steps">
+            <button className={'step ' + (mode === 'depot' ? 'active ' : '') + (custom.depot ? 'done' : '')} onClick={() => props.onMode('depot')}>
+              <i>{custom.depot ? '✓' : '1'}</i> Depot
+            </button>
+            <button className={'step ' + (mode === 'order' ? 'active ' : '') + (custom.orders.length > 0 ? 'done' : '')} onClick={() => props.onMode('order')}>
+              <i>{custom.orders.length > 0 ? '✓' : '2'}</i> Orders{custom.orders.length > 0 ? ` (${custom.orders.length})` : ''}
+            </button>
+            <button className={'step ' + (mode === 'zone' ? 'active ' : '') + (custom.zoneClosed ? 'done' : '')} onClick={() => props.onMode('zone')}>
+              <i>{custom.zoneClosed ? '✓' : '3'}</i> Zone to avoid <small>optional</small>
+            </button>
+            {mode === 'zone' && custom.zone.length >= 3 && !custom.zoneClosed && <button className="chip accent" onClick={props.onCloseZone}>Close zone</button>}
+            <span className="spacer" />
+            <label className="auto" title="Let the agent scatter random orders on the roads instead of clicking them">
+              <input type="checkbox" checked={props.auto} onChange={(e) => props.onAuto(e.target.checked)} />
+              Place orders for me
+              <input type="number" min={1} max={100} value={props.autoCount} disabled={!props.auto} onChange={(e) => props.onAutoCount(Math.max(1, Math.min(100, Number(e.target.value) || 1)))} aria-label="Number of random orders" />
+            </label>
+            {(custom.depot || custom.orders.length > 0 || custom.zone.length > 0) && <button className="chip" onClick={props.onClear}>Clear</button>}
+          </div>
+          <p className="edit-hint">
+            {mode === 'depot' && 'Click the map to place the depot — where the trucks start and finish.'}
+            {mode === 'order' && (props.auto ? 'The agent will place the orders. Click the map to place your own instead.' : `Click the map to add an order; click an order to remove it${custom.orders.length ? ` (${custom.orders.length} placed)` : ''}.`)}
+            {mode === 'zone' && (custom.zoneClosed ? 'Zone drawn. Press Clear to start over.' : 'Click corners of an area the trucks must avoid; click the first corner or “Close zone” to finish.')}
+            {mode === 'browse' && 'View only. Pick a step above to place points.'}
+          </p>
         </div>
       )}
       <div className="map-frame" style={{ aspectRatio: `${sample.width} / ${sample.height}` }}>
@@ -127,8 +144,8 @@ export default function MapView(props: {
           )}
           {draft && custom.orders.map((o, i) => (
             <g key={'d' + i}>
-              <circle cx={o[0]} cy={o[1]} r={11 * u} fill="#f8fafc" stroke="#0b1220" strokeWidth={2 * u} />
-              <text x={o[0]} y={o[1] + 4.2 * u} textAnchor="middle" fontSize={11.5 * u} fontWeight={700} fill="#0b1220">{i + 1}</text>
+              <circle cx={o[0]} cy={o[1]} r={15 * u} fill="#f8fafc" stroke="#0b1220" strokeWidth={3 * u} />
+              <text x={o[0]} y={o[1] + 5.2 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#0b1220">{i + 1}</text>
             </g>
           ))}
           {draft && custom.depot && (
@@ -145,7 +162,7 @@ export default function MapView(props: {
           )}
         </svg>
         {state.status === 'running' && <div className="map-stage"><span className="spinner" />{state.stage}</div>}
-        {state.status === 'idle' && !editing && !custom.depot && custom.orders.length === 0 && custom.zone.length === 0 && <div className="map-hint">Pick a request and press <b>Plan route</b></div>}
+        {state.status === 'idle' && !custom.depot && custom.orders.length === 0 && !props.auto && <div className="map-hint">Click the map to place the <b>depot</b>, then your <b>orders</b></div>}
       </div>
       <div className="legend">
         {Array.from(new Set(state.zones.map((z) => z.kind))).map((k) => (

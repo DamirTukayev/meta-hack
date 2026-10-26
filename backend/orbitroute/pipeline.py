@@ -58,6 +58,16 @@ def get_sample(name: str) -> Sample:
     raise KeyError(name)
 
 
+def request_text(request: str, custom: CustomInputs | None, auto_orders: int | None) -> str:
+    """The text sent to the parser. The order count comes from the user's clicks (or the "place for me" count), so it is
+    stated up front; any other number in the sentence is overridden later and reported."""
+    if custom is not None and custom.orders:
+        return f"{len(custom.orders)} orders. {request}"
+    if auto_orders:
+        return f"{auto_orders} orders. {request}"
+    return request
+
+
 def run_pipeline(
     sample: Sample,
     request: str,
@@ -69,6 +79,7 @@ def run_pipeline(
     seed: int = 0,
     use_model_decider: bool = True,
     custom: CustomInputs | None = None,
+    auto_orders: int | None = None,
     emit: Emit,
 ) -> AgentResult:
     run: RunBudget = guard.new_run(run_cap_usd)
@@ -86,8 +97,11 @@ def run_pipeline(
 
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
     has_custom = custom is not None and not custom.empty
-    parse_text = f"{len(custom.orders)} orders. {request}" if has_custom and custom.orders else request
-    problem = parse_request(text, parse_text, run=run)
+    problem = parse_request(text, request_text(request, custom, auto_orders), run=run)
+    if auto_orders and not (custom and custom.orders):
+        from orbitroute.understanding.constraints import with_order_count
+
+        problem = with_order_count(problem, auto_orders)
 
     notes: list[str] = []
     if has_custom:

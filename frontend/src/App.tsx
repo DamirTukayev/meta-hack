@@ -21,6 +21,9 @@ function RequestPanel(props: {
   onPlan: () => void
   state: RunState
   custom: Custom
+  auto: boolean
+  autoCount: number
+  canPlan: boolean
 }) {
   const { sample, state, custom } = props
   const running = state.status === 'running'
@@ -32,18 +35,20 @@ function RequestPanel(props: {
         {props.samples.map((s) => <option key={s.name} value={s.name}>{s.label}</option>)}
       </select>
       <button className="link" onClick={props.onPickArea} disabled={running}>＋ Choose another area on the map</button>
-      <label>What should the trucks do?</label>
-      <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="40 orders, 3 trucks, by 18:00, avoid the industrial zone" />
+      <label>Trucks, time and what to avoid</label>
+      <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="3 trucks, by 18:00, avoid the industrial zone" />
       <div className="examples">
         {sample?.examples.map((ex) => <button key={ex} className="example" onClick={() => props.onRequest(ex)} disabled={running}>{ex}</button>)}
       </div>
-      {(custom.depot || custom.orders.length > 0 || custom.zoneClosed) && (
-        <p className="own">
-          Using your own {[custom.depot && 'depot', custom.orders.length > 0 && `${custom.orders.length} order${custom.orders.length > 1 ? 's' : ''}`, custom.zoneClosed && 'avoid-zone'].filter(Boolean).join(', ')}.
-          {custom.orders.length > 0 && ' The order count in the text is ignored.'}
-        </p>
-      )}
-      <button className="primary" onClick={props.onPlan} disabled={running || !props.request.trim()}>{running ? 'Agent working…' : 'Plan route'}</button>
+      <ul className="checklist-mini">
+        <li className={custom.depot ? 'ok' : ''}>{custom.depot ? '✓' : '○'} Depot {custom.depot ? 'placed' : 'not placed'}</li>
+        <li className={custom.orders.length > 0 || props.auto ? 'ok' : ''}>
+          {custom.orders.length > 0 || props.auto ? '✓' : '○'} {custom.orders.length > 0 ? `${custom.orders.length} order${custom.orders.length > 1 ? 's' : ''} placed by you` : props.auto ? `${props.autoCount} random orders (agent places them)` : 'Orders not placed'}
+        </li>
+        <li className={custom.zoneClosed ? 'ok' : 'opt'}>{custom.zoneClosed ? '✓ Your avoid-zone drawn' : '○ Zone to avoid (optional)'}</li>
+      </ul>
+      <button className="primary" onClick={props.onPlan} disabled={running || !props.canPlan}>{running ? 'Agent working…' : 'Plan route'}</button>
+      {!props.canPlan && !running && <p className="muted small">Place the depot and at least one order on the map, or tick “Place orders for me”.</p>}
       {state.problem && (
         <div className="understood">
           <h3>What the agent understood</h3>
@@ -148,7 +153,9 @@ export default function App() {
   const [pinned, setPinned] = useState<number | null>(null)
   const [relax, setRelax] = useState<number | null>(null)
   const { state, start, reset } = useRun()
-  const [mode, setMode] = useState<Mode>('browse')
+  const [mode, setMode] = useState<Mode>('depot')
+  const [auto, setAuto] = useState(false)
+  const [autoCount, setAutoCount] = useState(20)
   const [picking, setPicking] = useState(false)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
 
@@ -165,26 +172,29 @@ export default function App() {
   }, [state.result])
 
   const sample = samples.find((s) => s.name === name)
-  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('browse'); reset() }
+  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('depot'); setAuto(false); reset() }
   const onArea = (s: Sample) => {
     setSamples((list) => (list.some((x) => x.name === s.name) ? list : [...list, s]))
     setName(s.name)
     setRequest(s.examples[0] ?? '')
     setCustom(emptyCustom)
-    setMode('browse')
+    setMode('depot')
+    setAuto(false)
     setPinned(null)
     setRelax(null)
     reset()
     setPicking(false)
   }
+  const canPlan = !!request.trim() && ((!!custom.depot && custom.orders.length > 0) || (auto && custom.orders.length === 0))
   const onPlan = () => {
     setPinned(null)
     setRelax(null)
     setMode('browse')
-    const body: { sample: string; request: string; custom?: object } = { sample: name, request }
+    const body: { sample: string; request: string; custom?: object; auto_orders?: number } = { sample: name, request }
     if (custom.depot || custom.orders.length > 0 || custom.zoneClosed) {
       body.custom = { depot: custom.depot, orders: custom.orders, zone: custom.zoneClosed ? custom.zone : [] }
     }
+    if (auto && custom.orders.length === 0) body.auto_orders = autoCount
     start(body)
   }
   // Editing starts from a clean map: the previous run no longer matches the inputs.
@@ -194,8 +204,11 @@ export default function App() {
   }
   const onMapClick = (xy: XY, unit: number) => {
     const near = (p: XY, r: number) => Math.hypot(p[0] - xy[0], p[1] - xy[1]) < r * unit
-    if (mode === 'depot') edit({ ...custom, depot: xy })
-    else if (mode === 'order') {
+    if (mode === 'depot') {
+      edit({ ...custom, depot: xy })
+      if (custom.orders.length === 0) setMode('order') // the natural next step
+    } else if (mode === 'order') {
+      setAuto(false)
       const hit = custom.orders.findIndex((o) => near(o, 14))
       edit({ ...custom, orders: hit >= 0 ? custom.orders.filter((_, i) => i !== hit) : [...custom.orders, xy] })
     } else if (mode === 'zone') {
@@ -221,7 +234,7 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} auto={auto} autoCount={autoCount} canPlan={canPlan} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">
@@ -235,7 +248,8 @@ export default function App() {
             sample={sample} state={state} selected={sel} plan={plan} report={report}
             mode={mode} custom={custom} onMode={setMode} onClick={onMapClick}
             onCloseZone={() => edit({ ...custom, zoneClosed: true })}
-            onClear={() => { edit(emptyCustom); setMode('browse') }}
+            onClear={() => { edit(emptyCustom); setMode('depot'); setAuto(false) }}
+            auto={auto} autoCount={autoCount} onAuto={setAuto} onAutoCount={setAutoCount}
           />
           <ResultBar state={state} relax={relax} onShowRelax={setRelax} />
         </div>
