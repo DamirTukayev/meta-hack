@@ -25,6 +25,14 @@ Num = Annotated[float, Field(allow_inf_nan=False)]
 Point = tuple[Num, Num]
 
 
+class PlacementError(ValueError):
+    """A placed point cannot be used; `kind` and `index` tell the UI which marker to highlight."""
+
+    def __init__(self, message: str, kind: str, index: int = 0):
+        super().__init__(message)
+        self.kind, self.index = kind, index
+
+
 class CustomInputs(BaseModel):
     depot: Point | None = None
     orders: list[Point] = Field(default_factory=list, max_length=MAX_ORDERS)
@@ -39,10 +47,10 @@ def _in_bounds(p: Point, scene: Scene) -> bool:
     return 0 <= p[0] <= scene.width and 0 <= p[1] <= scene.height
 
 
-def _snap(graph: RoadGraph, p: Point, what: str) -> tuple[int, float]:
+def _snap(graph: RoadGraph, p: Point, what: str, kind: str, index: int = 0) -> tuple[int, float]:
     node, dist_m = graph.nearest_node(*p)
     if dist_m > MAX_SNAP_M:
-        raise ValueError(f"The {what} is {dist_m:.0f} m from the nearest road the agent found (limit {MAX_SNAP_M:.0f} m). Place it closer to a road; the Graph layer shows the roads it found.")
+        raise PlacementError(f"The {what} is {dist_m:.0f} m from the nearest road the agent found (limit {MAX_SNAP_M:.0f} m). Place it closer to a road; the Graph layer shows the roads it found.", kind, index)
     return node, dist_m
 
 
@@ -68,16 +76,16 @@ def apply_custom(graph: RoadGraph, scene: Scene, problem: Problem, custom: Custo
 
     depot_node = None
     if custom.depot:
-        depot_node, d = _snap(graph, custom.depot, "depot")
+        depot_node, d = _snap(graph, custom.depot, "depot", "depot")
         if scene.kinds_at(*graph.nodes[depot_node]) & set(problem.avoid_zone_kinds):
-            raise ValueError("The depot is inside an avoided zone; move it outside.")
+            raise PlacementError("The depot is inside an avoided zone; move it outside.", "depot")
         if d > 25:
             notes.append(f"Depot snapped {d:.0f} m to the nearest road.")
 
     if custom.orders:
         nodes, snaps = [], []
         for i, p in enumerate(custom.orders, 1):
-            node, d = _snap(graph, p, f"order {i}")
+            node, d = _snap(graph, p, f"order {i}", "order", i - 1)
             nodes.append(node)
             snaps.append(d)
         if depot_node is None:

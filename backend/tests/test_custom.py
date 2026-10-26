@@ -41,6 +41,17 @@ def test_a_point_far_from_any_road_is_rejected_with_a_clear_message():
         apply_custom(grid_graph(), empty_scene(), base_problem(), CustomInputs(orders=[(0, 0)]))
 
 
+def test_the_error_says_which_point_is_the_problem():
+    from orbitroute.custom import PlacementError
+
+    with pytest.raises(PlacementError) as e:
+        apply_custom(grid_graph(), empty_scene(), base_problem(), CustomInputs(orders=[(100, 100), (200, 200), (0, 0)]))
+    assert (e.value.kind, e.value.index) == ("order", 2)  # the third order, zero-based
+    with pytest.raises(PlacementError) as e:
+        apply_custom(grid_graph(), empty_scene(), base_problem(), CustomInputs(depot=(0, 0), orders=[(100, 100)]))
+    assert e.value.kind == "depot"
+
+
 def test_points_outside_the_image_are_rejected():
     with pytest.raises(ValueError, match="outside the image"):
         apply_custom(grid_graph(), empty_scene(), base_problem(), CustomInputs(orders=[(500, 10)]))

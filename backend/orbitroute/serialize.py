@@ -55,13 +55,16 @@ def plan_json(sc: Scenario, plan: Plan, matrix: CostMatrix | None = None) -> dic
         if not r.stops:
             continue
         poly: list[list[float]] = []
+        legs: list[list[list[float]]] = []
         for leg in r.legs:
             pts = [_xy(g.nodes[n]) for n in leg]
+            legs.append(pts)  # leg k leads to stop k+1; the last leg returns to the depot
             poly.extend(pts if not poly else pts[1:])
         routes.append(
             {
                 "vehicle": r.vehicle,
                 "polyline": poly,
+                "legs": legs,
                 "stops": [{"order": s.order, "xy": _xy(g.nodes[s.node]), "arrive_s": s.arrive_s} for s in r.stops],
                 "start_s": r.start_s,
                 "end_s": r.end_s,
