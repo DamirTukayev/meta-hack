@@ -10,6 +10,9 @@ dependencies = [
     "numpy>=1.26",
     "pillow>=10.3",
     "meta-sam-parser",
+    "scikit-image>=0.26.0",
+    "scipy>=1.17.1",
+    "networkx>=3.6.1",
 ]
 
 [dependency-groups]

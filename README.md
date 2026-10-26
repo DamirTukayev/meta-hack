@@ -16,6 +16,8 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - Budget-guarded client for the Meta Model API (`backend/orbitroute/llm`): required token caps, global and per-run spend caps, kill switch.
 - SAM 3.1 output parser that turns box-local masks into full-image masks (`backend/orbitroute/perception/sam.py`).
 - NAIP tile downloader (`scripts/fetch_naip.py`).
+- Tiled SAM 3.1 road segmentation with overlap and an on-disk cache (`perception/segment.py`).
+- Road mask → routable graph: skeleton, junction/endpoint nodes, spur pruning, densification, gap bridging, width-based speed classes, node snapping (`perception/graph.py`), plus a debug overlay (`scripts/build_graph.py`).
 
 ## Run the tests
 

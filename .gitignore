@@ -42,3 +42,6 @@ data/raw/
 
 # Planning (local only)
 PLAN.md
+
+# Cached model outputs
+data/cache/
