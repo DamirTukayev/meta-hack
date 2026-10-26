@@ -13,6 +13,7 @@ const ZONE_COLORS: Record<string, string> = {
 
 interface Layers { roads: boolean; graph: boolean; zones: boolean; orders: boolean; routes: boolean }
 
+const clock = (sec: number) => `${String(Math.floor(sec / 3600)).padStart(2, '0')}:${String(Math.floor((sec % 3600) / 60)).padStart(2, '0')}`
 const pts = (poly: XY[]) => poly.map((p) => p.join(',')).join(' ')
 
 export default function MapView(props: {
@@ -164,6 +165,18 @@ export default function MapView(props: {
         {state.status === 'running' && <div className="map-stage"><span className="spinner" />{state.stage}</div>}
         {state.status === 'idle' && !custom.depot && custom.orders.length === 0 && !props.auto && <div className="map-hint">Click the map to place the <b>depot</b>, then your <b>orders</b></div>}
       </div>
+      {plan && plan.routes.length > 0 && (
+        <div className="trucks" aria-label="Trucks">
+          {plan.routes.map((r) => (
+            <div key={r.vehicle} className="truck">
+              <i style={{ background: ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length] }} />
+              <b>Truck {r.vehicle + 1}</b>
+              <span>{r.stops.length} stop{r.stops.length === 1 ? '' : 's'} · {(r.distance_m / 1000).toFixed(1)} km · back {clock(r.end_s)}</span>
+            </div>
+          ))}
+          {state.problem && <span className="trucks-note">Numbers restart for each truck. One trip per truck; capacity {state.problem.capacity} order{state.problem.capacity === 1 ? '' : 's'} each.</span>}
+        </div>
+      )}
       <div className="legend">
         {Array.from(new Set(state.zones.map((z) => z.kind))).map((k) => (
           <span key={k}><i style={{ background: ZONE_COLORS[k] }} />{k.replace('_', '/')}{avoid.includes(k) ? ' (avoid)' : ''}</span>
