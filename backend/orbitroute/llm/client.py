@@ -62,14 +62,31 @@ def _text_chars(messages: list[dict[str, Any]]) -> int:
 
 
 class MetaClient:
-    def __init__(self, settings: Settings, guard: BudgetGuard, timeout: float = 120.0):
-        if not settings.api_key:
-            raise RuntimeError("MODEL_API_KEY is not set (see .env.example)")
-        self._http = httpx.Client(
-            base_url=settings.base_url,
-            headers={"Authorization": f"Bearer {settings.api_key}"},
-            timeout=timeout,
-        )
+    """Chat / segmentation client for an OpenAI-compatible endpoint.
+
+    `provider="meta"` is the Meta Model API. `provider="baseten"` serves the open-weight Muse Spark Open
+    through Baseten (text steps only; it has no SAM).
+    """
+
+    def __init__(
+        self,
+        settings: Settings,
+        guard: BudgetGuard,
+        timeout: float = 120.0,
+        *,
+        provider: str = "meta",
+        transport: httpx.BaseTransport | None = None,
+    ):
+        self.provider = provider
+        if provider == "baseten":
+            key, base_url, self.default_model = settings.baseten_api_key, settings.baseten_base_url, settings.baseten_model
+            if not key:
+                raise RuntimeError("BASETEN_API_KEY is not set (see .env.example)")
+        else:
+            key, base_url, self.default_model = settings.api_key, settings.base_url, DEFAULT_MODEL
+            if not key:
+                raise RuntimeError("MODEL_API_KEY is not set (see .env.example)")
+        self._http = httpx.Client(base_url=base_url, headers={"Authorization": f"Bearer {key}"}, timeout=timeout, transport=transport)
         self._guard = guard
 
     def chat(
@@ -77,23 +94,24 @@ class MetaClient:
         messages: list[dict[str, Any]],
         *,
         max_completion_tokens: int,
-        model: str = DEFAULT_MODEL,
+        model: str | None = None,
         response_format: dict[str, Any] | None = None,
         reasoning_effort: str = "low",
         run: RunBudget | None = None,
         label: str = "chat",
     ) -> ChatResult:
         """max_completion_tokens is required: reasoning tokens count against it."""
+        model = model or self.default_model
         est_input = _text_chars(messages) // 3 + _count_images(messages) * IMAGE_TOKENS_ESTIMATE
         est_cost = token_cost(model, est_input, max_completion_tokens)
         self._guard.check(est_cost, run)
 
-        body: dict[str, Any] = {
-            "model": model,
-            "messages": messages,
-            "max_completion_tokens": max_completion_tokens,
-            "reasoning_effort": reasoning_effort,
-        }
+        body: dict[str, Any] = {"model": model, "messages": messages}
+        if self.provider == "baseten":  # plain OpenAI-style parameters
+            body["max_tokens"] = max_completion_tokens
+        else:
+            body["max_completion_tokens"] = max_completion_tokens
+            body["reasoning_effort"] = reasoning_effort
         if response_format is not None:
             body["response_format"] = response_format
 

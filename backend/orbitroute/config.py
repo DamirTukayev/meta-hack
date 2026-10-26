@@ -19,6 +19,10 @@ class Settings:
     run_cap_usd: float
     paid_calls_enabled: bool
     budget_state_path: Path
+    baseten_api_key: str
+    baseten_base_url: str
+    baseten_model: str
+    reasoning_provider: str  # "meta" or "baseten": which endpoint serves the text-reasoning steps
 
     @classmethod
     def load(cls) -> "Settings":
@@ -30,4 +34,8 @@ class Settings:
             run_cap_usd=float(os.environ.get("RUN_CAP_USD", "0.50")),
             paid_calls_enabled=os.environ.get("DEMO_PAID_CALLS_ENABLED", "true").lower() == "true",
             budget_state_path=Path(os.environ.get("BUDGET_STATE_PATH", ROOT / "budget_state.json")),
+            baseten_api_key=os.environ.get("BASETEN_API_KEY", ""),
+            baseten_base_url=os.environ.get("BASETEN_BASE_URL", "https://inference.baseten.co/v1"),
+            baseten_model=os.environ.get("BASETEN_MODEL", "meta-models/muse-spark-open-1026"),
+            reasoning_provider=os.environ.get("REASONING_PROVIDER", "meta").lower(),
         )

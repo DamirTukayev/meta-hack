@@ -25,6 +25,19 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 
 - **Web app** (`frontend/`, `backend/orbitroute/api.py`): FastAPI streams the agent run as server-sent events to a React + TypeScript UI. A map with toggleable layers (road mask, graph, zones, orders, routes), plan-by-plan tabs that show the failed plan next to the repaired one, a live six-point verification checklist and the agent's log.
 
+## Evaluation
+
+20 fixed scenarios on two NAIP tiles, plus 20 free-form request phrasings (`eval/RESULTS.md`, reproducible with `scripts/run_eval.py`):
+
+- A plain solver reported **15** plans as feasible; an independent audit found **6 of them (40%) broke a constraint** (7 scenarios entered an avoided zone, 3 missed the deadline, 2 overloaded a truck).
+- The agent returned only plans that passed the same audit: **15/20 verified**, the other **5 flagged as infeasible as stated, each with a verified relaxation** (all 4 provably infeasible requests were caught).
+- Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 4.2 s).
+- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (~$0.003 per run).
+
+## Open-weight path
+
+Text reasoning (request parsing and repair decisions) can run on the open-weight Muse Spark Open served by Baseten: set `REASONING_PROVIDER=baseten` and `BASETEN_API_KEY` in `.env`. SAM 3.1 and the vision step stay on the Meta Model API.
+
 ## Run the app locally
 
 ```bash

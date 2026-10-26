@@ -67,6 +67,8 @@ class PolicyDecider:
             if tried < 2 or "ban_all_zone_edges" not in allowed:
                 return Decision("ban_violating_edges", "Cut exactly the segments that entered the zone and re-solve.", "policy")
             return Decision("ban_all_zone_edges", "Targeted cuts keep finding new crossings; forbid the whole zone.", "policy")
+        if "capacity" in kinds:  # more search time cannot create capacity
+            return Decision("propose_relaxation", "The trucks cannot carry all orders; look for the smallest relaxation.", "policy")
         if ctx.history.count("resolve_longer") < 1 and "resolve_longer" in allowed:
             return Decision("resolve_longer", "The solver may simply need more search time.", "policy")
         return Decision("propose_relaxation", "The constraints appear contradictory; look for the smallest relaxation.", "policy")
