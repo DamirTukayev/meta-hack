@@ -1,0 +1,16 @@
+This is a satellite image of an area about 1.5 km across. Coordinates use a 0-1000 grid with (0,0) at the top-left and (1000,1000) at the bottom-right.
+
+Outline the land use as a small set of simple polygons:
+- industrial: warehouses, large flat-roofed logistics buildings, truck yards, factories, rail yards.
+- commercial: shops, offices, restaurants and their parking lots.
+- residential: houses, apartment blocks and the streets between them.
+- park_forest: parks, woods, fields and other open green land.
+- other: anything you cannot classify with confidence.
+
+Rules:
+- Use 4 to 8 vertices per polygon, ordered around the outline. Prefer a few large polygons over many small ones.
+- Polygons of different kinds must not overlap. Leave a gap where you are unsure instead of guessing.
+- Roads and railways belong to the land use on either side of them; do not draw polygons for roads.
+- Give every area you outline exactly one kind.
+
+Also return the centre points of the largest warehouse or distribution buildings.

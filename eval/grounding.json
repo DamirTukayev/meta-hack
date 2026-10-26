@@ -1,0 +1,85 @@
+{
+ "repeats": 3,
+ "versions": {
+  "v1": {
+   "samples": {
+    "columbus": {
+     "stability": 0.726,
+     "stability_min": 0.639,
+     "zones_per_run": [
+      13,
+      11,
+      12
+     ],
+     "covered_share": 0.707,
+     "overlap_share": 0.033,
+     "excess_green_by_kind": {
+      "commercial": 7.7,
+      "industrial": 7.8,
+      "park_forest": 22.2,
+      "residential": 13.3
+     }
+    },
+    "memphis": {
+     "stability": 0.64,
+     "stability_min": 0.527,
+     "zones_per_run": [
+      11,
+      8,
+      8
+     ],
+     "covered_share": 0.828,
+     "overlap_share": 0.021,
+     "excess_green_by_kind": {
+      "commercial": 21.2,
+      "industrial": 8.8,
+      "other": 31.5,
+      "park_forest": 32.1,
+      "residential": 22.5
+     }
+    }
+   },
+   "cost_usd": 0.067
+  },
+  "v2": {
+   "samples": {
+    "columbus": {
+     "stability": 0.716,
+     "stability_min": 0.682,
+     "zones_per_run": [
+      10,
+      11,
+      10
+     ],
+     "covered_share": 0.667,
+     "overlap_share": 0.007,
+     "excess_green_by_kind": {
+      "commercial": 7.7,
+      "industrial": 7.8,
+      "park_forest": 20.1,
+      "residential": 13.1
+     }
+    },
+    "memphis": {
+     "stability": 0.754,
+     "stability_min": 0.707,
+     "zones_per_run": [
+      7,
+      6,
+      8
+     ],
+     "covered_share": 0.764,
+     "overlap_share": 0.002,
+     "excess_green_by_kind": {
+      "commercial": 8.0,
+      "industrial": 8.6,
+      "other": 26.2,
+      "park_forest": 33.7,
+      "residential": 19.7
+     }
+    }
+   },
+   "cost_usd": 0.0839
+  }
+ }
+}

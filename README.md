@@ -40,6 +40,10 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 4.2 s).
 - Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (~$0.002 per run), so it adds readable explanations rather than different decisions.
 
+## Prompts
+
+The model prompts are versioned text files in `backend/orbitroute/prompts/` (`scene`, `request`, `repair`; `active.json` picks the version in use), not strings buried in code. `scripts/eval_grounding.py` compares scene-prompt versions on real runs (`eval/GROUNDING.md`). There are no human labels for land use, so it measures stability across repeated answers, overlap between zones of different kinds and a vegetation sanity check, not accuracy. Scene prompt v2 is cleaner (zones of different kinds overlap in ~0-1% of the outlined area instead of 2-3%) and about equally or slightly more stable (73% vs 68% mean agreement over 3 repeats; within noise on one of the two images), at ~25% more tokens; v1 stays active so the published evaluation numbers remain reproducible.
+
 ## Open-weight path
 
 Text reasoning (request parsing and repair decisions) can run on the open-weight Muse Spark Open served by Baseten: set `REASONING_PROVIDER=baseten` and `BASETEN_API_KEY` in `.env`. SAM 3.1 and the vision step stay on the Meta Model API.

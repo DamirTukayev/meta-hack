@@ -17,6 +17,7 @@ from shapely.prepared import prep
 
 from orbitroute.config import ROOT
 from orbitroute.llm.budget import RunBudget
+from orbitroute import prompts
 from orbitroute.llm.client import MetaClient, image_part
 
 CACHE_DIR = ROOT / "data" / "cache"
@@ -56,14 +57,6 @@ SCENE_SCHEMA = {
     },
     "required": ["zones", "warehouses"],
 }
-
-PROMPT = (
-    "This is a satellite image. Coordinates use a 0-1000 grid with (0,0) at the top-left. "
-    "Return land-use zones as polygons (industrial = warehouses, large logistics buildings and yards; "
-    "commercial = shops and parking; residential = houses and apartments; park_forest) "
-    "and the centre points of the largest warehouse buildings."
-)
-
 
 @dataclass
 class Zone:
@@ -115,13 +108,17 @@ def analyze_scene(
     run: RunBudget | None = None,
     use_cache: bool = True,
     max_completion_tokens: int = 6000,
+    prompt_version: str | None = None,
 ) -> Scene:
     width, height = Image.open(io.BytesIO(image_bytes)).size
-    cache = CACHE_DIR / f"scene_{hashlib.sha256(image_bytes).hexdigest()[:16]}.json"
+    version, prompt = prompts.load("scene", prompt_version)
+    # v1 keeps its original cache file name, so answers cached before prompts were versioned stay valid
+    suffix = "" if version == "v1" else f"_{version}"
+    cache = CACHE_DIR / f"scene_{hashlib.sha256(image_bytes).hexdigest()[:16]}{suffix}.json"
     if use_cache and cache.exists():
         return scene_from_raw(json.loads(cache.read_text()), width, height)
 
-    messages = [{"role": "user", "content": [{"type": "text", "text": PROMPT}, image_part(image_bytes)]}]
+    messages = [{"role": "user", "content": [{"type": "text", "text": prompt}, image_part(image_bytes)]}]
     raw, _ = client.chat_json(
         messages,
         "Scene",
