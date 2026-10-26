@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { arrowsAlong, buildGeo, pointAt, upTo } from './routeGeometry'
 import type { Custom, Iteration, Mode, PlanGeo, ReportGeo, RunState, Sample, XY } from './types'
 
 export const ROUTE_COLORS = ['#f43f5e', '#38bdf8', '#4ade80', '#fb923c', '#c084fc', '#2dd4bf']
@@ -32,14 +33,61 @@ export default function MapView(props: {
   autoCount: number
   onAuto: (v: boolean) => void
   onAutoCount: (n: number) => void
+  stale: boolean
+  onDrag: (kind: 'depot' | 'order', i: number, xy: XY) => void
+  onEditPlan: () => void
 }) {
   const { sample, state, plan, report, mode, custom } = props
   const svgRef = useRef<SVGSVGElement>(null)
-  const editing = mode !== 'browse' && (state.status === 'idle' || state.status === 'error')
-  const draft = state.status === 'idle' || state.status === 'error'
+  const editing = mode !== 'browse' && state.status !== 'running'
+  const draft = state.status === 'idle' || state.status === 'error' || props.stale // your points, drawn on the map and draggable
+  const [drag, setDrag] = useState<{ kind: 'depot' | 'order'; i: number } | null>(null)
+  useEffect(() => {
+    if (state.errorPoint) setLayers((l) => ({ ...l, graph: true, roads: true })) // show the roads that were found next to the offending point
+  }, [state.errorPoint])
+  const dragged = useRef({ moved: false, suppress: false, start: [0, 0] as XY })
   const [layers, setLayers] = useState<Layers>({ roads: true, graph: false, zones: true, orders: true, routes: true })
   const u = sample.width / 1536 // marker size unit, so overlays scale with the image
   const avoid = state.problem?.avoid_zone_kinds ?? []
+
+  // Replay of the drive: progress 0..1 along the longest route (null = show the finished plan).
+  const [progress, setProgress] = useState<number | null>(null)
+  const [playing, setPlaying] = useState(false)
+  const [hover, setHover] = useState<{ vehicle: number; stop: number } | null>(null)
+  const geos = useMemo(() => (plan ? plan.routes.map(buildGeo) : []), [plan])
+  const longest = Math.max(1, ...geos.map((g) => g.total))
+  const dCur = progress === null ? Infinity : progress * longest
+  useEffect(() => {
+    setProgress(null)
+    setPlaying(false)
+    setHover(null)
+  }, [plan])
+  useEffect(() => {
+    if (!playing) return
+    let raf = 0
+    let last = performance.now()
+    const REPLAY_SECONDS = 14 // the longest route takes this long to drive on screen
+    const tick = (now: number) => {
+      const dt = (now - last) / 1000
+      last = now
+      setProgress((p) => {
+        const next = (p ?? 0) + dt / REPLAY_SECONDS
+        if (next >= 1) {
+          setPlaying(false)
+          return 1
+        }
+        return next
+      })
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [playing])
+  const togglePlay = () => {
+    if (playing) return setPlaying(false)
+    if (progress === null || progress >= 1) setProgress(0)
+    setPlaying(true)
+  }
 
   const edges = useMemo(() => {
     if (!state.graph) return []
@@ -47,10 +95,37 @@ export default function MapView(props: {
     return state.graph.edges.map(([a, b, speed, bridge]) => ({ a: n[a], b: n[b], speed, bridge }))
   }, [state.graph])
 
-  const click = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!editing || !svgRef.current) return
+  const toImage = (e: React.MouseEvent<SVGSVGElement>): XY | null => {
+    if (!svgRef.current) return null
     const r = svgRef.current.getBoundingClientRect()
-    props.onClick([((e.clientX - r.left) / r.width) * sample.width, ((e.clientY - r.top) / r.height) * sample.height], u)
+    return [((e.clientX - r.left) / r.width) * sample.width, ((e.clientY - r.top) / r.height) * sample.height]
+  }
+  const click = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (dragged.current.suppress) { dragged.current.suppress = false; return } // the click that ends a drag is not a new point
+    const xy = toImage(e)
+    if (editing && xy) props.onClick(xy, u)
+  }
+  const move = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!drag) return
+    const xy = toImage(e)
+    if (!xy) return
+    if (!dragged.current.moved && Math.hypot(xy[0] - dragged.current.start[0], xy[1] - dragged.current.start[1]) < 8 * u) return
+    dragged.current.moved = true
+    props.onDrag(drag.kind, drag.i, [Math.max(0, Math.min(sample.width, xy[0])), Math.max(0, Math.min(sample.height, xy[1]))])
+  }
+  const endDrag = () => {
+    if (drag && dragged.current.moved) dragged.current.suppress = true
+    setDrag(null)
+    dragged.current.moved = false
+  }
+  const startDrag = (kind: 'depot' | 'order', i: number) => (e: React.MouseEvent) => {
+    if (!draft || mode === 'zone') return
+    e.stopPropagation()
+    const r = svgRef.current?.getBoundingClientRect()
+    if (!r) return
+    dragged.current.start = [((e.clientX - r.left) / r.width) * sample.width, ((e.clientY - r.top) / r.height) * sample.height]
+    dragged.current.moved = false
+    setDrag({ kind, i })
   }
   const toggle = (k: keyof Layers) => setLayers((l) => ({ ...l, [k]: !l[k] }))
   const names: [keyof Layers, string][] = [['roads', 'Road mask'], ['graph', 'Graph'], ['zones', 'Zones'], ['orders', 'Orders'], ['routes', 'Routes']]
@@ -81,19 +156,20 @@ export default function MapView(props: {
               Place orders for me
               <input type="number" min={1} max={100} value={props.autoCount} disabled={!props.auto} onChange={(e) => props.onAutoCount(Math.max(1, Math.min(100, Number(e.target.value) || 1)))} aria-label="Number of random orders" />
             </label>
+            {state.status === 'done' && !props.stale && <button className="chip accent" onClick={props.onEditPlan}>✎ Edit this plan</button>}
             {(custom.depot || custom.orders.length > 0 || custom.zone.length > 0) && <button className="chip" onClick={props.onClear}>Clear</button>}
           </div>
           <p className="edit-hint">
             {mode === 'depot' && 'Click the map to place the depot — where the trucks start and finish.'}
             {mode === 'order' && (props.auto ? 'The agent will place the orders. Click the map to place your own instead.' : `Click the map to add an order; click an order to remove it${custom.orders.length ? ` (${custom.orders.length} placed)` : ''}.`)}
             {mode === 'zone' && (custom.zoneClosed ? 'Zone drawn. Press Clear to start over.' : 'Click corners of an area the trucks must avoid; click the first corner or “Close zone” to finish.')}
-            {mode === 'browse' && 'View only. Pick a step above to place points.'}
+            {mode === 'browse' && (state.status === 'done' ? 'Press “Edit this plan” to move the depot, drag orders or add new ones.' : 'View only. Pick a step above to place points.')}
           </p>
         </div>
       )}
       <div className="map-frame" style={{ aspectRatio: `${sample.width} / ${sample.height}` }}>
         <img src={sample.image} alt="Satellite view" draggable={false} />
-        <svg ref={svgRef} viewBox={`0 0 ${sample.width} ${sample.height}`} preserveAspectRatio="xMidYMid meet" onClick={click} className={editing ? 'editing' : ''}>
+        <svg ref={svgRef} viewBox={`0 0 ${sample.width} ${sample.height}`} preserveAspectRatio="xMidYMid meet" onClick={click} onMouseMove={move} onMouseUp={endDrag} onMouseLeave={endDrag} className={(editing ? 'editing ' : '') + (draft && mode !== 'zone' ? 'draggable' : '')}>
           {layers.roads && state.mask && <image href={state.mask} width={sample.width} height={sample.height} />}
           {layers.zones &&
             state.zones.map((z, i) => {
@@ -106,12 +182,41 @@ export default function MapView(props: {
               <line key={i} x1={e.a[0]} y1={e.a[1]} x2={e.b[0]} y2={e.b[1]} stroke={e.bridge ? '#e879f9' : e.speed >= 50 ? '#fb7185' : e.speed >= 40 ? '#fbbf24' : '#67e8f9'} strokeWidth={3 * u} strokeLinecap="round" />
             ))}
           {layers.routes &&
-            plan?.routes.map((r) => (
-              <g key={r.vehicle}>
-                <polyline points={pts(r.polyline)} fill="none" stroke="#0b1220" strokeOpacity={0.55} strokeWidth={9 * u} strokeLinejoin="round" strokeLinecap="round" />
-                <polyline points={pts(r.polyline)} fill="none" stroke={ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]} strokeWidth={5 * u} strokeLinejoin="round" strokeLinecap="round" />
-              </g>
-            ))}
+            plan?.routes.map((r, ri) => {
+              const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
+              const g = geos[ri]
+              if (!g) return null
+              const replay = progress !== null
+              const faded = props.stale
+              const cur = replay ? Math.min(dCur, g.total) : g.total
+              return (
+                <g key={r.vehicle} opacity={faded ? 0.28 : 1}>
+                  {/* the whole route, faded while replaying; the last leg (back to the depot) is dashed */}
+                  {g.legs.map((leg, li) => (
+                    <g key={li} opacity={replay ? 0.35 : 1}>
+                      <polyline points={pts(leg)} fill="none" stroke="#0b1220" strokeOpacity={0.55} strokeWidth={9 * u} strokeLinejoin="round" strokeLinecap="round" />
+                      <polyline points={pts(leg)} fill="none" stroke={color} strokeWidth={5 * u} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={li === g.legs.length - 1 ? `${12 * u} ${9 * u}` : undefined} />
+                    </g>
+                  ))}
+                  {replay && cur > 0 && <polyline points={pts(upTo(g.flat, cur))} fill="none" stroke={color} strokeWidth={7 * u} strokeLinejoin="round" strokeLinecap="round" />}
+                  {/* direction of travel */}
+                  {g.legs.map((leg, li) =>
+                    arrowsAlong(leg, 150 * u).map((a, ai) => (
+                      <polygon key={`${li}-${ai}`} points={`${7 * u},0 ${-5 * u},${-5.5 * u} ${-5 * u},${5.5 * u}`} transform={`translate(${a.xy[0]} ${a.xy[1]}) rotate(${(a.angle * 180) / Math.PI})`} fill="#fff" stroke="#0b1220" strokeWidth={1.6 * u} strokeLinejoin="round" />
+                    )),
+                  )}
+                  {replay && (() => {
+                    const p = pointAt(g.flat, cur)
+                    return (
+                      <g transform={`translate(${p.xy[0]} ${p.xy[1]})`}>
+                        <circle r={13 * u} fill={color} stroke="#fff" strokeWidth={3 * u} />
+                        <polygon points={`${8 * u},0 ${-4 * u},${-5.5 * u} ${-4 * u},${5.5 * u}`} transform={`rotate(${(p.angle * 180) / Math.PI})`} fill="#fff" />
+                      </g>
+                    )
+                  })()}
+                </g>
+              )
+            })}
           {report?.violations
             .filter((v) => v.segments)
             .flatMap((v) => v.segments!)
@@ -124,14 +229,26 @@ export default function MapView(props: {
             ))}
           {layers.orders &&
             state.orders.map((o, i) => <circle key={i} cx={o[0]} cy={o[1]} r={5 * u} fill="#e5e7eb" stroke="#0b1220" strokeWidth={1.5 * u} opacity={plan ? 0.0 : 0.9} />)}
-          {layers.orders &&
-            plan?.routes.map((r) =>
-              r.stops.map((s, k) => (
-                <g key={`${r.vehicle}-${s.order}`}>
-                  <circle cx={s.xy[0]} cy={s.xy[1]} r={11 * u} fill={ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]} stroke="#fff" strokeWidth={2 * u} />
-                  <text x={s.xy[0]} y={s.xy[1] + 4.2 * u} textAnchor="middle" fontSize={11.5 * u} fontWeight={700} fill="#fff">{k + 1}</text>
-                </g>
-              )),
+          {layers.orders && !props.stale &&
+            plan?.routes.map((r, ri) =>
+              r.stops.map((st, k) => {
+                const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
+                const visited = progress === null || dCur >= (geos[ri]?.stopDist[k] ?? 0) - 0.5
+                const hot = hover?.vehicle === r.vehicle && hover.stop === k
+                return (
+                  <g key={`${r.vehicle}-${st.order}`} opacity={visited ? 1 : 0.5} onMouseEnter={() => setHover({ vehicle: r.vehicle, stop: k })} onMouseLeave={() => setHover(null)}>
+                    <title>{`Truck ${r.vehicle + 1} · stop ${k + 1} of ${r.stops.length} · order #${st.order} · arrives ${clock(st.arrive_s)}`}</title>
+                    {hot && <circle cx={st.xy[0]} cy={st.xy[1]} r={24 * u} fill="none" stroke="#fff" strokeWidth={3 * u} />}
+                    <circle cx={st.xy[0]} cy={st.xy[1]} r={14 * u} fill={visited ? color : '#0b1220'} stroke={visited ? '#fff' : color} strokeWidth={3 * u} />
+                    <text x={st.xy[0]} y={st.xy[1] + 5 * u} textAnchor="middle" fontSize={14 * u} fontWeight={800} fill="#fff">{k + 1}</text>
+                    {/* the order's own number (the one you gave it when placing it), next to its visiting order */}
+                    <g transform={`translate(${st.xy[0] + 12 * u} ${st.xy[1] - 27 * u})`}>
+                      <rect width={(10 + 9 * String(st.order).length) * u} height={16 * u} rx={8 * u} fill="#0b1220" fillOpacity={0.88} stroke={color} strokeWidth={1.5 * u} />
+                      <text x={((10 + 9 * String(st.order).length) / 2) * u} y={11.5 * u} textAnchor="middle" fontSize={11 * u} fontWeight={700} fill="#fff">{`#${st.order}`}</text>
+                    </g>
+                  </g>
+                )
+              }),
             )}
           {draft && custom.zone.length > 0 && (
             <g>
@@ -144,18 +261,22 @@ export default function MapView(props: {
             </g>
           )}
           {draft && custom.orders.map((o, i) => (
-            <g key={'d' + i}>
+            <g key={'d' + i} className="grab" onMouseDown={startDrag('order', i)}>
+              <title>{`Your order ${i + 1} — drag to move, click to remove`}</title>
+              {state.errorPoint?.kind === 'order' && state.errorPoint.index === i && <circle cx={o[0]} cy={o[1]} r={30 * u} fill="none" stroke="#ef4444" strokeWidth={5 * u} className="pulse" />}
               <circle cx={o[0]} cy={o[1]} r={15 * u} fill="#f8fafc" stroke="#0b1220" strokeWidth={3 * u} />
               <text x={o[0]} y={o[1] + 5.2 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#0b1220">{i + 1}</text>
             </g>
           ))}
           {draft && custom.depot && (
-            <g>
+            <g className="grab" onMouseDown={startDrag('depot', 0)}>
+              <title>Depot — drag to move it</title>
+              {state.errorPoint?.kind === 'depot' && <circle cx={custom.depot[0]} cy={custom.depot[1]} r={32 * u} fill="none" stroke="#ef4444" strokeWidth={5 * u} className="pulse" />}
               <rect x={custom.depot[0] - 16 * u} y={custom.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#0b1220" stroke="#facc15" strokeWidth={4 * u} strokeDasharray={`${6 * u} ${4 * u}`} />
               <text x={custom.depot[0]} y={custom.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
             </g>
           )}
-          {state.depot && (
+          {state.depot && !props.stale && (
             <g>
               <rect x={state.depot[0] - 16 * u} y={state.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#0b1220" stroke="#facc15" strokeWidth={4 * u} />
               <text x={state.depot[0]} y={state.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
@@ -166,22 +287,46 @@ export default function MapView(props: {
         {state.status === 'idle' && !custom.depot && custom.orders.length === 0 && !props.auto && <div className="map-hint">Click the map to place the <b>depot</b>, then your <b>orders</b></div>}
       </div>
       {plan && plan.routes.length > 0 && (
-        <div className="trucks" aria-label="Trucks">
-          {plan.routes.map((r) => (
-            <div key={r.vehicle} className="truck">
-              <i style={{ background: ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length] }} />
-              <b>Truck {r.vehicle + 1}</b>
-              <span>{r.stops.length} stop{r.stops.length === 1 ? '' : 's'} · {(r.distance_m / 1000).toFixed(1)} km · back {clock(r.end_s)}</span>
-            </div>
-          ))}
-          {state.problem && <span className="trucks-note">Numbers restart for each truck. One trip per truck; capacity {state.problem.capacity} order{state.problem.capacity === 1 ? '' : 's'} each.</span>}
+        <div className="drive">
+          <div className="replay">
+            <button className="chip on" onClick={togglePlay}>{playing ? '⏸ Pause' : progress !== null && progress >= 1 ? '↺ Replay the drive' : '▶ Replay the drive'}</button>
+            <input type="range" min={0} max={1000} value={Math.round((progress ?? 1) * 1000)} onChange={(e) => { setPlaying(false); setProgress(Number(e.target.value) / 1000) }} aria-label="Replay position" />
+            {progress !== null && <button className="chip" onClick={() => { setPlaying(false); setProgress(null) }}>Show all</button>}
+          </div>
+          <div className="trucks" aria-label="Trucks">
+            {plan.routes.map((r) => {
+              const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
+              return (
+                <div key={r.vehicle} className="truck-card" style={{ borderColor: color }}>
+                  <div className="truck-head"><i style={{ background: color }} /><b>Truck {r.vehicle + 1}</b><span>{r.stops.length} stop{r.stops.length === 1 ? '' : 's'} · {(r.distance_m / 1000).toFixed(1)} km</span></div>
+                  <ol className="sequence">
+                    <li className="end"><span className="dot depot">D</span> Leaves the depot <time>{clock(r.start_s)}</time></li>
+                    {r.stops.map((st, k) => (
+                      <li key={st.order} className={hover?.vehicle === r.vehicle && hover.stop === k ? 'hot' : ''} onMouseEnter={() => setHover({ vehicle: r.vehicle, stop: k })} onMouseLeave={() => setHover(null)}>
+                        <span className="dot" style={{ background: color }}>{k + 1}</span> Order #{st.order} <time>{clock(st.arrive_s)}</time>
+                      </li>
+                    ))}
+                    <li className="end"><span className="dot depot">D</span> Back at the depot <time>{clock(r.end_s)}</time></li>
+                  </ol>
+                </div>
+              )
+            })}
+          </div>
+          <p className="trucks-note">Arrows show the direction of travel and the dashed leg is the way back to the depot. The number in the circle is the order a truck visits the stop in (it restarts for every truck); the tag like #7 is the order's own number from when you placed it. The agent chooses the visiting sequence itself, to keep the driving time as short as possible. One trip per truck{state.problem ? `; capacity ${state.problem.capacity} order${state.problem.capacity === 1 ? '' : 's'} each` : ''}.</p>
         </div>
       )}
       <div className="legend">
+        <span className="legend-title" title="Muse Spark outlines these areas on the image; the outlines are approximate.">Land use</span>
         {Array.from(new Set(state.zones.map((z) => z.kind))).map((k) => (
-          <span key={k}><i style={{ background: ZONE_COLORS[k] }} />{k.replace('_', '/')}{avoid.includes(k) ? ' (avoid)' : ''}</span>
+          <span key={k}><i style={{ background: ZONE_COLORS[k] }} />{k === 'custom' ? 'your zone' : k.replace('_', '/')}{avoid.includes(k) ? ' — trucks avoid it' : ''}</span>
         ))}
-        <span><i className="sq" />depot</span>
+      </div>
+      <div className="legend symbols">
+        <span className="legend-title">Symbols</span>
+        <span><i className="sq" />Depot: where every truck starts and ends</span>
+        <span><i className="line" />A colour is one truck; arrows show the direction, the dashed part is the way back</span>
+        <span><i className="num">2</i>Order number in the circle = the order the truck visits it in; <b>#7</b> = the order's own number</span>
+        <span><i className="viol" />Red pulsing road = a plan broke the “avoid” rule there</span>
         <span className="credit">{sample.credit}</span>
       </div>
     </div>

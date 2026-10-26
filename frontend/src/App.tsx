@@ -24,6 +24,7 @@ function RequestPanel(props: {
   auto: boolean
   autoCount: number
   canPlan: boolean
+  hasPlan: boolean
   trucks: number
   onTrucks: (n: number) => void
 }) {
@@ -57,7 +58,7 @@ function RequestPanel(props: {
         </li>
         <li className={custom.zoneClosed ? 'ok' : 'opt'}>{custom.zoneClosed ? '✓ Your avoid-zone drawn' : '○ Zone to avoid (optional)'}</li>
       </ul>
-      <button className="primary" onClick={props.onPlan} disabled={running || !props.canPlan}>{running ? 'Agent working…' : 'Plan route'}</button>
+      <button className="primary" onClick={props.onPlan} disabled={running || !props.canPlan}>{running ? 'Agent working…' : props.hasPlan ? 'Replan' : 'Plan route'}</button>
       {!props.canPlan && !running && <p className="muted small">Place the depot and at least one order on the map, or tick “Place orders for me”.</p>}
       {state.problem && (
         <div className="understood">
@@ -167,6 +168,7 @@ export default function App() {
   const [auto, setAuto] = useState(false)
   const [autoCount, setAutoCount] = useState(20)
   const [trucks, setTrucks] = useState(3)
+  const [stale, setStale] = useState(false) // inputs changed after a plan was made: the plan on the map is out of date
   const [picking, setPicking] = useState(false)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
 
@@ -182,8 +184,15 @@ export default function App() {
     if (state.result?.status === 'needs_relaxation') setRelax(0)
   }, [state.result])
 
+  // When a run finishes its depot and orders become editable points (also the ones the agent placed itself).
+  useEffect(() => {
+    if (state.status !== 'done' || !state.depot) return
+    setCustom((c) => ({ ...c, depot: c.depot ?? state.depot, orders: c.orders.length ? c.orders : state.orders }))
+    setAuto(false)
+  }, [state.status, state.depot, state.orders])
+
   const sample = samples.find((s) => s.name === name)
-  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('depot'); setAuto(false); reset() }
+  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('depot'); setAuto(false); setStale(false); reset() }
   const onArea = (s: Sample) => {
     setSamples((list) => (list.some((x) => x.name === s.name) ? list : [...list, s]))
     setName(s.name)
@@ -191,6 +200,7 @@ export default function App() {
     setCustom(emptyCustom)
     setMode('depot')
     setAuto(false)
+    setStale(false)
     setPinned(null)
     setRelax(null)
     reset()
@@ -200,6 +210,7 @@ export default function App() {
   const onPlan = () => {
     setPinned(null)
     setRelax(null)
+    setStale(false)
     setMode('browse')
     const body: { sample: string; request: string; trucks: number; custom?: object; auto_orders?: number } = { sample: name, request, trucks }
     if (custom.depot || custom.orders.length > 0 || custom.zoneClosed) {
@@ -208,11 +219,16 @@ export default function App() {
     if (auto && custom.orders.length === 0) body.auto_orders = autoCount
     start(body)
   }
-  // Editing starts from a clean map: the previous run no longer matches the inputs.
+  // Changing the inputs after a plan keeps the old plan on screen (faded) and marks it out of date.
   const edit = (next: Custom) => {
-    if (state.status !== 'idle') { reset(); setPinned(null); setRelax(null) } // a new input starts from a clean map
+    if (state.status === 'done') setStale(true) // after an error the banner stays until the next plan, so the map does not jump while you drag
     setCustom(next)
   }
+  const onDrag = (kind: 'depot' | 'order', i: number, xy: XY) => {
+    if (kind === 'depot') edit({ ...custom, depot: xy })
+    else edit({ ...custom, orders: custom.orders.map((o, k) => (k === i ? xy : o)) })
+  }
+  const onEditPlan = () => { setStale(true); setMode('order') }
   const onMapClick = (xy: XY, unit: number) => {
     const near = (p: XY, r: number) => Math.hypot(p[0] - xy[0], p[1] - xy[1]) < r * unit
     if (mode === 'depot') {
@@ -245,13 +261,20 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} auto={auto} autoCount={autoCount} canPlan={canPlan} trucks={trucks} onTrucks={setTrucks} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">
               <b>The agent could not run this.</b>
               <span>{state.error}</span>
-              <span className="hint">Your points are still on the map. Turn on <b>Graph</b> to see which roads were found, then adjust and press Plan route again.</span>
+              <span className="hint">Your points are still on the map{state.errorPoint ? ' — the one with the red ring is the problem. The found roads are switched on so you can see where to move it' : ''}. Drag it (or add another), then press Replan.</span>
+            </div>
+          )}
+          {stale && state.status === 'done' && (
+            <div className="banner warn" role="status">
+              <b>You changed the inputs — the plan below is out of date.</b>
+              <span>Drag the depot or any order, add or remove points, then press <b>Replan</b>.</span>
+              <button className="primary inline" onClick={onPlan} disabled={!canPlan}>Replan</button>
             </div>
           )}
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
@@ -261,6 +284,7 @@ export default function App() {
             onCloseZone={() => edit({ ...custom, zoneClosed: true })}
             onClear={() => { edit(emptyCustom); setMode('depot'); setAuto(false) }}
             auto={auto} autoCount={autoCount} onAuto={setAuto} onAutoCount={setAutoCount}
+            stale={stale} onDrag={onDrag} onEditPlan={onEditPlan}
           />
           <ResultBar state={state} relax={relax} onShowRelax={setRelax} />
         </div>

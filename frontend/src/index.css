@@ -177,3 +177,31 @@ aside { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .stepper button:disabled { opacity: .4; cursor: default; }
 .stepper input { width: 52px; text-align: center; background: transparent; border: 0; border-left: 1px solid var(--line); border-right: 1px solid var(--line); outline: none; -moz-appearance: textfield; }
 .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.drive { margin-top: 12px; }
+.replay { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.replay input[type=range] { flex: 1; min-width: 160px; accent-color: var(--accent); }
+.drive .trucks { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 12px; padding: 0; background: none; }
+.truck-card { background: var(--panel-2); border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 10px 12px; }
+.truck-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.truck-head i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.truck-head span { color: var(--muted); font-size: 12px; }
+.sequence { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; max-height: 220px; overflow: auto; }
+.sequence li { display: flex; align-items: center; gap: 8px; padding: 2px 4px; border-radius: 6px; }
+.sequence li.hot { background: #1d2c4a; }
+.sequence li.end { color: var(--muted); }
+.sequence time { margin-left: auto; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: var(--muted); }
+.sequence .dot { width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 10.5px; font-weight: 800; color: #fff; flex: none; }
+.sequence .dot.depot { background: #0b1220; border: 2px solid #facc15; color: #facc15; }
+
+.banner.warn { background: #2b2410; border: 1px solid #6b5416; color: #fde68a; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+.banner.warn b { color: #fcd34d; }
+.banner.warn .primary.inline { margin-left: auto; padding: 7px 18px; }
+.map-frame svg.draggable .grab { cursor: grab; }
+.map-frame svg.draggable .grab:active { cursor: grabbing; }
+
+.legend-title { font-weight: 600; color: var(--text); }
+.legend.symbols { margin-top: 6px; gap: 6px 16px; }
+.legend i.line { width: 18px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f43f5e 60%, #38bdf8 60%); vertical-align: 2px; }
+.legend i.num { width: 16px; height: 16px; border-radius: 50%; background: #f43f5e; color: #fff; font-style: normal; font-size: 10px; font-weight: 800; display: inline-grid; place-items: center; margin-right: 5px; vertical-align: -3px; }
+.legend i.viol { width: 18px; height: 4px; border-radius: 2px; background: #ef4444; vertical-align: 2px; }

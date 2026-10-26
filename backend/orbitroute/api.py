@@ -19,7 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from orbitroute.agent.events import Event
 from orbitroute.areas import AREAS_DIR, area_id, ensure_area
 from orbitroute.config import ROOT, Settings
-from orbitroute.custom import CustomInputs
+from orbitroute.custom import CustomInputs, PlacementError
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard
 from orbitroute.limits import RateLimiter
 from orbitroute.llm.client import ApiError, MetaClient
@@ -160,6 +160,8 @@ async def run(body: RunRequest) -> StreamingResponse:
             )
         except BudgetExceeded as exc:
             q.put(("failure", {"message": f"Budget guard: {exc}"}))
+        except PlacementError as exc:
+            q.put(("failure", {"message": str(exc), "point": {"kind": exc.kind, "index": exc.index}}))
         except (ApiError, ValueError, RuntimeError) as exc:
             q.put(("failure", {"message": str(exc)}))
         except Exception as exc:  # never leave the page waiting on a silent crash

@@ -3,14 +3,14 @@ import type { Problem, RunState, StreamEvent, Zone, XY } from './types'
 
 export const initialState: RunState = { status: 'idle', stage: '', zones: [], warehouses: [], orders: [], iterations: [], log: [] }
 
-type Action = { kind: 'start' } | { kind: 'reset' } | { kind: 'event'; e: StreamEvent; t0: number } | { kind: 'error'; message: string } | { kind: 'done' }
+type Action = { kind: 'start' } | { kind: 'reset' } | { kind: 'event'; e: StreamEvent; t0: number } | { kind: 'error'; message: string; point?: RunState['errorPoint'] } | { kind: 'done' }
 
 let logId = 0
 
 function reduce(s: RunState, a: Action): RunState {
   if (a.kind === 'reset') return initialState
   if (a.kind === 'start') return { ...initialState, status: 'running', stage: 'Starting' }
-  if (a.kind === 'error') return { ...s, status: 'error', error: a.message, log: [...s.log, { id: ++logId, type: 'error', text: a.message, t: 0 }] }
+  if (a.kind === 'error') return { ...s, status: 'error', error: a.message, errorPoint: a.point, log: [...s.log, { id: ++logId, type: 'error', text: a.message, t: 0 }] }
   if (a.kind === 'done') return s.status === 'running' ? { ...s, status: 'done', stage: '' } : s
   const { e, t0 } = a
   const add = (text: string, type = e.type, source?: string) => [...s.log, { id: ++logId, type, text, t: e.t - t0, source }]
@@ -134,7 +134,7 @@ export function useRun(paceMs = 420) {
             queue.current.push({ kind: 'event', e: data as StreamEvent, t0: t0.current })
           } else if (name === 'failure') {
             finished.current = true
-            queue.current.push({ kind: 'error', message: data.message })
+            queue.current.push({ kind: 'error', message: data.message, point: data.point })
           } else if (name === 'done') {
             finished.current = true
           }

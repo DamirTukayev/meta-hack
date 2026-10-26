@@ -13,7 +13,7 @@ export interface Sample {
 
 export interface Zone { kind: string; polygon: XY[] }
 export interface Stop { order: number; xy: XY; arrive_s: number }
-export interface RoutePlan { vehicle: number; polyline: XY[]; stops: Stop[]; start_s: number; end_s: number; distance_m: number }
+export interface RoutePlan { vehicle: number; polyline: XY[]; legs: XY[][]; stops: Stop[]; start_s: number; end_s: number; distance_m: number }
 export interface PlanGeo { routes: RoutePlan[]; served: number; unserved: number[] }
 export interface Check { kind: string; title: string; passed: boolean; detail: string }
 export interface Violation { kind: string; message: string; route: number | null; segments?: [XY, XY][] }
@@ -66,6 +66,7 @@ export interface RunState {
   log: LogEntry[]
   result?: Result
   error?: string
+  errorPoint?: { kind: 'depot' | 'order'; index: number } // the placed point the error is about
 }
 export interface StreamEvent { type: string; message: string; data: Record<string, any>; t: number }
 

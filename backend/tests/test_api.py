@@ -88,6 +88,10 @@ def test_serializers_produce_json_with_pixel_geometry_and_violating_segments():
     json.dumps([pj, rj, scene_json(sc.scene), scenario_json(sc)])  # everything must be serialisable
     route = pj["routes"][0]
     assert len(route["polyline"]) > 2 and route["stops"][0]["order"] in (1, 2)
+    # one leg per stop plus the return to the depot; each leg starts where the previous one ended
+    assert len(route["legs"]) == len(route["stops"]) + 1
+    assert all(a[-1] == b[0] for a, b in zip(route["legs"], route["legs"][1:]))
+    assert route["legs"][0][0] == route["polyline"][0] and route["legs"][-1][-1] == route["polyline"][-1]
     zone = next(v for v in rj["violations"] if v["kind"] == "zones")
     assert zone["segments"] and len(zone["segments"][0]) == 2 and len(zone["segments"][0][0]) == 2
     assert [c["kind"] for c in rj["checks"]] == ["coverage", "fleet", "capacity", "paths", "deadline", "zones"]
@@ -131,3 +135,16 @@ def test_trucks_field_is_validated_and_forwarded(monkeypatch):
     assert c.post("/api/run", json={"sample": "columbus", "request": "x", "trucks": 31}).status_code == 422
     c.post("/api/run", json={"sample": "columbus", "request": "by 12:00", "trucks": 4})
     assert seen["t"] == 4
+
+
+def test_a_bad_point_is_reported_with_the_marker_to_highlight(monkeypatch):
+    from orbitroute.custom import PlacementError
+
+    def bad(*a, **kw):
+        raise PlacementError("The order 3 is 202 m from the nearest road", "order", 2)
+
+    monkeypatch.setattr(api, "run_pipeline", bad)
+    monkeypatch.setattr(api, "get_client", lambda: object())
+    r = TestClient(api.app).post("/api/run", json={"sample": "columbus", "request": "by 12:00"})
+    kind, data = sse_events(r.text)[0]
+    assert kind == "failure" and data["point"] == {"kind": "order", "index": 2}
