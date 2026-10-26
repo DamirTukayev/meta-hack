@@ -91,3 +91,24 @@ def test_serializers_produce_json_with_pixel_geometry_and_violating_segments():
     zone = next(v for v in rj["violations"] if v["kind"] == "zones")
     assert zone["segments"] and len(zone["segments"][0]) == 2 and len(zone["segments"][0][0]) == 2
     assert [c["kind"] for c in rj["checks"]] == ["coverage", "fleet", "capacity", "paths", "deadline", "zones"]
+
+
+def test_request_text_states_the_order_count_from_the_clicks_or_the_auto_count():
+    from orbitroute.custom import CustomInputs
+    from orbitroute.pipeline import request_text
+
+    assert request_text("3 trucks", CustomInputs(orders=[(1, 1), (2, 2)]), None) == "2 orders. 3 trucks"
+    assert request_text("3 trucks", None, 25) == "25 orders. 3 trucks"
+    assert request_text("3 trucks", CustomInputs(depot=(1, 1)), 25) == "25 orders. 3 trucks"
+    assert request_text("30 orders, 3 trucks", None, None) == "30 orders, 3 trucks"  # API clients may still put the count in the text
+
+
+def test_auto_orders_is_validated_and_forwarded(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(api, "run_pipeline", lambda sample, request, *, emit, auto_orders=None, **kw: seen.update(n=auto_orders))
+    monkeypatch.setattr(api, "get_client", lambda: object())
+    c = TestClient(api.app)
+    assert c.post("/api/run", json={"sample": "columbus", "request": "x", "auto_orders": 0}).status_code == 422
+    assert c.post("/api/run", json={"sample": "columbus", "request": "x", "auto_orders": 101}).status_code == 422
+    c.post("/api/run", json={"sample": "columbus", "request": "3 trucks", "auto_orders": 12})
+    assert seen["n"] == 12
