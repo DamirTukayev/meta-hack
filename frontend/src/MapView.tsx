@@ -1,0 +1,122 @@
+import { useMemo, useState } from 'react'
+import type { Iteration, PlanGeo, ReportGeo, RunState, Sample, XY } from './types'
+
+export const ROUTE_COLORS = ['#f43f5e', '#38bdf8', '#4ade80', '#fb923c', '#c084fc', '#2dd4bf']
+const ZONE_COLORS: Record<string, string> = {
+  industrial: '#ef4444',
+  commercial: '#f59e0b',
+  residential: '#3b82f6',
+  park_forest: '#22c55e',
+  other: '#9ca3af',
+}
+
+interface Layers { roads: boolean; graph: boolean; zones: boolean; orders: boolean; routes: boolean }
+
+const pts = (poly: XY[]) => poly.map((p) => p.join(',')).join(' ')
+
+export default function MapView(props: {
+  sample: Sample
+  state: RunState
+  selected: number // index of the iteration shown, or -1 for the final result
+  plan?: PlanGeo
+  report?: ReportGeo
+}) {
+  const { sample, state, plan, report } = props
+  const [layers, setLayers] = useState<Layers>({ roads: true, graph: false, zones: true, orders: true, routes: true })
+  const u = sample.width / 1536 // marker size unit, so overlays scale with the image
+  const avoid = state.problem?.avoid_zone_kinds ?? []
+
+  const edges = useMemo(() => {
+    if (!state.graph) return []
+    const n = state.graph.nodes
+    return state.graph.edges.map(([a, b, speed, bridge]) => ({ a: n[a], b: n[b], speed, bridge }))
+  }, [state.graph])
+
+  const toggle = (k: keyof Layers) => setLayers((l) => ({ ...l, [k]: !l[k] }))
+  const names: [keyof Layers, string][] = [['roads', 'Road mask'], ['graph', 'Graph'], ['zones', 'Zones'], ['orders', 'Orders'], ['routes', 'Routes']]
+
+  return (
+    <div className="map">
+      <div className="map-toolbar">
+        {names.map(([k, label]) => (
+          <button key={k} className={'chip ' + (layers[k] ? 'on' : '')} onClick={() => toggle(k)}>{label}</button>
+        ))}
+      </div>
+      <div className="map-frame" style={{ aspectRatio: `${sample.width} / ${sample.height}` }}>
+        <img src={sample.image} alt="Satellite view" draggable={false} />
+        <svg viewBox={`0 0 ${sample.width} ${sample.height}`} preserveAspectRatio="xMidYMid meet">
+          {layers.roads && state.mask && <image href={state.mask} width={sample.width} height={sample.height} />}
+          {layers.zones &&
+            state.zones.map((z, i) => {
+              const hot = avoid.includes(z.kind)
+              const c = ZONE_COLORS[z.kind] ?? '#9ca3af'
+              return <polygon key={i} points={pts(z.polygon)} fill={c} fillOpacity={hot ? 0.28 : 0.07} stroke={c} strokeOpacity={hot ? 0.95 : 0.35} strokeWidth={(hot ? 3 : 1.5) * u} strokeDasharray={hot ? undefined : `${8 * u} ${6 * u}`} />
+            })}
+          {layers.graph &&
+            edges.map((e, i) => (
+              <line key={i} x1={e.a[0]} y1={e.a[1]} x2={e.b[0]} y2={e.b[1]} stroke={e.bridge ? '#e879f9' : e.speed >= 50 ? '#fb7185' : e.speed >= 40 ? '#fbbf24' : '#67e8f9'} strokeWidth={3 * u} strokeLinecap="round" />
+            ))}
+          {layers.routes &&
+            plan?.routes.map((r) => (
+              <g key={r.vehicle}>
+                <polyline points={pts(r.polyline)} fill="none" stroke="#0b1220" strokeOpacity={0.55} strokeWidth={9 * u} strokeLinejoin="round" strokeLinecap="round" />
+                <polyline points={pts(r.polyline)} fill="none" stroke={ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]} strokeWidth={5 * u} strokeLinejoin="round" strokeLinecap="round" />
+              </g>
+            ))}
+          {report?.violations
+            .filter((v) => v.segments)
+            .flatMap((v) => v.segments!)
+            .map(([a, b], i) => (
+              <g key={'v' + i}>
+                <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#fff" strokeWidth={13 * u} strokeLinecap="round" opacity={0.9} />
+                <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#ef4444" strokeWidth={8 * u} strokeLinecap="round" className="pulse" />
+                <circle cx={(a[0] + b[0]) / 2} cy={(a[1] + b[1]) / 2} r={30 * u} fill="none" stroke="#ef4444" strokeWidth={4 * u} className="pulse" />
+              </g>
+            ))}
+          {layers.orders &&
+            state.orders.map((o, i) => <circle key={i} cx={o[0]} cy={o[1]} r={5 * u} fill="#e5e7eb" stroke="#0b1220" strokeWidth={1.5 * u} opacity={plan ? 0.0 : 0.9} />)}
+          {layers.orders &&
+            plan?.routes.map((r) =>
+              r.stops.map((s, k) => (
+                <g key={`${r.vehicle}-${s.order}`}>
+                  <circle cx={s.xy[0]} cy={s.xy[1]} r={11 * u} fill={ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]} stroke="#fff" strokeWidth={2 * u} />
+                  <text x={s.xy[0]} y={s.xy[1] + 4.2 * u} textAnchor="middle" fontSize={11.5 * u} fontWeight={700} fill="#fff">{k + 1}</text>
+                </g>
+              )),
+            )}
+          {state.depot && (
+            <g>
+              <rect x={state.depot[0] - 16 * u} y={state.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#0b1220" stroke="#facc15" strokeWidth={4 * u} />
+              <text x={state.depot[0]} y={state.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
+            </g>
+          )}
+        </svg>
+        {state.status === 'running' && <div className="map-stage"><span className="spinner" />{state.stage}</div>}
+        {state.status === 'idle' && <div className="map-hint">Pick a request and press <b>Plan</b></div>}
+      </div>
+      <div className="legend">
+        {Array.from(new Set(state.zones.map((z) => z.kind))).map((k) => (
+          <span key={k}><i style={{ background: ZONE_COLORS[k] }} />{k.replace('_', '/')}{avoid.includes(k) ? ' (avoid)' : ''}</span>
+        ))}
+        <span><i className="sq" />depot</span>
+        <span className="credit">{sample.credit}</span>
+      </div>
+    </div>
+  )
+}
+
+export function IterationTabs(props: { iterations: Iteration[]; selected: number; onSelect: (i: number) => void; running: boolean }) {
+  if (!props.iterations.length) return null
+  return (
+    <div className="tabs">
+      {props.iterations.map((it, i) => {
+        const state = !it.report ? 'checking' : it.report.ok ? 'ok' : 'fail'
+        return (
+          <button key={it.n} className={`tab ${state} ${i === props.selected ? 'active' : ''}`} onClick={() => props.onSelect(i)}>
+            Plan #{it.n} <b>{state === 'ok' ? '✓ verified' : state === 'fail' ? `✗ ${it.report!.violations.length} violation${it.report!.violations.length > 1 ? 's' : ''}` : '… checking'}</b>
+          </button>
+        )
+      })}
+    </div>
+  )
+}

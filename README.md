@@ -23,6 +23,20 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - Delivery scenarios, graph cost matrices and a PyVRP capacitated VRP-with-time-windows solver (`routing/`); `scripts/plan.py` runs the pipeline end to end without verification.
 - **The agent** (`agent/`, `verifier/`): an independent verifier re-simulates every route on the road graph (coverage, fleet, capacity, real-road paths, deadline, avoided zones). A bounded loop repairs violations: Muse Spark picks the repair action (forbid the violating road segments, forbid the whole zone, exclude unreachable orders, search longer, or compute the smallest relaxation); a deterministic policy is the fallback. Every relaxation option it proposes comes with a plan that passes verification. Run it with `scripts/agent.py`.
 
+- **Web app** (`frontend/`, `backend/orbitroute/api.py`): FastAPI streams the agent run as server-sent events to a React + TypeScript UI. A map with toggleable layers (road mask, graph, zones, orders, routes), plan-by-plan tabs that show the failed plan next to the repaired one, a live six-point verification checklist and the agent's log.
+
+## Run the app locally
+
+```bash
+uv sync
+cp .env.example .env              # then set MODEL_API_KEY
+uv run uvicorn orbitroute.api:app --app-dir backend --port 8000
+# in another terminal, for development with hot reload:
+cd frontend && npm install && npm run dev      # http://localhost:5173
+# or build once and let FastAPI serve it at http://localhost:8000:
+cd frontend && npm run build
+```
+
 ## Run the tests
 
 ```bash

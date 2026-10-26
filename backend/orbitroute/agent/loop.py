@@ -71,13 +71,13 @@ def run_agent(
         unreachable = sorted({j for i, j in matrix.unreachable if i == 0 and j not in excluded})  # orders the depot cannot reach
         emit(Event("matrix", f"travel times over the road graph ({len(banned)} segments forbidden)", {"banned": len(banned), "unreachable_orders": unreachable}))
         plan = solve_vrp(scenario, matrix, time_limit_s=time_limit, seed=seed, excluded=frozenset(excluded))
-        emit(Event("solve", f"solve #{it + 1}: {plan.served} orders on {len(plan.routes)} trucks in {plan.solve_seconds:.1f}s", {"iteration": it + 1, "served": plan.served, "routes": len(plan.routes)}))
+        emit(Event("solve", f"solve #{it + 1}: {plan.served} orders on {len(plan.routes)} trucks in {plan.solve_seconds:.1f}s", {"iteration": it + 1, "served": plan.served, "routes": len(plan.routes)}, obj=(plan, matrix)))
         if not verify_plan:
             return AgentResult("unverified", scenario, plan, verify(scenario, plan, excluded=excluded, inside=inside), matrix, iterations, excluded, seconds=time.perf_counter() - t0)
 
         report = verify(scenario, plan, excluded=excluded, inside=inside)
         iterations.append(Iteration(it + 1, plan, report))
-        emit(Event("verify", f"verification: {sum(c.passed for c in report.checks)}/{len(report.checks)} checks passed", {"ok": report.ok, "checks": [c.__dict__ for c in report.checks], "violations": [v.message for v in report.violations]}))
+        emit(Event("verify", f"verification: {sum(c.passed for c in report.checks)}/{len(report.checks)} checks passed", {"ok": report.ok, "checks": [c.__dict__ for c in report.checks], "violations": [v.message for v in report.violations]}, obj=report))
         if report.ok:
             status = "verified_partial" if excluded else "verified"
             emit(Event("final", f"plan verified{' (some orders excluded)' if excluded else ''}", {"status": status, "metrics": report.metrics}))
