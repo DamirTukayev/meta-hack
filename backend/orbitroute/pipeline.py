@@ -55,12 +55,14 @@ def run_pipeline(
     *,
     client: MetaClient,
     guard: BudgetGuard,
+    text_client: MetaClient | None = None,
     run_cap_usd: float,
     seed: int = 0,
     use_model_decider: bool = True,
     emit: Emit,
 ) -> AgentResult:
     run: RunBudget = guard.new_run(run_cap_usd)
+    text = text_client or client  # text-only reasoning can run on the open-weight model
     image_bytes = sample.image_bytes
 
     emit(Event("stage", "Segmenting roads with SAM 3.1 (tiled)", {"stage": "perception"}))
@@ -73,7 +75,7 @@ def run_pipeline(
     emit(Event("scene", f"{len(scene.zones)} zones, {len(scene.warehouses)} warehouses", scene_json(scene)))
 
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
-    problem = parse_request(client, request, run=run)
+    problem = parse_request(text, request, run=run)
     emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {problem.avoid_zone_kinds or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
 
     scenario = make_scenario(graph, scene, problem, seed=seed)
@@ -90,7 +92,7 @@ def run_pipeline(
             data.pop("violations", None)
         emit(Event(e.type, e.message, data, e.t))
 
-    decider: Decider = ModelDecider(client, run) if use_model_decider else PolicyDecider()
+    decider: Decider = ModelDecider(text, run) if use_model_decider else PolicyDecider()
     result = run_agent(scenario, decider=decider, emit=agent_emit)
 
     emit(

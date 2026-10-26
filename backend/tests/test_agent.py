@@ -136,3 +136,12 @@ def test_verifier_flags_capacity_coverage_and_broken_paths():
     kinds = report.summary()
     assert {"capacity", "coverage", "paths"} <= set(kinds)
     assert not report.ok
+
+
+def test_policy_does_not_waste_a_search_round_on_a_capacity_violation():
+    from orbitroute.verifier.checks import Report, Violation
+
+    report = Report(checks=[], violations=[Violation("capacity", "truck 0: 6 units, capacity 3", route=0)], metrics={})
+    assert PolicyDecider().decide(DecisionContext(report, 1, [])).action == "propose_relaxation"
+    late = Report(checks=[], violations=[Violation("deadline", "truck 0 finishes late", route=0)], metrics={})
+    assert PolicyDecider().decide(DecisionContext(late, 1, [])).action == "resolve_longer"  # a deadline miss may just need more search

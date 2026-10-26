@@ -34,6 +34,9 @@ guard = BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, se
 _client: MetaClient | None = None
 
 
+_text_client: MetaClient | None = None
+
+
 def get_client() -> MetaClient:
     global _client
     if _client is None:
@@ -41,12 +44,22 @@ def get_client() -> MetaClient:
     return _client
 
 
+def get_text_client() -> MetaClient:
+    """Client for the text-reasoning steps: Muse Spark Open on Baseten when configured, else the Meta API."""
+    global _text_client
+    if settings.reasoning_provider != "baseten":
+        return get_client()
+    if _text_client is None:
+        _text_client = MetaClient(settings, guard, provider="baseten")
+    return _text_client
+
+
 app = FastAPI(title="OrbitRoute")
 
 
 @app.get("/api/health")
 def health() -> dict:
-    return {"ok": True, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4)}
+    return {"ok": True, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4), "reasoning_provider": settings.reasoning_provider}
 
 
 @app.get("/api/samples")
@@ -98,7 +111,7 @@ async def run(
     def work() -> None:
         try:
             run_pipeline(
-                smp, request, client=get_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
+                smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
                 seed=seed, use_model_decider=decider == "model", emit=emit,
             )
         except BudgetExceeded as exc:

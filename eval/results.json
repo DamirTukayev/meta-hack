@@ -1,0 +1,581 @@
+{
+ "scenarios": {
+  "summary": {
+   "scenarios": 20,
+   "baseline": {
+    "solver_says_feasible": 15,
+    "invalid_after_independent_audit": 6,
+    "invalid_rate_among_claimed_feasible": 0.4,
+    "violation_kinds_in_scenarios": {
+     "zones": 7,
+     "deadline": 3,
+     "capacity": 2
+    }
+   },
+   "agent": {
+    "status_counts": {
+     "needs_relaxation": 5,
+     "verified": 15
+    },
+    "scenarios_with_a_first_pass_violation": 11,
+    "of_those_ended_verified": 6,
+    "mean_iterations": 1.5,
+    "mean_seconds": 5.1,
+    "final_plan_passes_audit": 20,
+    "provably_infeasible": 4,
+    "infeasible_correctly_flagged": 4,
+    "verified_but_partial": 0
+   },
+   "model_decider": {
+    "runs": 6,
+    "reached_verified": 5,
+    "mean_cost_usd": 0.003
+   },
+   "verified_scenarios": 15
+  },
+  "rows": [
+   {
+    "id": "col-res-30-3-a",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "verified",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0015
+    }
+   },
+   {
+    "id": "col-res-30-3-b",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "verified",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0019
+    }
+   },
+   {
+    "id": "col-res-30-3-c",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "verified",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0019
+    }
+   },
+   {
+    "id": "col-res-20-2",
+    "sample": "columbus",
+    "orders": 20,
+    "trucks": 2,
+    "deadline": "10:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "verified",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0017
+    }
+   },
+   {
+    "id": "col-res-45-3",
+    "sample": "columbus",
+    "orders": 45,
+    "trucks": 3,
+    "deadline": "11:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "verified",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0015
+    }
+   },
+   {
+    "id": "col-res-30-1-tight",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 1,
+    "deadline": "09:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": false,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "deadline": 1,
+     "zones": 1
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 3,
+    "agent_actions": [
+     "ban_violating_edges",
+     "resolve_longer",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "use 3 trucks instead of 1",
+     "move the deadline from 09:00 to 10:15"
+    ],
+    "final_report_ok": true,
+    "seconds": 18.6,
+    "model_decider": {
+     "status": "needs_relaxation",
+     "actions": [
+      "ban_violating_edges",
+      "resolve_longer",
+      "propose_relaxation"
+     ],
+     "iterations": 3,
+     "cost_usd": 0.0094
+    }
+   },
+   {
+    "id": "col-ind-40-3-a",
+    "sample": "columbus",
+    "orders": 40,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "col-ind-40-3-b",
+    "sample": "columbus",
+    "orders": 40,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "col-ind-25-2",
+    "sample": "columbus",
+    "orders": 25,
+    "trucks": 2,
+    "deadline": "10:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "col-com-20-2",
+    "sample": "columbus",
+    "orders": 20,
+    "trucks": 2,
+    "deadline": "11:00",
+    "avoid": [
+     "commercial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "col-resind-30-3",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "residential",
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "verified",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 4.0
+   },
+   {
+    "id": "mem-ind-30-3-a",
+    "sample": "memphis",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.4
+   },
+   {
+    "id": "mem-ind-30-3-b",
+    "sample": "memphis",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.1
+   },
+   {
+    "id": "mem-ind-30-3-c",
+    "sample": "memphis",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "mem-ind-20-2",
+    "sample": "memphis",
+    "orders": 20,
+    "trucks": 2,
+    "deadline": "09:30",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "mem-res-25-2",
+    "sample": "memphis",
+    "orders": 25,
+    "trucks": 2,
+    "deadline": "11:00",
+    "avoid": [
+     "residential"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "inf-time-12-1",
+    "sample": "columbus",
+    "orders": 12,
+    "trucks": 1,
+    "deadline": "08:30",
+    "avoid": [
+     "residential"
+    ],
+    "expect": "infeasible",
+    "baseline_solver_feasible": false,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "deadline": 1
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "resolve_longer",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "use 2 trucks instead of 1",
+     "move the deadline from 08:30 to 09:00"
+    ],
+    "final_report_ok": true,
+    "seconds": 15.0
+   },
+   {
+    "id": "inf-time-50-3",
+    "sample": "memphis",
+    "orders": 50,
+    "trucks": 3,
+    "deadline": "09:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": "infeasible",
+    "baseline_solver_feasible": false,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "deadline": 3
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "resolve_longer",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "use 4 trucks instead of 3",
+     "move the deadline from 09:00 to 09:15"
+    ],
+    "final_report_ok": true,
+    "seconds": 15.3
+   },
+   {
+    "id": "inf-capacity-40",
+    "sample": "columbus",
+    "orders": 40,
+    "trucks": 3,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": "infeasible",
+    "baseline_solver_feasible": false,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "capacity": 3
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 1,
+    "agent_actions": [
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "use 4 trucks instead of 3"
+    ],
+    "final_report_ok": true,
+    "seconds": 5.1
+   },
+   {
+    "id": "inf-capacity-24",
+    "sample": "memphis",
+    "orders": 24,
+    "trucks": 2,
+    "deadline": "12:00",
+    "avoid": [
+     "industrial"
+    ],
+    "expect": "infeasible",
+    "baseline_solver_feasible": false,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "capacity": 1
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 1,
+    "agent_actions": [
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "use 3 trucks instead of 2"
+    ],
+    "final_report_ok": true,
+    "seconds": 5.0
+   }
+  ]
+ },
+ "parsing": {
+  "cases": 20,
+  "exact_match_cases": 20,
+  "field_accuracy": 1.0,
+  "mean_seconds": 4.2,
+  "cost_usd": 0.1074,
+  "failures": []
+ },
+ "eval_cost_usd": 0.0179
+}
