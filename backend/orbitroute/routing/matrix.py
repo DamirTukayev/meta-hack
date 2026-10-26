@@ -6,26 +6,16 @@ from dataclasses import dataclass, field
 
 import networkx as nx
 import numpy as np
-from shapely.geometry import LineString
-
 from orbitroute.perception.graph import RoadGraph
+from orbitroute.routing.zones import banned_edges, edge_key, inside_lengths
 from orbitroute.understanding.scene import Zone
 
 UNREACHABLE_S = 10**6  # large, still safe for PyVRP's integer arithmetic
 
 
-def edge_key(u: int, v: int) -> tuple[int, int]:
-    return (u, v) if u < v else (v, u)
-
-
 def edges_in_zones(graph: RoadGraph, zones: list[Zone]) -> set[tuple[int, int]]:
-    """Graph edges whose segment touches any of the zones."""
-    banned: set[tuple[int, int]] = set()
-    for e in graph.edges:
-        line = LineString([tuple(graph.nodes[e.u]), tuple(graph.nodes[e.v])])
-        if any(z.polygon.intersects(line) for z in zones):
-            banned.add(edge_key(e.u, e.v))
-    return banned
+    """Graph edges that run through the zones (beyond the grazing tolerance)."""
+    return banned_edges(inside_lengths(graph, zones))
 
 
 @dataclass

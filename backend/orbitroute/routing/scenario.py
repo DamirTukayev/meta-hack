@@ -5,9 +5,11 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
+import networkx as nx
 import numpy as np
 
 from orbitroute.perception.graph import RoadGraph
+from orbitroute.routing.zones import banned_edges, inside_lengths
 from orbitroute.understanding.constraints import Problem
 from orbitroute.understanding.scene import Scene
 
@@ -47,14 +49,36 @@ def pick_depot(graph: RoadGraph, scene: Scene, problem: Problem) -> int:
     return min(free, key=lambda i: math.dist(graph.nodes[i], (cx, cy)))
 
 
-def make_scenario(graph: RoadGraph, scene: Scene, problem: Problem, seed: int = 0, min_sep_m: float = 90.0) -> Scenario:
-    """Place `problem.n_orders` synthetic orders on road nodes, deterministically for a given seed."""
+def _legally_reachable(graph: RoadGraph, scene: Scene, problem: Problem, depot: int) -> set[int]:
+    """Nodes the depot can reach without driving through an avoided zone."""
+    g = graph.to_networkx()
+    banned = banned_edges(inside_lengths(graph, scene.zones_of(problem.avoid_zone_kinds)))
+    g.remove_edges_from([e for e in banned if g.has_edge(*e)])
+    return set(nx.node_connected_component(g, depot))
+
+
+def make_scenario(
+    graph: RoadGraph,
+    scene: Scene,
+    problem: Problem,
+    seed: int = 0,
+    min_sep_m: float = 90.0,
+    ensure_reachable: bool = True,
+) -> Scenario:
+    """Place `problem.n_orders` synthetic orders on road nodes, deterministically for a given seed.
+
+    With ensure_reachable (default) orders are only placed where a truck can legally get to; turn it off
+    to create stress cases with orders that the avoided zone cuts off.
+    """
     rng = np.random.default_rng(seed)
     depot = pick_depot(graph, scene, problem)
+    reachable = _legally_reachable(graph, scene, problem, depot) if ensure_reachable and problem.avoid_zone_kinds else None
+    if reachable is not None and len(reachable) - 1 < problem.n_orders:
+        reachable = None  # not enough legal nodes: fall back to the whole graph
 
     candidates, weights = [], []
     for i, (x, y) in enumerate(graph.nodes):
-        if i == depot or _blocked(scene, problem, x, y):
+        if i == depot or _blocked(scene, problem, x, y) or (reachable is not None and i not in reachable):
             continue
         kinds = scene.kinds_at(x, y) or {"other"}
         candidates.append(i)

@@ -20,7 +20,8 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - Road mask → routable graph: skeleton, junction/endpoint nodes, spur pruning, densification, gap bridging, width-based speed classes, node snapping (`perception/graph.py`), plus a debug overlay (`scripts/build_graph.py`).
 - Request parsing with Muse Spark into a typed routing problem; every default the user did not state is reported as an assumption (`understanding/`).
 - Zone and warehouse grounding on the image with Muse Spark vision, cached (`understanding/scene.py`).
-- Delivery scenarios, graph cost matrices and a PyVRP capacitated VRP-with-time-windows solver (`routing/`); `scripts/plan.py` runs the pipeline end to end (no verification yet).
+- Delivery scenarios, graph cost matrices and a PyVRP capacitated VRP-with-time-windows solver (`routing/`); `scripts/plan.py` runs the pipeline end to end without verification.
+- **The agent** (`agent/`, `verifier/`): an independent verifier re-simulates every route on the road graph (coverage, fleet, capacity, real-road paths, deadline, avoided zones). A bounded loop repairs violations: Muse Spark picks the repair action (forbid the violating road segments, forbid the whole zone, exclude unreachable orders, search longer, or compute the smallest relaxation); a deterministic policy is the fallback. Every relaxation option it proposes comes with a plan that passes verification. Run it with `scripts/agent.py`.
 
 ## Run the tests
 
