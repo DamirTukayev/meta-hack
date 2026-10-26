@@ -32,8 +32,11 @@ def test_samples_endpoint_lists_bundled_images_with_examples():
 
 def test_unknown_sample_is_404_and_overlong_request_is_rejected():
     client = TestClient(api.app)
-    assert client.get("/api/run", params={"sample": "nope", "request": "x"}).status_code == 404
-    assert client.get("/api/run", params={"sample": "columbus", "request": "x" * 401}).status_code == 422
+    assert client.post("/api/run", json={"sample": "nope", "request": "x"}).status_code == 404
+    assert client.post("/api/run", json={"sample": "columbus", "request": "x" * 401}).status_code == 422
+    too_many = {"orders": [[10, 10]] * 101}
+    assert client.post("/api/run", json={"sample": "columbus", "request": "x", "custom": too_many}).status_code == 422
+    assert client.post("/api/run", json={"sample": "columbus", "request": "x", "custom": {"depot": [1, "nan"]}}).status_code == 422
 
 
 def test_run_streams_pipeline_events_then_done(monkeypatch):
@@ -43,10 +46,23 @@ def test_run_streams_pipeline_events_then_done(monkeypatch):
 
     monkeypatch.setattr(api, "run_pipeline", fake_pipeline)
     monkeypatch.setattr(api, "get_client", lambda: object())
-    r = TestClient(api.app).get("/api/run", params={"sample": "columbus", "request": "30 orders"})
+    r = TestClient(api.app).post("/api/run", json={"sample": "columbus", "request": "30 orders"})
     kinds = [k for k, _ in sse_events(r.text)]
     assert kinds == ["event", "event", "done"]
     assert sse_events(r.text)[0][1]["type"] == "stage"
+
+
+def test_custom_points_reach_the_pipeline(monkeypatch):
+    seen = {}
+
+    def fake_pipeline(sample, request, *, emit, custom=None, **kw):
+        seen["custom"] = custom
+
+    monkeypatch.setattr(api, "run_pipeline", fake_pipeline)
+    monkeypatch.setattr(api, "get_client", lambda: object())
+    body = {"sample": "columbus", "request": "3 trucks", "custom": {"depot": [100, 200], "orders": [[300, 200], [300, 300]], "zone": [[0, 0], [50, 0], [50, 50]]}}
+    TestClient(api.app).post("/api/run", json=body)
+    assert seen["custom"].depot == (100, 200) and len(seen["custom"].orders) == 2 and len(seen["custom"].zone) == 3
 
 
 def test_pipeline_errors_become_a_failure_event_not_a_crash(monkeypatch):
@@ -57,7 +73,7 @@ def test_pipeline_errors_become_a_failure_event_not_a_crash(monkeypatch):
 
     monkeypatch.setattr(api, "run_pipeline", boom)
     monkeypatch.setattr(api, "get_client", lambda: object())
-    r = TestClient(api.app).get("/api/run", params={"sample": "columbus", "request": "30 orders"})
+    r = TestClient(api.app).post("/api/run", json={"sample": "columbus", "request": "30 orders"})
     events = sse_events(r.text)
     assert events[0][0] == "failure" and "global cap" in events[0][1]["message"]
     assert events[-1][0] == "done"

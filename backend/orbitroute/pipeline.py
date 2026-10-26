@@ -10,6 +10,7 @@ from orbitroute.agent.events import Emit, Event
 from orbitroute.agent.loop import AgentResult, run_agent
 from orbitroute.agent.repair import Decider, ModelDecider, PolicyDecider
 from orbitroute.config import ROOT
+from orbitroute.custom import CustomInputs, apply_custom
 from orbitroute.llm.budget import BudgetGuard, RunBudget
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.graph import build_road_graph
@@ -59,6 +60,7 @@ def run_pipeline(
     run_cap_usd: float,
     seed: int = 0,
     use_model_decider: bool = True,
+    custom: CustomInputs | None = None,
     emit: Emit,
 ) -> AgentResult:
     run: RunBudget = guard.new_run(run_cap_usd)
@@ -75,11 +77,21 @@ def run_pipeline(
     emit(Event("scene", f"{len(scene.zones)} zones, {len(scene.warehouses)} warehouses", scene_json(scene)))
 
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
-    problem = parse_request(text, request, run=run)
-    emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {problem.avoid_zone_kinds or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
+    has_custom = custom is not None and not custom.empty
+    parse_text = f"{len(custom.orders)} orders. {request}" if has_custom and custom.orders else request
+    problem = parse_request(text, parse_text, run=run)
 
-    scenario = make_scenario(graph, scene, problem, seed=seed)
-    emit(Event("scenario", f"depot and {len(scenario.order_nodes)} synthetic orders placed on the roads", scenario_json(scenario)))
+    notes: list[str] = []
+    if has_custom:
+        scenario, problem, scene2, notes = apply_custom(graph, scene, problem, custom, seed=seed)
+        if scene2 is not scene:
+            emit(Event("scene", f"{len(scene2.zones)} zones including the one you drew", scene_json(scene2)))
+        problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
+        scenario.problem = problem
+    else:
+        scenario = make_scenario(graph, scene, problem, seed=seed)
+    emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {problem.avoid_zone_kinds or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
+    emit(Event("scenario", f"depot and {len(scenario.order_nodes)} orders placed on the roads" + (" (yours)" if has_custom and custom.orders else " (synthetic)"), scenario_json(scenario)))
 
     def agent_emit(e: Event) -> None:
         data = dict(e.data)

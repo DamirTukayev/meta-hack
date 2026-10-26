@@ -3,11 +3,12 @@ import type { Problem, RunState, StreamEvent, Zone, XY } from './types'
 
 export const initialState: RunState = { status: 'idle', stage: '', zones: [], warehouses: [], orders: [], iterations: [], log: [] }
 
-type Action = { kind: 'start' } | { kind: 'event'; e: StreamEvent; t0: number } | { kind: 'error'; message: string } | { kind: 'done' }
+type Action = { kind: 'start' } | { kind: 'reset' } | { kind: 'event'; e: StreamEvent; t0: number } | { kind: 'error'; message: string } | { kind: 'done' }
 
 let logId = 0
 
 function reduce(s: RunState, a: Action): RunState {
+  if (a.kind === 'reset') return initialState
   if (a.kind === 'start') return { ...initialState, status: 'running', stage: 'Starting' }
   if (a.kind === 'error') return { ...s, status: 'error', error: a.message }
   if (a.kind === 'done') return s.status === 'running' ? { ...s, status: 'done', stage: '' } : s
@@ -48,12 +49,45 @@ function reduce(s: RunState, a: Action): RunState {
   }
 }
 
+async function streamRun(body: object, onEvent: (name: string, data: any) => void, signal: AbortSignal) {
+  const res = await fetch('/api/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal })
+  if (!res.ok || !res.body) {
+    let detail = `The server answered ${res.status}.`
+    try {
+      const j = await res.json()
+      if (typeof j.detail === 'string') detail = j.detail
+      else if (Array.isArray(j.detail)) detail = 'Some input was not accepted (too many points, or a value is out of range).'
+    } catch { /* keep the generic message */ }
+    throw new Error(detail)
+  }
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buf = ''
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (done) break
+    buf += decoder.decode(value, { stream: true })
+    let i: number
+    while ((i = buf.indexOf('\n\n')) >= 0) {
+      const block = buf.slice(0, i)
+      buf = buf.slice(i + 2)
+      let name = 'message'
+      let data = ''
+      for (const line of block.split('\n')) {
+        if (line.startsWith('event: ')) name = line.slice(7)
+        else if (line.startsWith('data: ')) data += line.slice(6)
+      }
+      if (data) onEvent(name, JSON.parse(data))
+    }
+  }
+}
+
 /** Streams one agent run. Events are revealed one by one so the viewer can follow the agent's reasoning. */
 export function useRun(paceMs = 420) {
   const [state, dispatch] = useReducer(reduce, initialState)
   const queue = useRef<Action[]>([])
   const timer = useRef<number | null>(null)
-  const source = useRef<EventSource | null>(null)
+  const abort = useRef<AbortController | null>(null)
   const finished = useRef(false)
   const t0 = useRef(0)
 
@@ -73,44 +107,51 @@ export function useRun(paceMs = 420) {
   }, [paceMs])
 
   const stop = useCallback(() => {
-    source.current?.close()
+    abort.current?.abort()
     if (timer.current !== null) window.clearTimeout(timer.current)
     timer.current = null
     queue.current = []
   }, [])
 
+  const reset = useCallback(() => {
+    stop()
+    dispatch({ kind: 'reset' })
+  }, [stop])
+
   const start = useCallback(
-    (sample: string, request: string, decider: 'model' | 'policy' = 'model') => {
+    (body: { sample: string; request: string; decider?: 'model' | 'policy'; custom?: object }) => {
       stop()
       finished.current = false
       t0.current = 0
       dispatch({ kind: 'start' })
-      const url = `/api/run?${new URLSearchParams({ sample, request, decider })}`
-      const es = new EventSource(url)
-      source.current = es
-      es.addEventListener('event', (m) => {
-        const e = JSON.parse((m as MessageEvent).data) as StreamEvent
-        if (!t0.current) t0.current = e.t
-        queue.current.push({ kind: 'event', e, t0: t0.current })
-        pump()
-      })
-      es.addEventListener('failure', (m) => {
-        finished.current = true
-        queue.current.push({ kind: 'error', message: JSON.parse((m as MessageEvent).data).message })
-        pump()
-      })
-      es.addEventListener('done', () => {
-        finished.current = true
-        es.close()
-        pump()
-      })
-      es.onerror = () => {
-        if (!finished.current) {
-          es.close()
-          queue.current.push({ kind: 'error', message: 'Connection to the server was lost.' })
+      const ctl = new AbortController()
+      abort.current = ctl
+      streamRun(
+        { decider: 'model', ...body },
+        (name, data) => {
+          if (name === 'event') {
+            if (!t0.current) t0.current = data.t
+            queue.current.push({ kind: 'event', e: data as StreamEvent, t0: t0.current })
+          } else if (name === 'failure') {
+            finished.current = true
+            queue.current.push({ kind: 'error', message: data.message })
+          } else if (name === 'done') {
+            finished.current = true
+          }
           pump()
-        }
-      }
+        },
+        ctl.signal,
+      )
+        .then(() => {
+          finished.current = true
+          pump()
+        })
+        .catch((err: unknown) => {
+          if (ctl.signal.aborted) return
+          finished.current = true
+          queue.current.push({ kind: 'error', message: err instanceof Error ? err.message : 'Connection to the server was lost.' })
+          pump()
+        })
     },
     [pump, stop],
   )
@@ -118,5 +159,5 @@ export function useRun(paceMs = 420) {
   useEffect(() => {
     return () => stop()
   }, [stop])
-  return { state, start }
+  return { state, start, reset }
 }
