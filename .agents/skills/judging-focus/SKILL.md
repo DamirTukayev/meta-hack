@@ -5,6 +5,8 @@ description: Judging criteria, bonus targets and agent-design priorities for Orb
 
 # Judging focus
 
+**Standing goal: we are not building a simple project.** The organizers explicitly list "simple image analyzers" and basic wrappers as generic/banned. Aim for a deep, agent-first system that competes for the top 5 of the track (Stage 3: judges watch the video live). Before adding a feature, ask: does it raise Technical depth, Demo quality, Meta-tooling use or Impact? If not, cut it. See `hackathon-rules`.
+
 | Criterion | Weight | What it means for OrbitRoute |
 |---|---|---|
 | Impact | 30% | A concrete, real use case (routing where maps are missing or outdated: new districts, disaster response, logistics). Back claims with real evidence, never invented stats. |
@@ -14,8 +16,8 @@ description: Judging criteria, bonus targets and agent-design priorities for Orb
 
 ## Bonuses
 
-- **Open Weight** (10k): prefer Spark Open and open-weight paths where quality allows; document it.
-- **Agentic** (5k): the plan → solve → verify → repair → re-solve loop, with a visible agent log.
+- **Open Weight** (10k): prefer Spark Open / Glimmer on Baseten or Modal where quality allows (partner-verified); document it.
+- **Agentic** (5k): judged on autonomy, effectiveness at the task and practical usefulness — the plan → solve → verify → repair → re-solve loop, with a visible agent log.
 - **Most Viral** ($20k): a short, striking visual (image → masks → graph → routes) and an X post before Nov 8.
 
 ## Agent design principles

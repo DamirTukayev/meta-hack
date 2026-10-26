@@ -4,6 +4,7 @@ Read by Codex (and Claude Code via `CLAUDE.md`). Hackathon project: an agent tha
 
 ## Always
 
+- **We are NOT building a simple project.** Aim for a deep, agent-first system (plan → solve → verify → repair → re-solve), not a "simple image analyzer" or thin model wrapper — the organizers list those as generic/banned. Flag any change that moves toward that and propose the deeper alternative. Keep scenarios civilian (no war/political framing). See `hackathon-rules` and `judging-focus`.
 - **Write everything in English**: code, comments, commits, docs, README, UI text. (Chat with the user may be in Russian.)
 - Follow the skills in `.agents/skills/` (mirrored at `.claude/skills/`):
   - `hackathon-rules` — new work only, public repo, data licensing, README honesty, deadlines
@@ -17,5 +18,6 @@ Read by Codex (and Claude Code via `CLAUDE.md`). Hackathon project: an agent tha
 ## Key facts
 
 - Track: Push the Frontier, Indie, solo. Commits only from Oct 26, 2026.
-- Build window Oct 27 – Nov 4; deadline **Nov 5, 06:00 (UTC+5)**.
+- Build window Oct 27 – Nov 4; official deadline Nov 4, 21:00 ET = Nov 5, 07:00 UTC+5; personal hard deadline **Nov 5, 06:00 (UTC+5)**.
+- The demo may show only what was built during the hackathon, clearly identifiable — otherwise disqualification.
 - Models: SAM 3.1 (segmentation), Muse Spark / Spark Open (vision + reasoning), Muse Glimmer (cheap bulk steps).
