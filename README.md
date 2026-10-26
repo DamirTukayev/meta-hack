@@ -18,6 +18,9 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - NAIP tile downloader (`scripts/fetch_naip.py`).
 - Tiled SAM 3.1 road segmentation with overlap and an on-disk cache (`perception/segment.py`).
 - Road mask → routable graph: skeleton, junction/endpoint nodes, spur pruning, densification, gap bridging, width-based speed classes, node snapping (`perception/graph.py`), plus a debug overlay (`scripts/build_graph.py`).
+- Request parsing with Muse Spark into a typed routing problem; every default the user did not state is reported as an assumption (`understanding/`).
+- Zone and warehouse grounding on the image with Muse Spark vision, cached (`understanding/scene.py`).
+- Delivery scenarios, graph cost matrices and a PyVRP capacitated VRP-with-time-windows solver (`routing/`); `scripts/plan.py` runs the pipeline end to end (no verification yet).
 
 ## Run the tests
 
