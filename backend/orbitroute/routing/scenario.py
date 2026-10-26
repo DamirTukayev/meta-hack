@@ -64,6 +64,7 @@ def make_scenario(
     seed: int = 0,
     min_sep_m: float = 90.0,
     ensure_reachable: bool = True,
+    depot_node: int | None = None,
 ) -> Scenario:
     """Place `problem.n_orders` synthetic orders on road nodes, deterministically for a given seed.
 
@@ -71,7 +72,7 @@ def make_scenario(
     to create stress cases with orders that the avoided zone cuts off.
     """
     rng = np.random.default_rng(seed)
-    depot = pick_depot(graph, scene, problem)
+    depot = depot_node if depot_node is not None else pick_depot(graph, scene, problem)
     reachable = _legally_reachable(graph, scene, problem, depot) if ensure_reachable and problem.avoid_zone_kinds else None
     if reachable is not None and len(reachable) - 1 < problem.n_orders:
         reachable = None  # not enough legal nodes: fall back to the whole graph

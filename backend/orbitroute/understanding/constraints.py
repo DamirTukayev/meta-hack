@@ -8,7 +8,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-ZoneKind = Literal["industrial", "commercial", "residential", "park_forest"]
+ZoneKind = Literal["industrial", "commercial", "residential", "park_forest", "custom"]  # "custom" = a zone the user drew
 
 DEFAULT_SHIFT_START = "08:00"
 DEFAULT_DEADLINE = "18:00"
@@ -85,6 +85,19 @@ class Problem(BaseModel):
     objective: Literal["min_time", "min_distance"]
     assumptions: list[str]
     notes: list[str] = []
+
+
+def with_order_count(problem: Problem, n: int) -> Problem:
+    """Same problem for a different number of orders; a capacity that was only assumed is recomputed."""
+    updates: dict = {"n_orders": n}
+    assumptions = list(problem.assumptions)
+    for i, a in enumerate(assumptions):
+        if "a truck carries" in a:
+            capacity = math.ceil(n / problem.n_vehicles * CAPACITY_SLACK)
+            updates["capacity"] = capacity
+            assumptions[i] = f"Each order is 1 unit; a truck carries {capacity} units (not stated)."
+    updates["assumptions"] = assumptions
+    return problem.model_copy(update=updates)
 
 
 def resolve(parsed: ParsedRequest) -> Problem:

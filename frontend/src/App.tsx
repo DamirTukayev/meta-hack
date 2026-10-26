@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import MapView, { IterationTabs } from './MapView'
-import type { LogEntry, PlanGeo, ReportGeo, Result, RunState, Sample } from './types'
+import { emptyCustom } from './types'
+import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
 
 const ICONS: Record<string, string> = { stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', final: '■' }
@@ -17,8 +18,9 @@ function RequestPanel(props: {
   onRequest: (r: string) => void
   onPlan: () => void
   state: RunState
+  custom: Custom
 }) {
-  const { sample, state } = props
+  const { sample, state, custom } = props
   const running = state.status === 'running'
   return (
     <section className="panel request">
@@ -32,6 +34,12 @@ function RequestPanel(props: {
       <div className="examples">
         {sample?.examples.map((ex) => <button key={ex} className="example" onClick={() => props.onRequest(ex)} disabled={running}>{ex}</button>)}
       </div>
+      {(custom.depot || custom.orders.length > 0 || custom.zoneClosed) && (
+        <p className="own">
+          Using your own {[custom.depot && 'depot', custom.orders.length > 0 && `${custom.orders.length} order${custom.orders.length > 1 ? 's' : ''}`, custom.zoneClosed && 'avoid-zone'].filter(Boolean).join(', ')}.
+          {custom.orders.length > 0 && ' The order count in the text is ignored.'}
+        </p>
+      )}
       <button className="primary" onClick={props.onPlan} disabled={running || !props.request.trim()}>{running ? 'Agent working…' : 'Plan route'}</button>
       {state.problem && (
         <div className="understood">
@@ -43,7 +51,7 @@ function RequestPanel(props: {
           </dl>
           {state.problem.assumptions.length > 0 && (
             <>
-              <h4>Assumed, because the request did not say</h4>
+              <h4>Assumed or adjusted</h4>
               <ul>{state.problem.assumptions.map((a) => <li key={a}>{a}</li>)}</ul>
             </>
           )}
@@ -136,7 +144,9 @@ export default function App() {
   const [request, setRequest] = useState('')
   const [pinned, setPinned] = useState<number | null>(null)
   const [relax, setRelax] = useState<number | null>(null)
-  const { state, start } = useRun()
+  const { state, start, reset } = useRun()
+  const [mode, setMode] = useState<Mode>('browse')
+  const [custom, setCustom] = useState<Custom>(emptyCustom)
 
   useEffect(() => {
     fetch('/api/samples').then((r) => r.json()).then((s: Sample[]) => {
@@ -151,8 +161,34 @@ export default function App() {
   }, [state.result])
 
   const sample = samples.find((s) => s.name === name)
-  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? '') }
-  const onPlan = () => { setPinned(null); setRelax(null); start(name, request) }
+  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('browse'); reset() }
+  const onPlan = () => {
+    setPinned(null)
+    setRelax(null)
+    setMode('browse')
+    const body: { sample: string; request: string; custom?: object } = { sample: name, request }
+    if (custom.depot || custom.orders.length > 0 || custom.zoneClosed) {
+      body.custom = { depot: custom.depot, orders: custom.orders, zone: custom.zoneClosed ? custom.zone : [] }
+    }
+    start(body)
+  }
+  // Editing starts from a clean map: the previous run no longer matches the inputs.
+  const edit = (next: Custom) => {
+    if (state.status !== 'idle') { reset(); setPinned(null); setRelax(null) }
+    setCustom(next)
+  }
+  const onMapClick = (xy: XY, unit: number) => {
+    const near = (p: XY, r: number) => Math.hypot(p[0] - xy[0], p[1] - xy[1]) < r * unit
+    if (mode === 'depot') edit({ ...custom, depot: xy })
+    else if (mode === 'order') {
+      const hit = custom.orders.findIndex((o) => near(o, 14))
+      edit({ ...custom, orders: hit >= 0 ? custom.orders.filter((_, i) => i !== hit) : [...custom.orders, xy] })
+    } else if (mode === 'zone') {
+      if (custom.zoneClosed) return
+      if (custom.zone.length >= 3 && near(custom.zone[0], 16)) edit({ ...custom, zoneClosed: true })
+      else edit({ ...custom, zone: [...custom.zone, xy] })
+    }
+  }
 
   const sel = pinned !== null && pinned < state.iterations.length ? pinned : state.iterations.length - 1
   const iteration = state.iterations[sel]
@@ -170,10 +206,15 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} request={request} onRequest={setRequest} onPlan={onPlan} state={state} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} />
         <div className="center">
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
-          <MapView sample={sample} state={state} selected={sel} plan={plan} report={report} />
+          <MapView
+            sample={sample} state={state} selected={sel} plan={plan} report={report}
+            mode={mode} custom={custom} onMode={setMode} onClick={onMapClick}
+            onCloseZone={() => edit({ ...custom, zoneClosed: true })}
+            onClear={() => { edit(emptyCustom); setMode('browse') }}
+          />
           <ResultBar state={state} relax={relax} onShowRelax={setRelax} />
         </div>
         <aside>

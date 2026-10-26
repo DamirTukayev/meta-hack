@@ -8,12 +8,16 @@ import queue
 import threading
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
+from typing import Literal
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
 from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from orbitroute.agent.events import Event
 from orbitroute.config import ROOT, Settings
+from orbitroute.custom import CustomInputs
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard
 from orbitroute.llm.client import ApiError, MetaClient
 from orbitroute.pipeline import get_sample, list_samples, run_pipeline
@@ -91,17 +95,21 @@ def _sse(event: str, data: dict) -> str:
     return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 
-@app.get("/api/run")
-async def run(
-    sample: str,
-    request: str = Query(max_length=MAX_REQUEST_CHARS),
-    seed: int = 0,
-    decider: str = "model",
-) -> StreamingResponse:
+class RunRequest(BaseModel):
+    sample: str
+    request: str = Field(max_length=MAX_REQUEST_CHARS)
+    seed: int = 0
+    decider: Literal["model", "policy"] = "model"
+    custom: CustomInputs | None = None
+
+
+@app.post("/api/run")
+async def run(body: RunRequest) -> StreamingResponse:
     try:
-        smp = get_sample(sample)
+        smp = get_sample(body.sample)
     except KeyError:
         raise HTTPException(404, "unknown sample")
+    request, seed, decider, custom = body.request, body.seed, body.decider, body.custom
     q: queue.Queue = queue.Queue()
     done = object()
 
@@ -112,7 +120,7 @@ async def run(
         try:
             run_pipeline(
                 smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
-                seed=seed, use_model_decider=decider == "model", emit=emit,
+                seed=seed, use_model_decider=decider == "model", custom=custom, emit=emit,
             )
         except BudgetExceeded as exc:
             q.put(("failure", {"message": f"Budget guard: {exc}"}))

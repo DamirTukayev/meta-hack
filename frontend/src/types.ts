@@ -68,3 +68,8 @@ export interface RunState {
   error?: string
 }
 export interface StreamEvent { type: string; message: string; data: Record<string, any>; t: number }
+
+export type Mode = 'browse' | 'depot' | 'order' | 'zone'
+/** Points the user placed by clicking on the map, in image pixels. */
+export interface Custom { depot?: XY; orders: XY[]; zone: XY[]; zoneClosed: boolean }
+export const emptyCustom: Custom = { orders: [], zone: [], zoneClosed: false }
