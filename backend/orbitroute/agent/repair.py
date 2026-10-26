@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Protocol
 
+from orbitroute import prompts
 from orbitroute.llm.budget import BudgetExceeded, RunBudget
 from orbitroute.llm.client import ApiError, MetaClient
 from orbitroute.verifier.checks import Report
@@ -84,14 +85,6 @@ class PolicyDecider:
         return Decision("propose_relaxation", "The constraints appear contradictory; look for the smallest relaxation.", "policy")
 
 
-DECIDE_SYSTEM = (
-    "You are the repair planner of a delivery-routing agent. A verifier found violations in the current plan. "
-    "Choose exactly one action from the allowed list. Prefer cheap, targeted fixes before broad ones, never repeat a "
-    "fix that already failed twice, and choose propose_relaxation only when the constraints look contradictory. "
-    "Answer with the action and a one-sentence reason a dispatcher can read."
-)
-
-
 class ModelDecider:
     """Asks Muse Spark to pick the repair action; falls back to the policy if the answer is unusable."""
 
@@ -117,7 +110,7 @@ class ModelDecider:
         }
         import json
 
-        messages = [{"role": "system", "content": DECIDE_SYSTEM}, {"role": "user", "content": json.dumps(facts)}]
+        messages = [{"role": "system", "content": prompts.load("repair")[1]}, {"role": "user", "content": json.dumps(facts)}]
         try:
             raw, _ = self._client.chat_json(
                 messages, "RepairDecision", schema, max_completion_tokens=1500, reasoning_effort="low", run=self._run, label="repair_decision"

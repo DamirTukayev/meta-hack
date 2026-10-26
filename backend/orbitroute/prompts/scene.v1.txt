@@ -1,0 +1,1 @@
+This is a satellite image. Coordinates use a 0-1000 grid with (0,0) at the top-left. Return land-use zones as polygons (industrial = warehouses, large logistics buildings and yards; commercial = shops and parking; residential = houses and apartments; park_forest) and the centre points of the largest warehouse buildings.
