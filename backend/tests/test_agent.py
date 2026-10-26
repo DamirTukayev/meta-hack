@@ -77,14 +77,39 @@ def test_impossible_deadline_yields_verified_relaxation_options():
     assert result.report.ok
 
 
-def test_orders_cut_off_by_the_zone_are_excluded_and_reported():
-    # orders 3 and 4 sit inside the zone itself, so they can never be reached legally
-    sc = make_scenario_at(box(250, 0, 400, 400), [(100, 100), (100, 300), (300, 200), (300, 300)])
+LEFT = [(100, 100), (100, 150), (100, 250), (100, 300), (100, 350), (200, 100), (200, 300), (150, 100), (150, 300)]
+
+
+def test_a_few_orders_cut_off_by_the_zone_are_excluded_and_reported():
+    # 9 orders on the left, 1 inside the avoided zone: it can never be reached legally, 10% is acceptable to drop
+    sc = make_scenario_at(box(250, 0, 400, 400), [*LEFT, (300, 200)], vehicle_capacity=12)
     result = run_agent(sc, time_limit_s=1.0)
     assert result.status == "verified_partial"
-    assert set(result.excluded) == {3, 4}
+    assert set(result.excluded) == {10}
     assert result.report.ok and result.report.excluded == result.excluded
-    assert sorted(s.order for r in result.plan.routes for s in r.stops) == [1, 2]
+    assert sorted(s.order for r in result.plan.routes for s in r.stops) == list(range(1, 10))
+
+
+def test_when_most_orders_are_cut_off_the_agent_refuses_and_offers_to_stop_avoiding_the_zone():
+    sc = make_scenario_at(box(250, 0, 400, 400), [(100, 100), (100, 300), (300, 200), (300, 300)], vehicle_capacity=4)
+    result = run_agent(sc, time_limit_s=1.0)
+    assert result.status == "needs_relaxation" and not result.excluded
+    option = next(o for o in result.relaxations if o.kind == "allow_zone")
+    assert option.report.ok  # the relaxed plan is verified ...
+    zone_check = next(c for c in option.report.checks if c.kind == "zones")
+    assert not zone_check.passed and "relaxed" in zone_check.title  # ... and the zone check says honestly it is off
+    assert option.amount > 0 and "drives" in option.description  # ... and says how far it drives through the zone
+    assert sorted(s.order for r in option.plan.routes for s in r.stops) == [1, 2, 3, 4]
+
+
+def test_policy_drops_a_few_unreachable_orders_but_not_most_of_them():
+    from orbitroute.verifier.checks import Report, Violation
+
+    report = Report(checks=[], violations=[Violation("zones", "x", route=0, data={"edges": []})], metrics={})
+    few = DecisionContext(report, 1, [], unreachable_orders=[3], total_orders=20)
+    many = DecisionContext(report, 1, [], unreachable_orders=[1, 2, 3, 4, 5], total_orders=20)
+    assert PolicyDecider().decide(few).action == "exclude_unreachable"
+    assert PolicyDecider().decide(many).action == "propose_relaxation"
 
 
 def test_policy_escalates_from_targeted_to_full_zone_ban():
@@ -145,3 +170,13 @@ def test_policy_does_not_waste_a_search_round_on_a_capacity_violation():
     assert PolicyDecider().decide(DecisionContext(report, 1, [])).action == "propose_relaxation"
     late = Report(checks=[], violations=[Violation("deadline", "truck 0 finishes late", route=0)], metrics={})
     assert PolicyDecider().decide(DecisionContext(late, 1, [])).action == "resolve_longer"  # a deadline miss may just need more search
+
+
+def test_when_the_zone_is_not_the_only_problem_the_relaxation_combines_fixes():
+    # one truck, orders on both sides of a wall-like zone, and a deadline one truck cannot meet even without the zone
+    sc = make_scenario_at(box(250, 0, 400, 400), [(100, 100), (100, 300), (300, 200), (300, 300), (300, 100), (100, 350)], n_vehicles=1, vehicle_capacity=6)
+    sc = replace(sc, problem=sc.problem.model_copy(update={"deadline_s": sc.problem.shift_start_s + 12 * 60}))
+    result = run_agent(sc, time_limit_s=1.0)
+    assert result.status == "needs_relaxation"
+    combined = [o for o in result.relaxations if o.kind.startswith("allow_zone")]
+    assert combined and combined[0].report.ok

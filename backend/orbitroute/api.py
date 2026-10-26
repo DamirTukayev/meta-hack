@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import queue
 import threading
 from pathlib import Path
@@ -35,6 +36,7 @@ EXAMPLES = {
 }
 LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphis": "Memphis, TN — logistics district"}
 MAX_REQUEST_CHARS = 400
+log = logging.getLogger("orbitroute")
 AREA_EXAMPLES = ["30 orders, 3 trucks, by 12:00, avoid the industrial zone", "30 orders, 3 trucks, by 12:00, avoid the residential area"]
 # New map areas cost a download plus (on first use) about $0.035 of model calls, so they are rate limited.
 area_limit_ip = RateLimiter(max_events=6, window_s=3600)
@@ -157,6 +159,9 @@ async def run(body: RunRequest) -> StreamingResponse:
             q.put(("failure", {"message": f"Budget guard: {exc}"}))
         except (ApiError, ValueError, RuntimeError) as exc:
             q.put(("failure", {"message": str(exc)}))
+        except Exception as exc:  # never leave the page waiting on a silent crash
+            log.exception("run failed")
+            q.put(("failure", {"message": f"Unexpected error ({type(exc).__name__}). The run was stopped; please try again."}))
         finally:
             q.put(done)
 

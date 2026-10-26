@@ -5,7 +5,7 @@ import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
 
-const ICONS: Record<string, string> = { stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', final: '■' }
+const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', final: '■' }
 
 function fmtT(s: number) {
   return `${Math.max(s, 0).toFixed(1)}s`
@@ -189,7 +189,7 @@ export default function App() {
   }
   // Editing starts from a clean map: the previous run no longer matches the inputs.
   const edit = (next: Custom) => {
-    if (state.status !== 'idle') { reset(); setPinned(null); setRelax(null) }
+    if (state.status !== 'idle') { reset(); setPinned(null); setRelax(null) } // a new input starts from a clean map
     setCustom(next)
   }
   const onMapClick = (xy: XY, unit: number) => {
@@ -223,6 +223,13 @@ export default function App() {
       <main>
         <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} />
         <div className="center">
+          {state.status === 'error' && (
+            <div className="banner error" role="alert">
+              <b>The agent could not run this.</b>
+              <span>{state.error}</span>
+              <span className="hint">Your points are still on the map. Turn on <b>Graph</b> to see which roads were found, then adjust and press Plan route again.</span>
+            </div>
+          )}
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
           <MapView
             sample={sample} state={state} selected={sel} plan={plan} report={report}

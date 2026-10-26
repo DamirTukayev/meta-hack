@@ -10,7 +10,7 @@ let logId = 0
 function reduce(s: RunState, a: Action): RunState {
   if (a.kind === 'reset') return initialState
   if (a.kind === 'start') return { ...initialState, status: 'running', stage: 'Starting' }
-  if (a.kind === 'error') return { ...s, status: 'error', error: a.message }
+  if (a.kind === 'error') return { ...s, status: 'error', error: a.message, log: [...s.log, { id: ++logId, type: 'error', text: a.message, t: 0 }] }
   if (a.kind === 'done') return s.status === 'running' ? { ...s, status: 'done', stage: '' } : s
   const { e, t0 } = a
   const add = (text: string, type = e.type, source?: string) => [...s.log, { id: ++logId, type, text, t: e.t - t0, source }]

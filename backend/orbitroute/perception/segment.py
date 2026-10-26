@@ -21,6 +21,10 @@ from orbitroute.llm.client import MetaClient
 from orbitroute.perception.sam import parse_instances, response_text
 
 CACHE_DIR = ROOT / "data" / "cache"
+# 6x6 tiles of ~256 px: narrow residential streets are only found when each tile is small. On a suburban
+# area 3x3 tiles found 4.8 km of road, 5x5 found 14.2 km and 6x6 found 18.3 km (about $0.09 per image).
+DEFAULT_TILES = 6
+DEFAULT_OVERLAP = 48
 MIN_CONFIDENCE = 0.0  # SAM confidences on thin roads are low (~0.5); filtering is left to later stages
 
 
@@ -52,11 +56,11 @@ def segment_concept(
     image_bytes: bytes,
     concept: str = "road",
     *,
-    n: int = 3,
-    overlap: int = 96,
+    n: int = DEFAULT_TILES,
+    overlap: int = DEFAULT_OVERLAP,
     run: RunBudget | None = None,
     use_cache: bool = True,
-    workers: int = 4,
+    workers: int = 8,
 ) -> np.ndarray:
     """Union of SAM masks for `concept` over n x n overlapping tiles. Returns a bool (H, W) mask."""
     cache = _cache_path(image_bytes, concept, n, overlap)

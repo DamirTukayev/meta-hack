@@ -19,7 +19,7 @@ if "scenarios" in res:
         "|---|---|---|",
         f"| Plans the solver reports as feasible | {b['solver_says_feasible']}/{s['scenarios']} | — |",
         f"| Of those, plans that break a constraint on independent audit | **{b['invalid_after_independent_audit']}** ({(b['invalid_rate_among_claimed_feasible'] or 0):.0%}) | 0 — every plan returned as verified passed the audit |",
-        f"| Scenarios with a first-pass violation → ended verified | — | {a['of_those_ended_verified']}/{a['scenarios_with_a_first_pass_violation']} (the other {a['scenarios_with_a_first_pass_violation'] - a['of_those_ended_verified']} are infeasible as stated and were flagged with verified fixes) |",
+        f"| Scenarios with a first-pass violation → ended verified | — | {a['of_those_ended_verified']}/{a['scenarios_with_a_first_pass_violation']} (the other {a['scenarios_with_a_first_pass_violation'] - a['of_those_ended_verified']} cannot be met as stated; see the table) |",
         f"| Provably infeasible requests flagged with a verified fix | 0/{a['provably_infeasible']} (solver returns a plan anyway) | {a['infeasible_correctly_flagged']}/{a['provably_infeasible']} |",
         f"| Final status | — | {', '.join(f'{k}: {v}' for k, v in a['status_counts'].items())} |",
         f"| Mean iterations / mean wall time | 1 | {a['mean_iterations']} / {a['mean_seconds']} s |",
@@ -29,10 +29,12 @@ if "scenarios" in res:
     ]
     if m["runs"]:
         same = sum(r["model_decider"]["actions"] == r["agent_actions"] for r in rows if "model_decider" in r)
+        rest = m["runs"] - m["reached_verified"]
         out += [
-            f"Muse Spark as the repair planner (instead of the deterministic policy), on the {m['runs']} scenarios with a first-pass violation: "
-            f"it chose exactly the policy's actions in {same}/{m['runs']} runs, {m['reached_verified']}/{m['runs']} ended verified (the other one is the infeasible request, flagged correctly), "
-            f"mean cost ${m['mean_cost_usd']} per run. In this suite the model adds readable reasons, not different decisions.",
+            f"Muse Spark as the repair planner (instead of the deterministic policy), on {m['runs']} scenarios with a first-pass violation: "
+            f"it chose exactly the policy's actions in {same}/{m['runs']} runs and {m['reached_verified']}/{m['runs']} ended verified"
+            + (f" ({rest} flagged as infeasible as stated)" if rest else "")
+            + f"; mean cost ${m['mean_cost_usd']} per run. In this suite the model adds readable reasons, not different decisions.",
             "",
         ]
     out += ["| Scenario | Request | Solver only | Agent | Iterations | Repairs |", "|---|---|---|---|---|---|"]

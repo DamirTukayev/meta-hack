@@ -16,14 +16,14 @@ from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.overlay import draw_graph
-from orbitroute.perception.segment import segment_concept
+from orbitroute.perception.segment import DEFAULT_OVERLAP, DEFAULT_TILES, segment_concept
 
 
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("name")
-    p.add_argument("--tiles", type=int, default=3)
-    p.add_argument("--overlap", type=int, default=96)
+    p.add_argument("--tiles", type=int, default=DEFAULT_TILES)
+    p.add_argument("--overlap", type=int, default=DEFAULT_OVERLAP)
     p.add_argument("--out", type=Path, default=Path("scratch"))
     a = p.parse_args()
 

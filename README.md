@@ -6,7 +6,7 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 
 ## What it does
 
-1. **SAM 3.1** segments roads from a satellite image (tiled) and the pixels become a road graph.
+1. **SAM 3.1** segments roads from a satellite image (36 overlapping tiles, so narrow streets are found) and the pixels become a road graph.
 2. **Muse Spark** reads the request ("40 orders, 3 trucks, by 18:00, avoid the industrial zone") and the image, and produces formal routing constraints.
 3. A vehicle-routing **solver** builds the routes.
 4. The **agent verifies** the plan independently, repairs violated constraints and re-solves until the plan is valid, or explains why it cannot be.
@@ -29,12 +29,13 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 
 ## Evaluation
 
-20 fixed scenarios on two NAIP tiles, plus 20 free-form request phrasings (`eval/RESULTS.md`, reproducible with `scripts/run_eval.py`):
+20 fixed scenarios on two NAIP tiles plus 20 free-form request phrasings (`eval/RESULTS.md`, reproducible with `scripts/run_eval.py`). Ten scenarios use squares drawn across the road network, the way a user would draw them on the map; the rest use zones found by Muse Spark, plus four requests that are infeasible by arithmetic.
 
-- A plain solver reported **15** plans as feasible; an independent audit found **6 of them (40%) broke a constraint** (7 scenarios entered an avoided zone, 3 missed the deadline, 2 overloaded a truck).
-- The agent returned only plans that passed the same audit: **15/20 verified**, the other **5 flagged as infeasible as stated, each with a verified relaxation** (all 4 provably infeasible requests were caught).
+- A plain solver reported **15** plans as feasible; an independent audit found **9 of them (60%) broke a constraint** (10 scenarios entered an avoided zone, 3 missed the deadline, 2 overloaded a truck).
+- The agent returned only plans that passed the same audit: **14/20 verified**; the other **6 were flagged as impossible as stated, each with a verified way out** (4 provably infeasible requests, plus 2 where the avoided residential zone cuts off most streets, so it offers to stop avoiding it).
+- Of the 14 scenarios whose first plan was invalid, 8 were repaired to a verified plan automatically.
 - Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 4.2 s).
-- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (~$0.003 per run).
+- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (~$0.002 per run), so it adds readable explanations rather than different decisions.
 
 ## Open-weight path
 

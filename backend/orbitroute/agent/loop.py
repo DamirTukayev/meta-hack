@@ -85,7 +85,7 @@ def run_agent(
         if it == max_iterations:
             break
 
-        ctx = DecisionContext(report, it + 1, list(history), unreachable, all_zone_edges_banned=zone_edges <= banned)
+        ctx = DecisionContext(report, it + 1, list(history), unreachable, all_zone_edges_banned=zone_edges <= banned, total_orders=p.n_orders)
         try:
             decision = decider.decide(ctx)
         except BudgetExceeded as exc:
@@ -110,7 +110,7 @@ def run_agent(
             time_limit, seed = time_limit * 2, seed + 1
             emit(Event("repair", f"re-solving with a {time_limit:.0f}s limit and seed {seed}", {}))
         elif decision.action == "propose_relaxation":
-            options = find_relaxations(scenario, matrix, excluded, inside)
+            options = find_relaxations(scenario, matrix, excluded, inside, zone_edges=zone_edges)
             for o in options:
                 emit(Event("relaxation", f"smallest fix: {o.description}", {"kind": o.kind, "amount": o.amount}))
             if options:

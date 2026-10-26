@@ -136,3 +136,10 @@ aside { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .primary.inline { width: auto; padding: 10px 22px; }
 .credit-line { margin: 10px 0 0; font-size: 11.5px; color: var(--muted); }
 .leaflet-container { font: inherit; }
+
+.banner { border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+.banner.error { background: #2a1519; border: 1px solid #7f2a33; color: #fecaca; }
+.banner.error b { color: #fca5a5; }
+.banner .hint { color: var(--muted); font-size: 12.5px; }
+.log li.error .icon { color: var(--bad); }
+.log li.error .text { color: #fecaca; }

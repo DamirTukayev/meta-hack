@@ -30,8 +30,8 @@ export default function MapView(props: {
 }) {
   const { sample, state, plan, report, mode, custom } = props
   const svgRef = useRef<SVGSVGElement>(null)
-  const editing = mode !== 'browse' && state.status === 'idle'
-  const draft = state.status === 'idle'
+  const editing = mode !== 'browse' && (state.status === 'idle' || state.status === 'error')
+  const draft = state.status === 'idle' || state.status === 'error'
   const [layers, setLayers] = useState<Layers>({ roads: true, graph: false, zones: true, orders: true, routes: true })
   const u = sample.width / 1536 // marker size unit, so overlays scale with the image
   const avoid = state.problem?.avoid_zone_kinds ?? []
