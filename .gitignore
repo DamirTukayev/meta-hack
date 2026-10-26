@@ -15,6 +15,23 @@ build/
 # OS / IDE
 .DS_Store
 .idea/
+.vscode/
+*.swp
+
+# Local-only living docs (kept on disk, not published)
+VIDEO_SCRIPT.md
+PROJECT_CV.md
+
+# Personal / not part of the project (put private files in personal/)
+personal/
+private/
+scratch/
+*.private.*
+*.local.*
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/worktrees/
+.codex/
 
 # Local runtime state
 budget_state.json
