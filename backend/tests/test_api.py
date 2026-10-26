@@ -112,3 +112,22 @@ def test_auto_orders_is_validated_and_forwarded(monkeypatch):
     assert c.post("/api/run", json={"sample": "columbus", "request": "x", "auto_orders": 101}).status_code == 422
     c.post("/api/run", json={"sample": "columbus", "request": "3 trucks", "auto_orders": 12})
     assert seen["n"] == 12
+
+
+def test_request_text_states_the_truck_count_from_its_own_field():
+    from orbitroute.custom import CustomInputs
+    from orbitroute.pipeline import request_text
+
+    assert request_text("by 12:00", CustomInputs(orders=[(1, 1)] * 5), None, 4) == "5 orders. 4 trucks. by 12:00"
+    assert request_text("by 12:00", None, None, 2) == "2 trucks. by 12:00"
+
+
+def test_trucks_field_is_validated_and_forwarded(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(api, "run_pipeline", lambda sample, request, *, emit, trucks=None, **kw: seen.update(t=trucks))
+    monkeypatch.setattr(api, "get_client", lambda: object())
+    c = TestClient(api.app)
+    assert c.post("/api/run", json={"sample": "columbus", "request": "x", "trucks": 0}).status_code == 422
+    assert c.post("/api/run", json={"sample": "columbus", "request": "x", "trucks": 31}).status_code == 422
+    c.post("/api/run", json={"sample": "columbus", "request": "by 12:00", "trucks": 4})
+    assert seen["t"] == 4

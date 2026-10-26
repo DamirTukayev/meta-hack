@@ -87,17 +87,25 @@ class Problem(BaseModel):
     notes: list[str] = []
 
 
-def with_order_count(problem: Problem, n: int) -> Problem:
-    """Same problem for a different number of orders; a capacity that was only assumed is recomputed."""
-    updates: dict = {"n_orders": n}
+def _with_counts(problem: Problem, n_orders: int, n_vehicles: int) -> Problem:
+    """Same problem for other counts; a capacity that was only assumed follows them."""
+    updates: dict = {"n_orders": n_orders, "n_vehicles": n_vehicles}
     assumptions = list(problem.assumptions)
     for i, a in enumerate(assumptions):
         if "a truck carries" in a:
-            capacity = math.ceil(n / problem.n_vehicles * CAPACITY_SLACK)
+            capacity = math.ceil(n_orders / n_vehicles * CAPACITY_SLACK)
             updates["capacity"] = capacity
             assumptions[i] = f"Each order is 1 unit; a truck carries {capacity} units (not stated)."
     updates["assumptions"] = assumptions
     return problem.model_copy(update=updates)
+
+
+def with_order_count(problem: Problem, n: int) -> Problem:
+    return _with_counts(problem, n, problem.n_vehicles)
+
+
+def with_vehicle_count(problem: Problem, n: int) -> Problem:
+    return _with_counts(problem, problem.n_orders, n)
 
 
 def resolve(parsed: ParsedRequest) -> Problem:

@@ -75,3 +75,15 @@ def test_agent_routes_around_a_zone_the_user_drew():
     assert result.status == "verified"
     assert len(result.iterations) >= 2 and not result.iterations[0].report.ok  # the direct way crosses the drawn zone
     assert result.report.ok
+
+
+def test_changing_the_truck_count_recomputes_an_assumed_capacity_only():
+    from orbitroute.understanding.constraints import with_vehicle_count
+
+    assumed = base_problem(n_orders=30, n_vehicles=3)  # capacity assumed: ceil(30 / 3 * 1.5) = 15
+    assert assumed.capacity == 15
+    p2 = with_vehicle_count(assumed, 5)
+    assert p2.n_vehicles == 5 and p2.capacity == 9 and any("carries 9 units" in a for a in p2.assumptions)
+    stated = base_problem(n_orders=30, n_vehicles=3, vehicle_capacity=12)
+    p3 = with_vehicle_count(stated, 5)
+    assert p3.n_vehicles == 5 and p3.capacity == 12

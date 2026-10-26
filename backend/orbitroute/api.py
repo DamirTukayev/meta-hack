@@ -26,19 +26,19 @@ from orbitroute.llm.client import ApiError, MetaClient
 from orbitroute.naip import NoImagery
 from orbitroute.pipeline import get_sample, list_samples, run_pipeline
 
-# The orders themselves are clicked on the map, so the sentences describe only the trucks, the time and the zone.
+# Orders are clicked on the map and trucks have their own field, so the sentences describe only the time and what to avoid.
 EXAMPLES = {
     "columbus": [
-        "3 trucks, by 12:00, avoid the residential area",
-        "3 trucks, by 12:00, avoid the industrial zone",
-        "1 truck, by 09:00, avoid the residential area",
+        "by 12:00, avoid the residential area",
+        "by 12:00, avoid the industrial zone",
+        "by 09:00, avoid the residential area",
     ],
-    "memphis": ["3 trucks, by 12:00, avoid the industrial zone", "2 trucks, by 11:00, avoid the residential area"],
+    "memphis": ["by 12:00, avoid the industrial zone", "by 11:00, avoid the residential area"],
 }
 LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphis": "Memphis, TN — logistics district"}
 MAX_REQUEST_CHARS = 400
 log = logging.getLogger("orbitroute")
-AREA_EXAMPLES = ["3 trucks, by 12:00, avoid the industrial zone", "3 trucks, by 12:00, avoid the residential area"]
+AREA_EXAMPLES = ["by 12:00, avoid the industrial zone", "by 12:00, avoid the residential area"]
 # New map areas cost a download plus (on first use) about $0.035 of model calls, so they are rate limited.
 area_limit_ip = RateLimiter(max_events=6, window_s=3600)
 area_limit_all = RateLimiter(max_events=40, window_s=3600)
@@ -136,6 +136,7 @@ class RunRequest(BaseModel):
     decider: Literal["model", "policy"] = "model"
     custom: CustomInputs | None = None
     auto_orders: int | None = Field(default=None, ge=1, le=100)  # "place the orders for me": how many
+    trucks: int | None = Field(default=None, ge=1, le=30)  # the Trucks field; overrides the text
 
 
 @app.post("/api/run")
@@ -144,7 +145,7 @@ async def run(body: RunRequest) -> StreamingResponse:
         smp = get_sample(body.sample)
     except KeyError:
         raise HTTPException(404, "unknown sample")
-    request, seed, decider, custom, auto_orders = body.request, body.seed, body.decider, body.custom, body.auto_orders
+    request, seed, decider, custom, auto_orders, trucks = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks
     q: queue.Queue = queue.Queue()
     done = object()
 
@@ -155,7 +156,7 @@ async def run(body: RunRequest) -> StreamingResponse:
         try:
             run_pipeline(
                 smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
-                seed=seed, use_model_decider=decider == "model", custom=custom, auto_orders=auto_orders, emit=emit,
+                seed=seed, use_model_decider=decider == "model", custom=custom, auto_orders=auto_orders, trucks=trucks, emit=emit,
             )
         except BudgetExceeded as exc:
             q.put(("failure", {"message": f"Budget guard: {exc}"}))

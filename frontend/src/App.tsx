@@ -24,6 +24,8 @@ function RequestPanel(props: {
   auto: boolean
   autoCount: number
   canPlan: boolean
+  trucks: number
+  onTrucks: (n: number) => void
 }) {
   const { sample, state, custom } = props
   const running = state.status === 'running'
@@ -35,8 +37,16 @@ function RequestPanel(props: {
         {props.samples.map((s) => <option key={s.name} value={s.name}>{s.label}</option>)}
       </select>
       <button className="link" onClick={props.onPickArea} disabled={running}>＋ Choose another area on the map</button>
-      <label>Trucks, time and what to avoid</label>
-      <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="3 trucks, by 18:00, avoid the industrial zone" />
+      <div className="field-row">
+        <label htmlFor="trucks">Trucks</label>
+        <div className="stepper">
+          <button type="button" onClick={() => props.onTrucks(Math.max(1, props.trucks - 1))} disabled={running || props.trucks <= 1} aria-label="Fewer trucks">−</button>
+          <input id="trucks" type="number" min={1} max={30} value={props.trucks} disabled={running} onChange={(e) => props.onTrucks(Math.max(1, Math.min(30, Number(e.target.value) || 1)))} />
+          <button type="button" onClick={() => props.onTrucks(Math.min(30, props.trucks + 1))} disabled={running || props.trucks >= 30} aria-label="More trucks">+</button>
+        </div>
+      </div>
+      <label>Time and what to avoid</label>
+      <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="by 18:00, avoid the industrial zone" />
       <div className="examples">
         {sample?.examples.map((ex) => <button key={ex} className="example" onClick={() => props.onRequest(ex)} disabled={running}>{ex}</button>)}
       </div>
@@ -156,6 +166,7 @@ export default function App() {
   const [mode, setMode] = useState<Mode>('depot')
   const [auto, setAuto] = useState(false)
   const [autoCount, setAutoCount] = useState(20)
+  const [trucks, setTrucks] = useState(3)
   const [picking, setPicking] = useState(false)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
 
@@ -190,7 +201,7 @@ export default function App() {
     setPinned(null)
     setRelax(null)
     setMode('browse')
-    const body: { sample: string; request: string; custom?: object; auto_orders?: number } = { sample: name, request }
+    const body: { sample: string; request: string; trucks: number; custom?: object; auto_orders?: number } = { sample: name, request, trucks }
     if (custom.depot || custom.orders.length > 0 || custom.zoneClosed) {
       body.custom = { depot: custom.depot, orders: custom.orders, zone: custom.zoneClosed ? custom.zone : [] }
     }
@@ -234,7 +245,7 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} auto={auto} autoCount={autoCount} canPlan={canPlan} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} auto={auto} autoCount={autoCount} canPlan={canPlan} trucks={trucks} onTrucks={setTrucks} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">

@@ -58,14 +58,18 @@ def get_sample(name: str) -> Sample:
     raise KeyError(name)
 
 
-def request_text(request: str, custom: CustomInputs | None, auto_orders: int | None) -> str:
-    """The text sent to the parser. The order count comes from the user's clicks (or the "place for me" count), so it is
-    stated up front; any other number in the sentence is overridden later and reported."""
+def request_text(request: str, custom: CustomInputs | None, auto_orders: int | None, trucks: int | None = None) -> str:
+    """The text sent to the parser. The order count comes from the user's clicks (or the "place for me" count) and the
+    truck count from its own field, so both are stated up front; any other number in the sentence is overridden later
+    and reported."""
+    head = []
     if custom is not None and custom.orders:
-        return f"{len(custom.orders)} orders. {request}"
-    if auto_orders:
-        return f"{auto_orders} orders. {request}"
-    return request
+        head.append(f"{len(custom.orders)} orders.")
+    elif auto_orders:
+        head.append(f"{auto_orders} orders.")
+    if trucks:
+        head.append(f"{trucks} trucks.")
+    return " ".join([*head, request])
 
 
 def run_pipeline(
@@ -80,6 +84,7 @@ def run_pipeline(
     use_model_decider: bool = True,
     custom: CustomInputs | None = None,
     auto_orders: int | None = None,
+    trucks: int | None = None,
     emit: Emit,
 ) -> AgentResult:
     run: RunBudget = guard.new_run(run_cap_usd)
@@ -97,20 +102,28 @@ def run_pipeline(
 
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
     has_custom = custom is not None and not custom.empty
-    problem = parse_request(text, request_text(request, custom, auto_orders), run=run)
+    problem = parse_request(text, request_text(request, custom, auto_orders, trucks), run=run)
+    notes: list[str] = []
+    if trucks and problem.n_vehicles != trucks:
+        notes.append(f"Using {trucks} truck{'s' if trucks != 1 else ''} from the Trucks field instead of the {problem.n_vehicles} in the text.")
+    if trucks:
+        from orbitroute.understanding.constraints import with_vehicle_count
+
+        problem = with_vehicle_count(problem, trucks)
     if auto_orders and not (custom and custom.orders):
         from orbitroute.understanding.constraints import with_order_count
 
         problem = with_order_count(problem, auto_orders)
 
-    notes: list[str] = []
     if has_custom:
-        scenario, problem, scene2, notes = apply_custom(graph, scene, problem, custom, seed=seed)
+        scenario, problem, scene2, custom_notes = apply_custom(graph, scene, problem, custom, seed=seed)
+        notes += custom_notes
         if scene2 is not scene:
             emit(Event("scene", f"{len(scene2.zones)} zones including the one you drew", scene_json(scene2)))
         problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
         scenario.problem = problem
     else:
+        problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
         scenario = make_scenario(graph, scene, problem, seed=seed)
     emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {problem.avoid_zone_kinds or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
     emit(Event("scenario", f"depot and {len(scenario.order_nodes)} orders placed on the roads" + (" (yours)" if has_custom and custom.orders else " (synthetic)"), scenario_json(scenario)))
