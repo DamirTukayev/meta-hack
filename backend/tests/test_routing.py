@@ -88,3 +88,15 @@ def test_orders_are_placed_only_where_a_truck_can_legally_go():
     assert all(graph.nodes[n][1] > 220 for n in legal.order_nodes)
     stress = make_scenario(graph, scene, prob, seed=2, ensure_reachable=False)
     assert any(graph.nodes[n][1] < 180 for n in stress.order_nodes) or stress.order_nodes != legal.order_nodes
+
+
+def test_prefer_connected_depot_avoids_a_pocket_cut_off_by_the_zone(monkeypatch):
+    from orbitroute.routing import scenario as sc
+
+    graph, scene, prob = grid_graph(), grid_scene(), problem()
+    near_centre, far = (210.0, 210.0), (300.0, 300.0)
+    scene.warehouses = [near_centre, far]
+    pocket_node = graph.nearest_node(*near_centre)[0]
+    monkeypatch.setattr(sc, "_legally_reachable", lambda g, s, p, node: {node} if node == pocket_node else set(range(40)))
+    assert sc.pick_depot(graph, scene, prob) == pocket_node  # default: nearest the centre
+    assert sc.pick_depot(graph, scene, prob, prefer_connected=True) == graph.nearest_node(*far)[0]

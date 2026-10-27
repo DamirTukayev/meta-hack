@@ -36,10 +36,21 @@ def _blocked(scene: Scene, problem: Problem, x: float, y: float) -> bool:
     return bool(scene.kinds_at(x, y) & set(problem.avoid_zone_kinds))
 
 
-def pick_depot(graph: RoadGraph, scene: Scene, problem: Problem) -> int:
-    """A warehouse outside the avoided zones, closest to the image centre; else the node nearest the centre."""
+def pick_depot(graph: RoadGraph, scene: Scene, problem: Problem, prefer_connected: bool = False) -> int:
+    """A warehouse outside the avoided zones, closest to the image centre; else the node nearest the centre.
+
+    With prefer_connected the warehouse that can legally reach the most road wins (ties: nearest the centre), so a
+    depot boxed in by the avoided zone does not squeeze every order into one pocket.
+    """
     cx, cy = scene.width / 2, scene.height / 2
     allowed = [w for w in scene.warehouses if not _blocked(scene, problem, *w)]
+    if allowed and prefer_connected and problem.avoid_zone_kinds:
+        def reach(w: tuple[float, float]) -> tuple[int, float]:
+            node = graph.nearest_node(*w)[0]
+            return (-len(_legally_reachable(graph, scene, problem, node)), math.dist(w, (cx, cy)))
+
+        x, y = min(allowed, key=reach)
+        return graph.nearest_node(x, y)[0]
     if allowed:
         x, y = min(allowed, key=lambda w: math.dist(w, (cx, cy)))
         return graph.nearest_node(x, y)[0]
@@ -65,6 +76,7 @@ def make_scenario(
     min_sep_m: float = 90.0,
     ensure_reachable: bool = True,
     depot_node: int | None = None,
+    prefer_connected: bool = False,
 ) -> Scenario:
     """Place `problem.n_orders` synthetic orders on road nodes, deterministically for a given seed.
 
@@ -72,7 +84,7 @@ def make_scenario(
     to create stress cases with orders that the avoided zone cuts off.
     """
     rng = np.random.default_rng(seed)
-    depot = depot_node if depot_node is not None else pick_depot(graph, scene, problem)
+    depot = depot_node if depot_node is not None else pick_depot(graph, scene, problem, prefer_connected)
     reachable = _legally_reachable(graph, scene, problem, depot) if ensure_reachable and problem.avoid_zone_kinds else None
     if reachable is not None and len(reachable) - 1 < problem.n_orders:
         reachable = None  # not enough legal nodes: fall back to the whole graph

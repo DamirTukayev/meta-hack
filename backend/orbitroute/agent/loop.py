@@ -63,7 +63,7 @@ def run_agent(
     iterations: list[Iteration] = []
     time_limit, seed = time_limit_s, 0
 
-    emit(Event("start", f"{p.n_orders} orders, {p.n_vehicles} trucks, avoiding {p.avoid_zone_kinds or 'nothing'}", {"problem": p.model_dump()}))
+    emit(Event("start", f"Agent loop: solve, verify, repair (up to {max_iterations} repairs)", {"problem": p.model_dump()}))
 
     plan, report = None, None
     for it in range(max_iterations + 1):
