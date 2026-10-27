@@ -124,8 +124,8 @@ def run_pipeline(
         scenario.problem = problem
     else:
         problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
-        scenario = make_scenario(graph, scene, problem, seed=seed)
-    emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {problem.avoid_zone_kinds or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
+        scenario = make_scenario(graph, scene, problem, seed=seed, prefer_connected=True)
+    emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {', '.join(problem.avoid_zone_kinds) or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
     emit(Event("scenario", f"depot and {len(scenario.order_nodes)} orders placed on the roads" + (" (yours)" if has_custom and custom.orders else " (synthetic)"), scenario_json(scenario)))
 
     def agent_emit(e: Event) -> None:

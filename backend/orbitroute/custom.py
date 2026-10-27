@@ -99,5 +99,5 @@ def apply_custom(graph: RoadGraph, scene: Scene, problem: Problem, custom: Custo
             notes.append(f"Some orders were snapped to the nearest road (up to {max(snaps):.0f} m).")
         scenario = Scenario(graph, scene, problem, depot_node=depot_node, order_nodes=nodes, seed=seed)
     else:
-        scenario = make_scenario(graph, scene, problem, seed=seed, depot_node=depot_node)
+        scenario = make_scenario(graph, scene, problem, seed=seed, depot_node=depot_node, prefer_connected=True)
     return scenario, problem, scene, notes

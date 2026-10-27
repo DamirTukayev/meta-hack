@@ -139,7 +139,7 @@ function Checklist({ report, title }: { report?: ReportGeo; title: string }) {
 function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => void; relax: number | null }) {
   const { state } = props
   const r: Result | undefined = state.result
-  if (state.status === 'error') return <div className="result error"><b>Something went wrong.</b> {state.error}</div>
+  if (state.status === 'error') return <div className="result idle">No plan was made. The reason is in the red message above.</div>
   if (!r) return <div className="result idle">{state.status === 'running' ? 'The agent is working on it…' : 'No plan yet.'}</div>
   const total = state.problem?.n_orders ?? r.plan.served
   const excluded = Object.keys(r.excluded).length
