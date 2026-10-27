@@ -279,8 +279,8 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <div className="brand"><svg width="26" height="26" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="#2dd4bf" strokeWidth="3" /><circle cx="16" cy="16" r="4" fill="#2dd4bf" /></svg><b>OrbitRoute</b></div>
-        <p>A satellite image and one sentence in. A verified delivery plan out — the agent checks its own work.</p>
+        <div className="brand"><svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="#ffb000" strokeWidth="2" /><path d="M16 1v8M16 23v8M1 16h8M23 16h8" stroke="#ffb000" strokeWidth="2" /><circle cx="16" cy="16" r="2.5" fill="#ffb000" /></svg><b>OrbitRoute</b></div>
+        <Stepper state={state} />
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
@@ -300,7 +300,6 @@ export default function App() {
               <button className="primary inline" onClick={onPlan} disabled={!canPlan}>Replan</button>
             </div>
           )}
-          <Stepper state={state} />
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
           <MapView
             sample={sample} state={state} selected={sel} plan={plan} report={report}
