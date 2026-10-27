@@ -12,7 +12,8 @@ from orbitroute.agent.repair import Decider, ModelDecider, PolicyDecider
 from orbitroute.config import ROOT
 from orbitroute.custom import CustomInputs, apply_custom
 from orbitroute.llm.budget import BudgetGuard, RunBudget
-from orbitroute.llm.client import MetaClient
+from orbitroute.llm.client import ApiError, MetaClient
+from orbitroute.perception.buildings import building_points, segment_buildings
 from orbitroute.perception.flood import flood_zones, segment_floods
 from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
@@ -125,8 +126,15 @@ def run_pipeline(
 
         problem = with_order_count(problem, auto_orders)
 
+    targets = None
+    if not (custom and custom.orders):  # the agent places the orders: at buildings, not at random points of the road
+        emit(Event("stage", "Finding buildings with SAM 3.1 (delivery addresses)", {"stage": "scene"}))
+        try:
+            targets = building_points(segment_buildings(client, image_bytes, run=run), sample.meta["m_per_px"])
+        except ApiError:  # not essential: without it the orders go on road points
+            notes.append("Buildings could not be read from the photo, so the orders were placed on road points.")
     if has_custom:
-        scenario, problem, scene2, custom_notes = apply_custom(graph, scene, problem, custom, seed=seed)
+        scenario, problem, scene2, custom_notes = apply_custom(graph, scene, problem, custom, seed=seed, targets=targets)
         notes += custom_notes
         if scene2 is not scene:
             emit(Event("scene", f"{len(scene2.zones)} zones including the one you drew", scene_json(scene2)))
@@ -134,9 +142,9 @@ def run_pipeline(
         scenario.problem = problem
     else:
         problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
-        scenario = make_scenario(graph, scene, problem, seed=seed, prefer_connected=True)
+        scenario = make_scenario(graph, scene, problem, seed=seed, prefer_connected=True, targets=targets)
     emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {', '.join(problem.avoid_zone_kinds) or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
-    emit(Event("scenario", f"depot and {len(scenario.order_nodes)} orders placed on the roads" + (" (yours)" if has_custom and custom.orders else " (synthetic)"), scenario_json(scenario)))
+    emit(Event("scenario", (f"depot and {len(scenario.order_nodes)} orders placed on the roads (yours)" if has_custom and custom.orders else f"depot and {len(scenario.order_nodes)} orders placed" + (f", {sum(t is not None for t in scenario.order_targets)} of them at buildings found by SAM 3.1" if scenario.order_targets else " on road points")), scenario_json(scenario)))
 
     def agent_emit(e: Event) -> None:
         data = dict(e.data)
@@ -162,9 +170,10 @@ def run_pipeline(
                 "report": report_json(result.scenario, result.report),
                 "excluded": {str(k): v for k, v in result.excluded.items()},
                 "relaxations": [
-                    {"kind": o.kind, "amount": o.amount, "description": o.description, "plan": plan_json(o.scenario, o.plan), "report": report_json(o.scenario, o.report)}
+                    {"kind": o.kind, "amount": o.amount, "description": o.description, "plan": plan_json(o.scenario, o.plan), "report": report_json(o.scenario, o.report), "depot": scenario_json(o.scenario)["depot"]}
                     for o in result.relaxations
                 ],
+                "recommendation": {"index": result.recommendation.index, "reason": result.recommendation.reason, "source": result.recommendation.source} if result.recommendation else None,
                 "seconds": round(result.seconds, 1),
                 "cost_usd": round(run.spent, 4),
                 "paid_calls": run.calls,

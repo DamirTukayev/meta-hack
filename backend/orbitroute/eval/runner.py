@@ -13,6 +13,7 @@ from orbitroute.eval.parse_cases import CASES
 from orbitroute.eval.scenarios import SCENARIOS, EvalScenario
 from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
+from orbitroute.perception.buildings import building_points, segment_buildings
 from orbitroute.perception.flood import flood_zones, segment_floods
 from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
@@ -21,12 +22,14 @@ from orbitroute.routing.scenario import make_scenario
 from orbitroute.understanding.constraints import ParsedRequest, hhmm_to_seconds, resolve
 from orbitroute.understanding.request import parse_request
 from orbitroute.understanding.scene import Scene, analyze_scene
+from orbitroute.verifier.independent import audit_plan, disagreements
 
 
 @dataclass
 class World:
     graph: object
     scene: object
+    targets: list | None = None  # building centres: where the orders go, as in the product
 
 
 def load_world(client: MetaClient, name: str, run) -> World:
@@ -35,7 +38,7 @@ def load_world(client: MetaClient, name: str, run) -> World:
     scene = analyze_scene(client, s.image_bytes, run=run)
     if s.meta.get("event"):  # disaster imagery: the standing water, as the pipeline finds it when the request says "flooded"
         scene = Scene(scene.width, scene.height, [*scene.zones, *flood_zones(segment_floods(client, s.image_bytes, run=run), s.meta["m_per_px"])], scene.warehouses)
-    return World(graph, scene)
+    return World(graph, scene, building_points(segment_buildings(client, s.image_bytes, run=run), s.meta["m_per_px"]))
 
 
 def build_scenario(world: World, sc: EvalScenario):
@@ -47,9 +50,9 @@ def build_scenario(world: World, sc: EvalScenario):
     )
     problem = resolve(parsed)
     if sc.zone:
-        scenario, *_ = apply_custom(world.graph, world.scene, problem, CustomInputs(zone=list(sc.zone)), seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere)
+        scenario, *_ = apply_custom(world.graph, world.scene, problem, CustomInputs(zone=list(sc.zone)), seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere, targets=world.targets)
         return scenario
-    return make_scenario(world.graph, world.scene, problem, seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere)
+    return make_scenario(world.graph, world.scene, problem, seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere, targets=world.targets)
 
 
 def run_scenarios(client: MetaClient, guard: BudgetGuard, *, time_limit_s: float = 2.0, model_decider_on: int = 6, log=print) -> list[dict]:
@@ -63,19 +66,25 @@ def run_scenarios(client: MetaClient, guard: BudgetGuard, *, time_limit_s: float
         scenario = build_scenario(worlds[sc.sample], sc)
         res = run_agent(scenario, decider=PolicyDecider(), time_limit_s=time_limit_s)
         first = res.iterations[0]
+        # the audit that judges the plans is a second implementation, written separately from the verifier the agent runs
+        audit_first = audit_plan(scenario, first.plan, excluded={})
+        audit_final = audit_plan(res.scenario, res.plan, excluded=res.report.excluded)  # a relaxation option carries its own left-out orders
         row = {
             "id": sc.id, "sample": sc.sample, "orders": sc.n_orders, "trucks": sc.n_vehicles, "deadline": sc.deadline,
             "avoid": list(sc.avoid) or (["drawn zone"] if sc.zone else []), "expect": sc.expect,
             # baseline = the first solve, exactly what the pipeline would return without a verifier
             "baseline_solver_feasible": first.plan.feasible,
-            "baseline_audit_ok": first.report.ok,
-            "baseline_violations": first.report.summary(),
+            "baseline_audit_ok": audit_first.ok,
+            "baseline_verifier_ok": first.report.ok,
+            "baseline_violations": {k: len(v) for k, v in audit_first.failed.items()},
+            "audit_disagreements": [*disagreements(first.report, audit_first), *disagreements(res.report, audit_final)],
             "agent_status": res.status,
             "agent_iterations": len(res.iterations),
             "agent_actions": [i.action for i in res.iterations if i.action],
             "excluded_orders": len(res.excluded),
             "relaxations": [o.description for o in res.relaxations],
             "final_report_ok": res.report.ok,
+            "final_audit_ok": audit_final.ok,
             "seconds": round(res.seconds, 1),
         }
         if not first.report.ok and model_used < model_decider_on:
@@ -127,6 +136,12 @@ def summarize_scenarios(rows: list[dict]) -> dict:
             "mean_cost_usd": round(mean(m["cost_usd"] for m in models), 4) if models else None,
         },
         "verified_scenarios": len(verified_final),
+        "audit": {
+            "plans_compared": 2 * n,
+            "plans_with_a_disagreement": sum(bool(r["audit_disagreements"]) for r in rows),
+            "disagreements": sum(len(r["audit_disagreements"]) for r in rows),
+            "returned_plans_failing_the_audit": sum(not r["final_audit_ok"] for r in rows if r["agent_status"] in ("verified", "verified_partial")),
+        },
     }
 
 

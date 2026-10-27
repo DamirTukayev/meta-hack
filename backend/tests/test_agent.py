@@ -113,6 +113,67 @@ def test_a_mostly_cut_off_request_also_offers_to_serve_the_reachable_orders_with
     assert "2 reachable orders" in option.description and "#3" in option.description and "#4" in option.description
 
 
+def split_scenario():
+    """A vertical forbidden band: the depot and one order on its left, three orders on its right."""
+    return make_scenario_at(box(180, 0, 220, 400), [(100, 100), (300, 100), (300, 200), (300, 300)], depot_pt=(100, 200), vehicle_capacity=4)
+
+
+def test_when_the_zone_cuts_the_depot_off_the_agent_offers_to_move_the_depot_to_where_the_orders_are():
+    result = run_agent(split_scenario(), time_limit_s=1.0)
+    assert result.status == "needs_relaxation"
+    option = next(o for o in result.relaxations if o.kind == "move_depot")
+    assert option.report.ok and option.report.excluded.keys() == {1}  # three of four orders, order 1 stays cut off
+    assert sorted(s.order for r in option.plan.routes for s in r.stops) == [2, 3, 4]
+    assert option.scenario.graph.nodes[option.scenario.depot_node][0] > 220  # the depot is now on the right of the band
+    assert next(c for c in option.report.checks if c.kind == "zones").passed  # no rule is broken
+    assert "3 of 4 orders" in option.description
+
+
+def test_no_depot_move_is_offered_when_the_depot_already_reaches_the_most_orders():
+    result = run_agent(make_scenario_at(box(250, 0, 400, 400), [(100, 100), (100, 300), (300, 200), (300, 300)], vehicle_capacity=4), time_limit_s=1.0)
+    assert not any(o.kind == "move_depot" for o in result.relaxations)
+
+
+def test_the_policy_recommends_the_safe_option_that_serves_the_most_orders():
+    result = run_agent(split_scenario(), time_limit_s=1.0)
+    rec = PolicyDecider().recommend(result.relaxations, result.scenario.problem)
+    chosen = result.relaxations[rec.index]
+    assert not chosen.kind.startswith("allow_zone") and chosen.kind == "move_depot" and rec.source == "policy"
+    assert result.recommendation.index == rec.index  # the loop used it (the default decider is the policy)
+
+
+class FakeJSON:
+    def __init__(self, raw=None, raises=None):
+        self.raw, self.raises = raw, raises
+        self.messages = None
+
+    def chat_json(self, messages, name, schema, **kw):
+        self.messages = messages
+        if self.raises:
+            raise self.raises
+        return self.raw, None
+
+
+def test_the_model_recommendation_is_used_when_it_is_sensible_and_overruled_when_it_is_not():
+    from orbitroute.llm.client import ApiError
+
+    result = run_agent(split_scenario(), time_limit_s=1.0)
+    options, problem = result.relaxations, result.scenario.problem
+    safe = next(i for i, o in enumerate(options) if o.kind == "serve_reachable")
+    unsafe = next(i for i, o in enumerate(options) if o.kind.startswith("allow_zone"))
+    ok = ModelDecider(FakeJSON({"index": safe, "reason": "Keeps every rule."})).recommend(options, problem)
+    assert (ok.index, ok.source, ok.reason) == (safe, "model", "Keeps every rule.")
+    # it must not recommend driving through the forbidden zone while an option that keeps every rule exists
+    rejected = ModelDecider(FakeJSON({"index": unsafe, "reason": "Fastest."})).recommend(options, problem)
+    assert rejected.source == "policy" and "policy used" in rejected.reason and not options[rejected.index].kind.startswith("allow_zone")
+    for bad in (FakeJSON({"index": 99, "reason": "x"}), FakeJSON({"index": 0, "reason": " "}), FakeJSON(raises=ApiError(500, "down"))):
+        assert ModelDecider(bad).recommend(options, problem).source == "policy"
+    fake = FakeJSON({"index": safe, "reason": "ok"})
+    ModelDecider(fake).recommend(options, problem)
+    sent = fake.messages[1]["content"]
+    assert "drives_through_avoided_zone" in sent and "orders_served" in sent
+
+
 def test_policy_drops_a_few_unreachable_orders_but_not_most_of_them():
     from orbitroute.verifier.checks import Report, Violation
 

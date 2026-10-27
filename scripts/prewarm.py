@@ -9,6 +9,7 @@ import json
 import shutil
 
 from orbitroute.config import PREWARMED_DIR, ROOT
+from orbitroute.perception.buildings import building_cache_name
 from orbitroute.perception.flood import flood_cache_names
 from orbitroute.perception.segment import cache_names
 
@@ -17,7 +18,7 @@ PREWARMED_DIR.mkdir(parents=True, exist_ok=True)
 for jpg in sorted((ROOT / "data" / "samples").glob("*.jpg")):
     h = hashlib.sha256(jpg.read_bytes()).hexdigest()[:16]
     meta = json.loads(jpg.with_suffix(".json").read_text())
-    wanted = [*cache_names(jpg.read_bytes()), f"scene_{h}.json", *(flood_cache_names(jpg.read_bytes()) if meta.get("event") else [])]
+    wanted = [*cache_names(jpg.read_bytes()), building_cache_name(jpg.read_bytes()), f"scene_{h}.json", *(flood_cache_names(jpg.read_bytes()) if meta.get("event") else [])]
     for name in wanted:
         src = CACHE / name
         if not src.exists():

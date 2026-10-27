@@ -3,6 +3,7 @@ name = "orbitroute"
 version = "0.1.0"
 description = "Agent that turns a satellite image and a natural-language request into a verified delivery plan."
 requires-python = ">=3.11"
+license = "MIT"
 dependencies = [
     "httpx>=0.27",
     "python-dotenv>=1.0",

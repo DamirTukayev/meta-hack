@@ -1,10 +1,13 @@
 // Records the README demo: frames of a one-click run and of the drive replay, plus a full-size screenshot of the result.
 // Needs the app running on http://localhost:8000 (npm run build first). Usage: node scripts/capture_demo.mjs [frames-dir]
+// Optional second argument: the example sentence to click first (default: the first one). Pick one where the agent has to repair
+// a violation, for example "by 12:00, avoid the industrial zone" on Columbus.
 // Then: uv run python scripts/make_gif.py [frames-dir]
 import { mkdirSync, rmSync } from 'node:fs'
 import { launch } from './cdp.mjs'
 
 const dir = process.argv[2] ?? 'scratch/frames'
+const example = process.argv[3]
 rmSync(dir, { recursive: true, force: true })
 mkdirSync(dir, { recursive: true })
 const b = await launch(1440, 900)
@@ -14,6 +17,7 @@ const frame = async (tag = '') => b.shot(`${dir}/f${String(n++).padStart(3, '0')
 await b.goto('http://localhost:8000/')
 await b.sleep(1200)
 await frame('_hold')                     // the welcome card
+if (example) await b.eval(`[...document.querySelectorAll('.example')].find(x => x.innerText.trim() === ${JSON.stringify(example)}).click()`)
 await b.eval(`[...document.querySelectorAll('button')].find(x => /try it with/i.test(x.innerText)).click()`)
 const t0 = Date.now()
 let done = false

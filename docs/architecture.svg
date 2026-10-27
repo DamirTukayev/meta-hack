@@ -43,7 +43,7 @@
   <text x="326" y="86" class="t">two tilings of the photo, masks united</text>
   <text x="326" y="103" class="t">mask → skeleton → road graph with</text>
   <text x="326" y="120" class="t">gap bridging and speed classes</text>
-  <text x="326" y="141" class="l">also finds flood water, for "avoid the floods"</text>
+  <text x="326" y="141" class="l">also finds buildings (the addresses) and flood water</text>
 
   <rect class="model" x="310" y="164" width="390" height="76"/>
   <text x="326" y="186" class="h">MUSE SPARK (VISION)  ·  READ THE LAND</text>
@@ -103,7 +103,7 @@
   <text x="326" y="592" class="h">REPAIR AGENT  ·  MUSE SPARK CHOOSES THE FIX</text>
   <text x="326" y="612" class="t">forbid violating road segments · forbid the zone ·</text>
   <text x="326" y="629" class="t">leave out unreachable orders · search longer ·</text>
-  <text x="326" y="646" class="t">propose the smallest relaxation (rules as fallback)</text>
+  <text x="326" y="646" class="t">propose relaxations, recommend one (rules as fallback)</text>
   <path class="lr" d="M715 520 L715 570" marker-end="url(#r)"/>
   <text x="727" y="550" class="hr">violations</text>
   <path class="lr" d="M310 615 L270 615 L270 470 L310 470" marker-end="url(#r)"/>

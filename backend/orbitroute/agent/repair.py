@@ -29,6 +29,27 @@ class Decision:
 
 
 @dataclass
+class Recommendation:
+    index: int  # which relaxation option the agent recommends
+    reason: str
+    source: str  # "model" | "policy"
+
+
+def breaks_a_rule(option) -> bool:
+    """Options that stop avoiding the zone drive through what was forbidden; the others only change what is served or how."""
+    return option.kind.startswith("allow_zone")
+
+
+def policy_recommendation(options) -> Recommendation:
+    """Rules first: keep every rule, serve the most orders; drive through the zone only when nothing else is left."""
+    safe = [i for i, o in enumerate(options) if not breaks_a_rule(o)]
+    if not safe:
+        return Recommendation(0, "Every option drives through the avoided zone; this one does it the least.", "policy")
+    best = max(safe, key=lambda i: (sum(len(r.stops) for r in options[i].plan.routes), -i))
+    return Recommendation(best, "It breaks no rule and serves the most orders of the options that keep every rule.", "policy")
+
+
+@dataclass
 class DecisionContext:
     report: Report
     iteration: int
@@ -58,9 +79,14 @@ def allowed_actions(ctx: DecisionContext) -> list[str]:
 class Decider(Protocol):
     def decide(self, ctx: DecisionContext) -> Decision: ...
 
+    def recommend(self, options, problem) -> Recommendation: ...
+
 
 class PolicyDecider:
     """Deterministic rules; also the fallback whenever the model's answer cannot be used."""
+
+    def recommend(self, options, problem) -> Recommendation:
+        return policy_recommendation(options)
 
     def decide(self, ctx: DecisionContext) -> Decision:
         allowed = allowed_actions(ctx)
@@ -121,3 +147,43 @@ class ModelDecider:
             pass
         fb = self._fallback.decide(ctx)
         return Decision(fb.action, fb.reason + " (model answer unusable; policy used)", "policy")
+
+    def recommend(self, options, problem) -> Recommendation:
+        """Asks Muse Spark which verified alternative to recommend; a rule keeps it from recommending to drive through a forbidden zone."""
+        import json
+
+        fallback = policy_recommendation(options)
+        if len(options) < 2:
+            return fallback
+        schema = {
+            "type": "object",
+            "properties": {"index": {"type": "integer", "enum": list(range(len(options)))}, "reason": {"type": "string"}},
+            "required": ["index", "reason"],
+        }
+        facts = {
+            "avoided_zone_kinds": list(problem.avoid_zone_kinds),
+            "orders_in_the_request": problem.n_orders,
+            "options": [
+                {
+                    "index": i,
+                    "change": o.description,
+                    "orders_served": sum(len(r.stops) for r in o.plan.routes),
+                    "orders_left_out": len(o.report.excluded),
+                    "drives_through_avoided_zone": breaks_a_rule(o),
+                    "trucks_used": sum(1 for r in o.plan.routes if r.stops),
+                    "last_truck_back": o.report.metrics.get("last_return"),
+                }
+                for i, o in enumerate(options)
+            ],
+        }
+        messages = [{"role": "system", "content": prompts.load("recommend")[1]}, {"role": "user", "content": json.dumps(facts)}]
+        try:
+            raw, _ = self._client.chat_json(messages, "Recommendation", schema, max_completion_tokens=1500, reasoning_effort="low", run=self._run, label="recommendation")
+            index = raw.get("index")
+            reason = str(raw.get("reason", "")).strip()
+            safe_exists = any(not breaks_a_rule(o) for o in options)
+            if isinstance(index, int) and 0 <= index < len(options) and reason and not (safe_exists and breaks_a_rule(options[index])):
+                return Recommendation(index, reason, "model")
+        except (ApiError, BudgetExceeded, ValueError, KeyError):
+            pass
+        return Recommendation(fallback.index, fallback.reason + " (model answer unusable; policy used)", "policy")

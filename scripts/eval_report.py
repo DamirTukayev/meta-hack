@@ -13,18 +13,20 @@ if "scenarios" in res:
         f"## Plan → verify → repair vs. a plain solver ({s['scenarios']} scenarios)",
         "",
         "Baseline = the first solve of the same solver, returned as is (what a pipeline without the verifier would output). "
-        "Every plan is audited by the independent verifier, so the baseline's hidden violations become visible.",
+        "Every plan is audited by a second implementation of the checks, written separately from the verifier the agent runs (`verifier/independent.py`: exact shapely geometry on the route polylines), so the baseline's hidden violations become visible.",
         "",
         "| | Solver only (no verifier) | OrbitRoute agent |",
         "|---|---|---|",
         f"| Plans the solver reports as feasible | {b['solver_says_feasible']}/{s['scenarios']} | — |",
-        f"| Of those, plans that break a constraint on independent audit | **{b['invalid_after_independent_audit']}** ({(b['invalid_rate_among_claimed_feasible'] or 0):.0%}) | 0 — every plan returned as verified passed the audit |",
+        f"| Of those, plans that break a constraint on independent audit | **{b['invalid_after_independent_audit']}** ({(b['invalid_rate_among_claimed_feasible'] or 0):.0%}) | 0 — every plan returned as verified passed the audit (see below) |",
         f"| Scenarios with a first-pass violation → ended verified | — | {a['of_those_ended_verified']}/{a['scenarios_with_a_first_pass_violation']} (including those that leave cut-off orders out with a reason; the other {a['scenarios_with_a_first_pass_violation'] - a['of_those_ended_verified']} cannot be met as stated; see the tables) |",
         f"| Provably infeasible requests flagged with a verified fix | 0/{a['provably_infeasible']} (solver returns a plan anyway) | {a['infeasible_correctly_flagged']}/{a['provably_infeasible']} |",
         f"| Final status | — | {', '.join(f'{k}: {v}' for k, v in a['status_counts'].items())} |",
         f"| Mean iterations / mean wall time | 1 | {a['mean_iterations']} / {a['mean_seconds']} s |",
         "",
         f"Violation kinds seen in first-pass plans (scenarios affected): {', '.join(f'{k} {v}' for k, v in b['violation_kinds_in_scenarios'].items()) or 'none'}.",
+        (f"The verifier the agent runs and the separate audit gave different verdicts on **{s['audit']['disagreements']}** of {s['audit']['plans_compared']} checked plans (first plan and returned plan of every scenario); {s['audit']['returned_plans_failing_the_audit']} of the plans the agent returned as verified fail the audit." if "audit" in s else ""),
+        "",
         "",
     ]
     if m["runs"]:

@@ -41,6 +41,10 @@ LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphi
 MAX_REQUEST_CHARS = 400
 settings = Settings.load()
 log = logging.getLogger("orbitroute")
+
+
+class RunCancelled(Exception):
+    """The browser disconnected; the run is abandoned at its next event."""
 AREA_EXAMPLES = ["by 12:00, avoid the industrial zone", "by 12:00, avoid the residential area"]
 # New map areas cost a download plus (on first use) about $0.45 of SAM calls (two tilings), so they are rate limited.
 area_limit_ip = RateLimiter(max_events=4, window_s=3600)
@@ -62,11 +66,15 @@ _text_client = None
 
 
 def client_ip(request: Request) -> str:
-    """The caller's address. Behind a reverse proxy (TRUST_PROXY=1) the first X-Forwarded-For entry is used."""
+    """The caller's address. Behind trusted reverse proxies (TRUST_PROXY=1) it comes from X-Forwarded-For.
+
+    Every proxy appends the address it saw, so only the entries from the right are trustworthy: the first one is whatever
+    the caller wrote. With TRUSTED_PROXY_HOPS proxies in front of the app, the client is that many entries from the right.
+    """
     if settings.trust_proxy:
-        forwarded = request.headers.get("x-forwarded-for", "")
-        if forwarded:
-            return forwarded.split(",")[0].strip()
+        parts = [p.strip() for p in request.headers.get("x-forwarded-for", "").split(",") if p.strip()]
+        if len(parts) >= settings.trusted_proxy_hops:
+            return parts[-settings.trusted_proxy_hops]
     return request.client.host if request.client else "unknown"
 
 
@@ -118,11 +126,18 @@ async def transcribe(request: Request) -> dict:
     wait = max(asr_limit_ip.check(client_ip(request)), asr_limit_all.check("all"))
     if wait:
         raise HTTPException(429, f"Too many voice requests right now. Try again in {int(wait // 60) + 1} min.", headers={"Retry-After": str(int(wait) + 1)})
-    audio = await request.body()
+    declared = request.headers.get("content-length")
+    if declared and declared.isdigit() and int(declared) > MAX_AUDIO_BYTES:
+        raise HTTPException(413, "The recording is too long (limit about 60 seconds).")
+    chunks, size = [], 0
+    async for chunk in request.stream():  # never hold more than the limit in memory, whatever the headers claim
+        size += len(chunk)
+        if size > MAX_AUDIO_BYTES:
+            raise HTTPException(413, "The recording is too long (limit about 60 seconds).")
+        chunks.append(chunk)
+    audio = b"".join(chunks)
     if not audio:
         raise HTTPException(400, "No audio received.")
-    if len(audio) > MAX_AUDIO_BYTES:
-        raise HTTPException(413, "The recording is too long (limit about 60 seconds).")
     loop = asyncio.get_running_loop()
     try:
         text = await loop.run_in_executor(None, lambda: get_client().transcribe(audio))
@@ -156,8 +171,7 @@ def choose_area(body: AreaRequest, request: Request) -> dict:
     """Fetch (once) the aerial image around a point picked on the map and register it as a sample."""
     name = area_id(body.lat, body.lon)
     if not (AREAS_DIR / f"{name}.jpg").exists():  # only new downloads count against the limits
-        ip = request.client.host if request.client else "unknown"
-        wait = max(area_limit_ip.check(ip), area_limit_all.check("all"))
+        wait = max(area_limit_ip.check(client_ip(request)), area_limit_all.check("all"))
         if wait:
             raise HTTPException(429, f"Too many new areas right now. Try again in {int(wait // 60) + 1} min, or pick one of the ready-made areas.")
     try:
@@ -209,8 +223,11 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
     request, seed, decider, custom, auto_orders, trucks = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks
     q: queue.Queue = queue.Queue()
     done = object()
+    stopped = threading.Event()  # set when the browser goes away: the run stops at its next step instead of spending money for nobody
 
     def emit(e: Event) -> None:
+        if stopped.is_set():
+            raise RunCancelled()
         q.put(("event", {"type": e.type, "message": e.message, "data": e.data, "t": round(e.t, 3)}))
 
     def work() -> None:
@@ -219,6 +236,8 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
                 smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
                 seed=seed, use_model_decider=decider == "model", custom=custom, auto_orders=auto_orders, trucks=trucks, emit=emit,
             )
+        except RunCancelled:
+            log.info("run cancelled: the client disconnected")
         except BudgetExceeded as exc:
             q.put(("failure", {"message": f"Budget guard: {exc}"}))
         except PlacementError as exc:
@@ -237,13 +256,16 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
 
     async def stream():
         loop = asyncio.get_running_loop()
-        while True:
-            item = await loop.run_in_executor(None, q.get)
-            if item is done:
-                yield _sse("done", {})
-                return
-            kind, payload = item
-            yield _sse(kind, payload)
+        try:
+            while True:
+                item = await loop.run_in_executor(None, q.get)
+                if item is done:
+                    yield _sse("done", {})
+                    return
+                kind, payload = item
+                yield _sse(kind, payload)
+        finally:
+            stopped.set()  # also reached when the client disconnects mid-run
 
     return StreamingResponse(stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 

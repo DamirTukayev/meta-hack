@@ -45,7 +45,10 @@ def scene_json(scene: Scene) -> dict:
 
 
 def scenario_json(sc: Scenario) -> dict:
-    return {"depot": _xy(sc.graph.nodes[sc.depot_node]), "orders": [_xy(sc.graph.nodes[n]) for n in sc.order_nodes]}
+    out = {"depot": _xy(sc.graph.nodes[sc.depot_node]), "orders": [_xy(sc.graph.nodes[n]) for n in sc.order_nodes]}
+    if sc.order_targets:  # the building behind each order (null where the order is just a point on a road)
+        out["order_targets"] = [_xy(t) if t else None for t in sc.order_targets]
+    return out
 
 
 def plan_json(sc: Scenario, plan: Plan, matrix: CostMatrix | None = None) -> dict:

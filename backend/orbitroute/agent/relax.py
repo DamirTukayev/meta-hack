@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+import math
+
+import networkx as nx
+
 from orbitroute.routing.matrix import CostMatrix, build_matrix
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan, solve_vrp
@@ -18,7 +22,7 @@ MAX_EXTRA_DEADLINE_S = 4 * 3600
 
 @dataclass
 class RelaxationOption:
-    kind: str  # serve_reachable | add_vehicles | extend_deadline | allow_zone | allow_zone+<other>
+    kind: str  # move_depot | serve_reachable | add_vehicles | extend_deadline | allow_zone | allow_zone+<other>
     amount: int  # trucks, or seconds
     description: str
     scenario: Scenario
@@ -47,6 +51,39 @@ def _mark_zone_relaxed(report: Report, through_m: float) -> Report:
     return report
 
 
+def _move_depot(scenario: Scenario, excluded: dict[int, str], inside: dict, zone_edges: set, time_limit_s: float, seed: int) -> RelaxationOption | None:
+    """Put the depot on the piece of road (with the avoided zones closed) that reaches the most orders, if that beats the current one."""
+    g = scenario.graph.to_networkx()
+    g.remove_edges_from([e for e in zone_edges if g.has_edge(*e)])
+    comp_of = {n: i for i, c in enumerate(nx.connected_components(g)) for n in c}
+    orders = {i + 1: n for i, n in enumerate(scenario.order_nodes) if i + 1 not in excluded}
+    counts: dict[int, int] = {}
+    for n in orders.values():
+        counts[comp_of[n]] = counts.get(comp_of[n], 0) + 1
+    if not counts:
+        return None
+    best = max(counts, key=lambda c: counts[c])
+    current = counts.get(comp_of[scenario.depot_node], 0)
+    if counts[best] <= current:
+        return None
+    mine = [o for o, n in orders.items() if comp_of[n] == best]
+    pts = [scenario.graph.nodes[orders[o]] for o in mine]
+    cx, cy = sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)
+    taken = set(orders.values())
+    members = [n for n, c in comp_of.items() if c == best and n not in taken]
+    if not members:
+        return None
+    depot = min(members, key=lambda n: math.dist(scenario.graph.nodes[n], (cx, cy)))
+    moved = replace(scenario, depot_node=depot)
+    left_out = {**excluded, **{o: "cut off: cannot be reached without entering an avoided zone" for o in orders if o not in mine}}
+    matrix = build_matrix(moved.graph, moved.location_nodes, zone_edges)
+    plan, report = _try(moved, matrix, left_out, inside, time_limit_s, seed)
+    if not report.ok:
+        return None
+    reach = f"all {len(mine)} orders" if len(mine) == len(orders) else f"{len(mine)} of {len(orders)} orders"
+    return RelaxationOption("move_depot", len(mine), f"move the depot to the spot marked on the map: {reach} become reachable without entering the zone (from the current spot: {current})", moved, plan, report)
+
+
 def find_relaxations(
     scenario: Scenario,
     matrix: CostMatrix,
@@ -60,6 +97,11 @@ def find_relaxations(
     """Smallest verified relaxations, one per dimension: more trucks, a later deadline, or entering the zone."""
     options: list[RelaxationOption] = []
     p = scenario.problem
+
+    if zone_edges:
+        moved = _move_depot(scenario, excluded, inside, zone_edges, time_limit_s, seed)
+        if moved:
+            options.append(moved)
 
     # serve what can be reached and say which orders are cut off: breaks no rule, only the promise to serve everyone
     if zone_edges:

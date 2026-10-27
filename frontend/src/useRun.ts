@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
 import type { Problem, RunState, StreamEvent, Zone, XY } from './types'
 
-export const initialState: RunState = { status: 'idle', stage: '', zones: [], warehouses: [], orders: [], iterations: [], log: [] }
+export const initialState: RunState = { status: 'idle', stage: '', zones: [], warehouses: [], orders: [], orderTargets: [], iterations: [], log: [] }
 
 type Action = { kind: 'start' } | { kind: 'reset' } | { kind: 'event'; e: StreamEvent; t0: number } | { kind: 'error'; message: string; point?: RunState['errorPoint'] } | { kind: 'done' }
 
@@ -25,7 +25,7 @@ function reduce(s: RunState, a: Action): RunState {
     case 'problem':
       return { ...s, problem: { ...(d.problem as Problem), assumptions: d.assumptions }, log: add(e.message) }
     case 'scenario':
-      return { ...s, depot: d.depot, orders: d.orders, log: add(e.message) }
+      return { ...s, depot: d.depot, orders: d.orders, orderTargets: d.order_targets ?? [], log: add(e.message) }
     case 'solve':
       return { ...s, stage: 'Verifying the plan independently', iterations: [...s.iterations, { n: d.iteration, plan: d.plan }], log: add(e.message) }
     case 'verify': {

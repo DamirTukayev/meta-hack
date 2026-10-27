@@ -14,6 +14,8 @@ from orbitroute.understanding.constraints import Problem
 from orbitroute.understanding.scene import Scene
 
 # Where deliveries tend to be: houses and shops, rarely parks, never in an avoided zone.
+MAX_TARGET_SNAP_M = 80.0  # a building further than this from every usable road node is not a delivery address
+BUILDING_SEP_M = 35.0  # deliveries to neighbouring houses are fine, but not to the same one twice
 KIND_WEIGHT = {"residential": 3.0, "commercial": 2.0, "other": 1.0, "park_forest": 0.3, "industrial": 1.0}
 
 
@@ -25,6 +27,7 @@ class Scenario:
     depot_node: int
     order_nodes: list[int]  # graph node of each order
     seed: int
+    order_targets: list[tuple[float, float] | None] | None = None  # the building each order belongs to, where known (image pixels)
 
     @property
     def location_nodes(self) -> list[int]:
@@ -89,6 +92,7 @@ def make_scenario(
     ensure_reachable: bool = True,
     depot_node: int | None = None,
     prefer_connected: bool = False,
+    targets: list[tuple[float, float]] | None = None,
 ) -> Scenario:
     """Place `problem.n_orders` synthetic orders on road nodes, deterministically for a given seed.
 
@@ -111,18 +115,38 @@ def make_scenario(
     if len(candidates) < problem.n_orders:
         raise ValueError(f"only {len(candidates)} usable road nodes for {problem.n_orders} orders")
 
+    chosen: list[int] = []
+    chosen_targets: dict[int, tuple[float, float]] = {}
+    if targets:
+        usable = set(candidates)
+        pairs: dict[int, tuple[float, float]] = {}
+        for x, y in targets:  # a building is served from the nearest road node, if the trucks may use it
+            node, dist_m = graph.nearest_node(x, y)
+            if dist_m <= MAX_TARGET_SNAP_M and node in usable and node not in pairs:
+                pairs[node] = (x, y)
+        building_nodes = list(pairs)
+        sep_px = BUILDING_SEP_M / graph.m_per_px
+        for i in rng.permutation(len(building_nodes)):
+            node = building_nodes[int(i)]
+            if all(math.dist(graph.nodes[node], graph.nodes[c]) >= sep_px for c in chosen):
+                chosen.append(node)
+                chosen_targets[node] = pairs[node]
+            if len(chosen) == problem.n_orders:
+                break
+
     p = np.array(weights) / sum(weights)
     order = list(rng.choice(candidates, size=len(candidates), replace=False, p=p))
-    chosen: list[int] = []
     sep_px = min_sep_m / graph.m_per_px
     for node in order:  # greedy: keep orders apart; relax if the area is too small
-        if all(math.dist(graph.nodes[node], graph.nodes[c]) >= sep_px for c in chosen):
-            chosen.append(int(node))
         if len(chosen) == problem.n_orders:
             break
+        if int(node) not in chosen and all(math.dist(graph.nodes[node], graph.nodes[c]) >= sep_px for c in chosen):
+            chosen.append(int(node))
     for node in order:
         if len(chosen) == problem.n_orders:
             break
         if int(node) not in chosen:
             chosen.append(int(node))
-    return Scenario(graph=graph, scene=scene, problem=problem, depot_node=depot, order_nodes=chosen, seed=seed)
+    chosen = [int(n) for n in chosen]
+    order_targets = [chosen_targets.get(n) for n in chosen] if chosen_targets else None
+    return Scenario(graph=graph, scene=scene, problem=problem, depot_node=depot, order_nodes=chosen, seed=seed, order_targets=order_targets)
