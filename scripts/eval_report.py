@@ -43,22 +43,25 @@ if "scenarios" in res:
         out.append(f"| {r['id']} | {r['orders']} orders, {r['trucks']} trucks, by {r['deadline']}, avoid {'+'.join(r['avoid'])} | {base} | {r['agent_status']} | {r['agent_iterations']} | {', '.join(r['agent_actions']) or '—'} |")
     out.append("")
 
-if "parsing" in res:
-    p = res["parsing"]
+parse_keys = [k for k in res if k.startswith("parsing")]
+if parse_keys:
+    n = res[parse_keys[0]]["cases"]
     out += [
-        f"## Request parsing with Muse Spark ({p['cases']} free-form phrasings)",
+        f"## Request parsing ({n} free-form phrasings), by model and prompt version",
         "",
-        f"- Exact match on every field: **{p['exact_match_cases']}/{p['cases']}**",
-        f"- Field-level accuracy: **{p['field_accuracy']:.1%}**",
-        f"- Mean latency {p['mean_seconds']} s, total cost ${p['cost_usd']}",
-        "- Limitation: the cases are written by the project author, so this measures robustness to paraphrase, not to the wild.",
-        "",
+        "| Model | Request prompt | Exact match | Field accuracy | Mean latency | Cost |",
+        "|---|---|---|---|---|---|",
     ]
-    if p["failures"]:
-        out += ["Failures:", ""]
-        for f in p["failures"]:
-            out.append(f"- `{f['text']}` — {f['error'] or ', '.join(f'{k}: expected {v[0]}, got {v[1]}' for k, v in f['wrong'].items())}")
-        out.append("")
+    for k in parse_keys:
+        p = res[k]
+        provider = "Muse Spark Open (open weights, Baseten)" if "baseten" in k else "Muse Spark 1.3 (Meta API)"
+        version = k.rsplit("_", 1)[-1] if k.rsplit("_", 1)[-1].startswith("v") else "v1"
+        out.append(f"| {provider} | {version} | {p['exact_match_cases']}/{p['cases']} | {p['field_accuracy']:.1%} | {p['mean_seconds']} s | ${p['cost_usd']} |")
+    out += ["", "Prompt v2 states the field rules explicitly (default objective, what counts as a capacity, how to read a time range). It fixed every miss of the open-weight model (11/20 -> 20/20) without hurting the Meta model.", "- Limitation: the cases are written by the project author, so this measures robustness to paraphrase, not to the wild.", ""]
+    for k in parse_keys:
+        for f in res[k]["failures"]:
+            out.append(f"- `{k}`: `{f['text']}` — {f['error'] or ', '.join(f'{a}: expected {v[0]}, got {v[1]}' for a, v in f['wrong'].items())}")
+    out.append("")
 
 out.append(f"Evaluation cost: ${res.get('eval_cost_usd', 0)}")
 Path("eval/RESULTS.md").write_text("\n".join(out) + "\n")

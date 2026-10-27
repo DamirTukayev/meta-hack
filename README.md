@@ -46,7 +46,9 @@ The model prompts are versioned text files in `backend/orbitroute/prompts/` (`sc
 
 ## Open-weight path
 
-Text reasoning (request parsing and repair decisions) can run on the open-weight Muse Spark Open served by Baseten: set `REASONING_PROVIDER=baseten` and `BASETEN_API_KEY` in `.env`. SAM 3.1 and the vision step stay on the Meta Model API.
+The text-reasoning steps (turning the request into constraints, choosing the repair action) can run on the open-weight **Muse Spark Open**, served by Baseten: set `REASONING_PROVIDER=baseten` and `BASETEN_API_KEY` in `.env`. SAM 3.1 and the vision step stay on the Meta Model API. If Baseten fails or its separate budget runs out, the call falls back to the Meta API.
+
+Measured on the 20 free-form requests (`eval/RESULTS.md`): with the first request prompt Muse Spark Open parsed 11/20 exactly (it defaulted to "shortest distance" and misread a few fields); after the field rules were spelled out in prompt v2 it parses **20/20**, in about 2.6 s per request, the same as Muse Spark 1.3. Its repair decisions were checked on four scenarios and matched the deterministic policy in all of them.
 
 ## Run the app locally
 

@@ -81,3 +81,24 @@ def test_scene_from_real_model_output():
     assert scene.warehouses and all(0 <= x <= 1536 and 0 <= y <= 1536 for x, y in scene.warehouses)
     # the first warehouse the model reported (top-left big building) sits inside an industrial zone
     assert "industrial" in scene.kinds_at(*scene.warehouses[0])
+
+
+def test_parse_request_asks_again_when_the_answer_is_not_json_at_all():
+    import json
+
+    class Flaky(FakeClient):
+        def chat_json(self, messages, name, schema, **kw):
+            if not self.outputs:
+                raise json.JSONDecodeError("Expecting value", "", 0)
+            return super().chat_json(messages, name, schema, **kw)
+
+    class Empty:
+        calls = 0
+
+        def chat_json(self, *a, **kw):
+            Empty.calls += 1
+            if Empty.calls == 1:
+                raise json.JSONDecodeError("Expecting value", "   ", 3)
+            return GOOD, None
+
+    assert parse_request(Empty(), "x").n_orders == 40 and Empty.calls == 2

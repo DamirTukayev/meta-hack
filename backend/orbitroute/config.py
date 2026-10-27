@@ -23,6 +23,8 @@ class Settings:
     baseten_base_url: str
     baseten_model: str
     reasoning_provider: str  # "meta" or "baseten": which endpoint serves the text-reasoning steps
+    baseten_budget_cap_usd: float
+    baseten_state_path: Path
 
     @classmethod
     def load(cls) -> "Settings":
@@ -38,4 +40,7 @@ class Settings:
             baseten_base_url=os.environ.get("BASETEN_BASE_URL", "https://inference.baseten.co/v1"),
             baseten_model=os.environ.get("BASETEN_MODEL", "meta-models/muse-spark-open-1026"),
             reasoning_provider=os.environ.get("REASONING_PROVIDER", "meta").lower(),
+            # Baseten credits ($100) are a separate pot from the Meta credits; our estimate of their price is conservative
+            baseten_budget_cap_usd=float(os.environ.get("BASETEN_BUDGET_CAP_USD", "60")),
+            baseten_state_path=Path(os.environ.get("BASETEN_BUDGET_STATE_PATH", ROOT / "budget_state_baseten.json")),
         )
