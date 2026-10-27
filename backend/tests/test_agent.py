@@ -102,6 +102,17 @@ def test_when_most_orders_are_cut_off_the_agent_refuses_and_offers_to_stop_avoid
     assert sorted(s.order for r in option.plan.routes for s in r.stops) == [1, 2, 3, 4]
 
 
+def test_a_mostly_cut_off_request_also_offers_to_serve_the_reachable_orders_without_breaking_any_rule():
+    sc = make_scenario_at(box(250, 0, 400, 400), [(100, 100), (100, 300), (300, 200), (300, 300)], vehicle_capacity=4)
+    result = run_agent(sc, time_limit_s=1.0)
+    option = next(o for o in result.relaxations if o.kind == "serve_reachable")
+    assert option.report.ok and option.report.excluded == {3: option.report.excluded[3], 4: option.report.excluded[4]}
+    assert all("cut off" in why for why in option.report.excluded.values())
+    assert sorted(s.order for r in option.plan.routes for s in r.stops) == [1, 2]  # the zone is still avoided
+    assert next(c for c in option.report.checks if c.kind == "zones").passed
+    assert "2 reachable orders" in option.description and "#3" in option.description and "#4" in option.description
+
+
 def test_policy_drops_a_few_unreachable_orders_but_not_most_of_them():
     from orbitroute.verifier.checks import Report, Violation
 

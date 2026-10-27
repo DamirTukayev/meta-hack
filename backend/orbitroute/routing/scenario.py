@@ -36,21 +36,33 @@ def _blocked(scene: Scene, problem: Problem, x: float, y: float) -> bool:
     return bool(scene.kinds_at(x, y) & set(problem.avoid_zone_kinds))
 
 
+def _legal_component_sizes(graph: RoadGraph, scene: Scene, problem: Problem) -> dict[int, int]:
+    """For every road node: how many nodes its connected piece of road has once the avoided zones are closed."""
+    g = graph.to_networkx()
+    banned = banned_edges(inside_lengths(graph, scene.zones_of(problem.avoid_zone_kinds)))
+    g.remove_edges_from([e for e in banned if g.has_edge(*e)])
+    return {n: len(c) for c in nx.connected_components(g) for n in c}
+
+
 def pick_depot(graph: RoadGraph, scene: Scene, problem: Problem, prefer_connected: bool = False) -> int:
     """A warehouse outside the avoided zones, closest to the image centre; else the node nearest the centre.
 
-    With prefer_connected the warehouse that can legally reach the most road wins (ties: nearest the centre), so a
-    depot boxed in by the avoided zone does not squeeze every order into one pocket.
+    With prefer_connected the depot is where the trucks can legally reach the most road (a warehouse if the photo has one,
+    else a staging point on the largest dry piece of the network; ties: nearest the centre), so a depot boxed in by the
+    avoided zone does not squeeze every order into one pocket.
     """
     cx, cy = scene.width / 2, scene.height / 2
     allowed = [w for w in scene.warehouses if not _blocked(scene, problem, *w)]
-    if allowed and prefer_connected and problem.avoid_zone_kinds:
-        def reach(w: tuple[float, float]) -> tuple[int, float]:
-            node = graph.nearest_node(*w)[0]
-            return (-len(_legally_reachable(graph, scene, problem, node)), math.dist(w, (cx, cy)))
-
-        x, y = min(allowed, key=reach)
-        return graph.nearest_node(x, y)[0]
+    if prefer_connected and problem.avoid_zone_kinds:
+        sizes = _legal_component_sizes(graph, scene, problem)
+        if allowed:
+            nodes = [graph.nearest_node(x, y)[0] for x, y in allowed]
+            best = min(zip(nodes, allowed), key=lambda na: (-sizes.get(na[0], 0), math.dist(na[1], (cx, cy))))
+            return best[0]
+        free = [i for i, (x, y) in enumerate(graph.nodes) if not _blocked(scene, problem, x, y)]
+        if free:
+            top = max(sizes.get(i, 0) for i in free)
+            return min((i for i in free if sizes.get(i, 0) == top), key=lambda i: math.dist(graph.nodes[i], (cx, cy)))
     if allowed:
         x, y = min(allowed, key=lambda w: math.dist(w, (cx, cy)))
         return graph.nearest_node(x, y)[0]

@@ -311,3 +311,4 @@ header .stepper { flex: 1; min-width: 420px; border: 0; background: none; paddin
 .banner.error { background: #240c0c; border-color: #7f2a2a; }
 .banner.warn { background: #2b1e00; border-color: #7a5300; color: #ffd98a; }
 .banner.warn b { color: var(--accent); }
+.legend i.cut { width: 16px; height: 16px; border-radius: 50%; border: 2px dashed #ff4d4d; color: #ff4d4d; font-style: normal; font-size: 12px; font-weight: 800; line-height: 11px; text-align: center; display: inline-grid; place-items: center; margin-right: 5px; vertical-align: -3px; box-sizing: border-box; }

@@ -27,4 +27,8 @@ CASES: list[tuple[str, dict]] = [
     ("33 orders, 3 trucks, by 12:00, but don't go through the industrial zone or the commercial area", dict(n_orders=33, n_vehicles=3, deadline="12:00", avoid={"industrial", "commercial"})),
     ("Two trucks, thirty orders, finish by 17:00", dict(n_orders=30, n_vehicles=2, deadline="17:00")),
     ("14 orders on 2 trucks with capacity 8 each, leave at 6:00, done by 10:30", dict(n_orders=14, n_vehicles=2, vehicle_capacity=8, shift_start="06:00", deadline="10:30")),
+    ("Deliver 30 relief packages with 3 trucks by 14:00, avoid the flooded areas", dict(n_orders=30, n_vehicles=3, deadline="14:00", avoid={"flooded"})),
+    ("Keep the trucks out of the floodwater: 25 orders, 2 trucks, by 16:00", dict(n_orders=25, n_vehicles=2, deadline="16:00", avoid={"flooded"})),
+    ("Food drop for 18 households, 3 vans, stay off roads that are under water, done by 3pm", dict(n_orders=18, n_vehicles=3, deadline="15:00", avoid={"flooded"})),
+    ("40 orders, 4 trucks, by 17:00, avoid the flooded streets and the industrial zone", dict(n_orders=40, n_vehicles=4, deadline="17:00", avoid={"flooded", "industrial"})),
 ]

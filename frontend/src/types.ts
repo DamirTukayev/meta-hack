@@ -9,6 +9,8 @@ export interface Sample {
   examples: string[]
   image: string
   credit: string
+  event?: string | null // disaster imagery: the storm or flood the photo was taken during
+  captured?: string | null
 }
 
 export interface Zone { kind: string; polygon: XY[] }

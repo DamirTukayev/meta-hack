@@ -1,28 +1,28 @@
 {
  "scenarios": {
   "summary": {
-   "scenarios": 46,
+   "scenarios": 62,
    "baseline": {
-    "solver_says_feasible": 41,
-    "invalid_after_independent_audit": 21,
-    "invalid_rate_among_claimed_feasible": 0.512,
+    "solver_says_feasible": 57,
+    "invalid_after_independent_audit": 29,
+    "invalid_rate_among_claimed_feasible": 0.509,
     "violation_kinds_in_scenarios": {
-     "zones": 22,
+     "zones": 30,
      "deadline": 3,
      "capacity": 2
     }
    },
    "agent": {
     "status_counts": {
-     "needs_relaxation": 11,
-     "verified": 24,
+     "needs_relaxation": 19,
+     "verified": 32,
      "verified_partial": 11
     },
-    "scenarios_with_a_first_pass_violation": 26,
+    "scenarios_with_a_first_pass_violation": 34,
     "of_those_ended_verified": 15,
-    "mean_iterations": 1.78,
-    "mean_seconds": 6.5,
-    "final_plan_passes_audit": 46,
+    "mean_iterations": 1.71,
+    "mean_seconds": 6.9,
+    "final_plan_passes_audit": 62,
     "provably_infeasible": 4,
     "infeasible_correctly_flagged": 4,
     "verified_but_partial": 11
@@ -32,7 +32,7 @@
     "reached_verified": 5,
     "mean_cost_usd": 0.0036
    },
-   "verified_scenarios": 35
+   "verified_scenarios": 43
   },
   "rows": [
    {
@@ -128,7 +128,7 @@
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.0016
+     "cost_usd": 0.0022
     }
    },
    {
@@ -255,7 +255,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.1
+    "seconds": 2.0
    },
    {
     "id": "col-grid-01",
@@ -276,7 +276,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.1
+    "seconds": 2.0
    },
    {
     "id": "col-grid-02",
@@ -350,7 +350,7 @@
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.0024
+     "cost_usd": 0.002
     }
    },
    {
@@ -425,7 +425,7 @@
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.002
+     "cost_usd": 0.0024
     }
    },
    {
@@ -472,10 +472,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
+     "serve the 7 reachable orders now and leave the 23 cut-off ones (#2, #3, #4, #5, #6, #7, #8, #9 ...) for later",
      "stop avoiding the drawn zone (the plan drives 1491 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6,
+    "seconds": 13.1,
     "model_decider": {
      "status": "needs_relaxation",
      "actions": [
@@ -483,7 +484,7 @@
       "propose_relaxation"
      ],
      "iterations": 2,
-     "cost_usd": 0.0054
+     "cost_usd": 0.0047
     }
    },
    {
@@ -510,7 +511,7 @@
     "excluded_orders": 3,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.2,
+    "seconds": 6.1,
     "model_decider": {
      "status": "verified_partial",
      "actions": [
@@ -518,7 +519,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0047
+     "cost_usd": 0.0051
     }
    },
    {
@@ -545,7 +546,7 @@
     "excluded_orders": 4,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.3,
+    "seconds": 6.1,
     "model_decider": {
      "status": "verified_partial",
      "actions": [
@@ -553,7 +554,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0056
+     "cost_usd": 0.0053
     }
    },
    {
@@ -579,10 +580,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
+     "serve the 8 reachable orders now and leave the 22 cut-off ones (#2, #3, #4, #5, #6, #11, #12, #13 ...) for later",
      "stop avoiding the drawn zone (the plan drives 908 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 13.1
    },
    {
     "id": "mem-any-11",
@@ -607,10 +609,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
+     "serve the 3 reachable orders now and leave the 27 cut-off ones (#1, #2, #3, #4, #5, #6, #7, #8 ...) for later",
      "stop avoiding the drawn zone (the plan drives 1292 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.8
+    "seconds": 13.1
    },
    {
     "id": "mem-any-12",
@@ -812,10 +815,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
+     "serve the 23 reachable orders now and leave the 7 cut-off ones (#2, #3, #4, #9, #13, #15, #30) for later",
      "stop avoiding the drawn zone (the plan drives 953 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 13.1
    },
    {
     "id": "col-any-11",
@@ -840,10 +844,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
+     "serve the 21 reachable orders now and leave the 9 cut-off ones (#1, #5, #18, #19, #21, #22, #25, #26 ...) for later",
      "stop avoiding the drawn zone (the plan drives 1988 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 13.1
    },
    {
     "id": "col-any-12",
@@ -869,7 +874,7 @@
     "excluded_orders": 5,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.2
+    "seconds": 6.1
    },
    {
     "id": "col-any-20",
@@ -894,10 +899,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
+     "serve the 15 reachable orders now and leave the 15 cut-off ones (#6, #7, #9, #11, #12, #13, #16, #17 ...) for later",
      "stop avoiding the drawn zone (the plan drives 2305 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.8
+    "seconds": 13.1
    },
    {
     "id": "col-any-21",
@@ -1120,7 +1126,7 @@
      "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 7 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 29.0
+    "seconds": 28.6
    },
    {
     "id": "inf-time-50-3",
@@ -1207,6 +1213,406 @@
     ],
     "final_report_ok": true,
     "seconds": 9.6
+   },
+   {
+    "id": "hou-flood-0",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "hou-flood-1",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "hou-flood-2",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "hou-flood-3",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "hou-flood-any-0",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 8 reachable orders now and leave the 12 cut-off ones (#2, #3, #6, #7, #9, #10, #11, #12 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1842 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.1
+   },
+   {
+    "id": "hou-flood-any-1",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 5 reachable orders now and leave the 15 cut-off ones (#1, #2, #3, #5, #6, #8, #9, #10 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 2020 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.1
+   },
+   {
+    "id": "hou-flood-any-2",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 8 reachable orders now and leave the 12 cut-off ones (#1, #2, #4, #5, #6, #7, #8, #9 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1842 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.1
+   },
+   {
+    "id": "hou-flood-any-3",
+    "sample": "houston-harvey",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #2, #3, #5, #8, #9, #10, #11 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1763 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.1
+   },
+   {
+    "id": "houb-flood-0",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "houb-flood-1",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "houb-flood-2",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "houb-flood-3",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
+    "relaxations": [],
+    "final_report_ok": true,
+    "seconds": 2.0
+   },
+   {
+    "id": "houb-flood-any-0",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #2, #4, #5, #9, #10, #11, #13 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 2460 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.0
+   },
+   {
+    "id": "houb-flood-any-1",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 6 reachable orders now and leave the 14 cut-off ones (#1, #2, #3, #4, #5, #9, #10, #11 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 2077 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.0
+   },
+   {
+    "id": "houb-flood-any-2",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #3, #4, #8, #9, #10, #11, #12 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 2468 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.0
+   },
+   {
+    "id": "houb-flood-any-3",
+    "sample": "houston-harvey-b",
+    "orders": 20,
+    "trucks": 3,
+    "deadline": "14:00",
+    "avoid": [
+     "flooded"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 2
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 8 reachable orders now and leave the 12 cut-off ones (#1, #2, #3, #5, #6, #8, #10, #11 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 2867 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 13.0
    }
   ]
  },
@@ -1350,6 +1756,22 @@
   "field_accuracy": 1.0,
   "mean_seconds": 2.6,
   "cost_usd": 0.0616,
+  "failures": []
+ },
+ "parsing_v3": {
+  "cases": 24,
+  "exact_match_cases": 24,
+  "field_accuracy": 1.0,
+  "mean_seconds": 1.9,
+  "cost_usd": 0.0655,
+  "failures": []
+ },
+ "parsing_baseten_v3": {
+  "cases": 24,
+  "exact_match_cases": 24,
+  "field_accuracy": 1.0,
+  "mean_seconds": 2.0,
+  "cost_usd": 0.0593,
   "failures": []
  }
 }

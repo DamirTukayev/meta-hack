@@ -99,11 +99,15 @@ def test_committed_prewarmed_answers_cover_the_bundled_samples():
     import hashlib
 
     from orbitroute.config import PREWARMED_DIR, ROOT, resolve_cached
+    import json
+
+    from orbitroute.perception.flood import flood_cache_names
     from orbitroute.perception.segment import cache_names
 
     for jpg in (ROOT / "data" / "samples").glob("*.jpg"):
         h = hashlib.sha256(jpg.read_bytes()).hexdigest()[:16]
-        for name in (*cache_names(jpg.read_bytes()), f"scene_{h}.json"):
+        disaster = json.loads(jpg.with_suffix(".json").read_text()).get("event")
+        for name in (*cache_names(jpg.read_bytes()), f"scene_{h}.json", *(flood_cache_names(jpg.read_bytes()) if disaster else [])):
             assert (PREWARMED_DIR / name).exists(), f"{name} is not pre-warmed for {jpg.stem}"
 
 

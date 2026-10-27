@@ -34,6 +34,8 @@ EXAMPLES = {
         "by 09:00, avoid the residential area",
     ],
     "memphis": ["by 12:00, avoid the industrial zone", "by 11:00, avoid the residential area"],
+    "houston-harvey": ["by 14:00, avoid the flooded areas", "by 16:00, avoid the flooded areas and the residential streets"],
+    "houston-harvey-b": ["by 14:00, avoid the flooded areas", "by 18:00, avoid the flooded areas"],
 }
 LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphis": "Memphis, TN — logistics district"}
 MAX_REQUEST_CHARS = 400
@@ -102,7 +104,9 @@ def sample_dict(s) -> dict:
         "m_per_px": s.meta["m_per_px"],
         "examples": EXAMPLES.get(s.name, AREA_EXAMPLES),
         "image": f"/api/samples/{s.name}/image",
-        "credit": "Imagery: USGS NAIP (public domain)",
+        "credit": s.meta.get("credit", "Imagery: USGS NAIP (public domain)"),
+        "event": s.meta.get("event") or None,  # set for disaster imagery: the storm or flood the photo was taken during
+        "captured": s.meta.get("captured") or None,
     }
 
 

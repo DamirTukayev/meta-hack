@@ -18,7 +18,7 @@ MAX_EXTRA_DEADLINE_S = 4 * 3600
 
 @dataclass
 class RelaxationOption:
-    kind: str  # add_vehicles | extend_deadline
+    kind: str  # serve_reachable | add_vehicles | extend_deadline | allow_zone | allow_zone+<other>
     amount: int  # trucks, or seconds
     description: str
     scenario: Scenario
@@ -60,6 +60,20 @@ def find_relaxations(
     """Smallest verified relaxations, one per dimension: more trucks, a later deadline, or entering the zone."""
     options: list[RelaxationOption] = []
     p = scenario.problem
+
+    # serve what can be reached and say which orders are cut off: breaks no rule, only the promise to serve everyone
+    if zone_edges:
+        legal = build_matrix(scenario.graph, scenario.location_nodes, zone_edges)  # every road inside the zones forbidden
+        cut_off = sorted({j for i, j in legal.unreachable if i == 0 and j not in excluded})
+        n_left = len(scenario.order_nodes) - len(excluded)
+        if cut_off and len(cut_off) < n_left:
+            left_out = {**excluded, **{o: "cut off: cannot be reached without entering an avoided zone" for o in cut_off}}
+            plan, report = _try(scenario, legal, left_out, inside, time_limit_s, seed)
+            if report.ok:
+                ids = ", ".join(f"#{o}" for o in cut_off[:8]) + (" ..." if len(cut_off) > 8 else "")
+                options.append(
+                    RelaxationOption("serve_reachable", len(cut_off), f"serve the {n_left - len(cut_off)} reachable orders now and leave the {len(cut_off)} cut-off ones ({ids}) for later", scenario, plan, report)
+                )
 
     for extra in range(1, MAX_EXTRA_VEHICLES + 1):
         sc = replace(scenario, problem=p.model_copy(update={"n_vehicles": p.n_vehicles + extra}))

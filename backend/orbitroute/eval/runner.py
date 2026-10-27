@@ -13,13 +13,14 @@ from orbitroute.eval.parse_cases import CASES
 from orbitroute.eval.scenarios import SCENARIOS, EvalScenario
 from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
+from orbitroute.perception.flood import flood_zones, segment_floods
 from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
 from orbitroute.pipeline import get_sample
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.understanding.constraints import ParsedRequest, hhmm_to_seconds, resolve
 from orbitroute.understanding.request import parse_request
-from orbitroute.understanding.scene import analyze_scene
+from orbitroute.understanding.scene import Scene, analyze_scene
 
 
 @dataclass
@@ -31,7 +32,10 @@ class World:
 def load_world(client: MetaClient, name: str, run) -> World:
     s = get_sample(name)
     graph = build_road_graph(segment_roads(client, s.image_bytes, run=run), s.meta["m_per_px"])
-    return World(graph, analyze_scene(client, s.image_bytes, run=run))
+    scene = analyze_scene(client, s.image_bytes, run=run)
+    if s.meta.get("event"):  # disaster imagery: the standing water, as the pipeline finds it when the request says "flooded"
+        scene = Scene(scene.width, scene.height, [*scene.zones, *flood_zones(segment_floods(client, s.image_bytes, run=run), s.meta["m_per_px"])], scene.warehouses)
+    return World(graph, scene)
 
 
 def build_scenario(world: World, sc: EvalScenario):
@@ -45,7 +49,7 @@ def build_scenario(world: World, sc: EvalScenario):
     if sc.zone:
         scenario, *_ = apply_custom(world.graph, world.scene, problem, CustomInputs(zone=list(sc.zone)), seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere)
         return scenario
-    return make_scenario(world.graph, world.scene, problem, seed=sc.seed, prefer_connected=True)
+    return make_scenario(world.graph, world.scene, problem, seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere)
 
 
 def run_scenarios(client: MetaClient, guard: BudgetGuard, *, time_limit_s: float = 2.0, model_decider_on: int = 6, log=print) -> list[dict]:
