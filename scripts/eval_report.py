@@ -19,7 +19,7 @@ if "scenarios" in res:
         "|---|---|---|",
         f"| Plans the solver reports as feasible | {b['solver_says_feasible']}/{s['scenarios']} | — |",
         f"| Of those, plans that break a constraint on independent audit | **{b['invalid_after_independent_audit']}** ({(b['invalid_rate_among_claimed_feasible'] or 0):.0%}) | 0 — every plan returned as verified passed the audit |",
-        f"| Scenarios with a first-pass violation → ended verified | — | {a['of_those_ended_verified']}/{a['scenarios_with_a_first_pass_violation']} (the other {a['scenarios_with_a_first_pass_violation'] - a['of_those_ended_verified']} cannot be met as stated; see the table) |",
+        f"| Scenarios with a first-pass violation → ended verified | — | {a['of_those_ended_verified']}/{a['scenarios_with_a_first_pass_violation']} (including those that leave cut-off orders out with a reason; the other {a['scenarios_with_a_first_pass_violation'] - a['of_those_ended_verified']} cannot be met as stated; see the tables) |",
         f"| Provably infeasible requests flagged with a verified fix | 0/{a['provably_infeasible']} (solver returns a plan anyway) | {a['infeasible_correctly_flagged']}/{a['provably_infeasible']} |",
         f"| Final status | — | {', '.join(f'{k}: {v}' for k, v in a['status_counts'].items())} |",
         f"| Mean iterations / mean wall time | 1 | {a['mean_iterations']} / {a['mean_seconds']} s |",
@@ -37,6 +37,19 @@ if "scenarios" in res:
             + f"; mean cost ${m['mean_cost_usd']} per run. In this suite the model adds readable reasons, not different decisions.",
             "",
         ]
+    def family(r: dict) -> str:
+        if "-grid-" in r["id"]:
+            return "Drawn zone, orders only where a legal route can reach them"
+        if "-any-" in r["id"]:
+            return "Drawn zone, orders placed anywhere (some are cut off by the zone)"
+        return "Zones found by Muse Spark, plus provably infeasible requests"
+
+    out += ["By kind of scenario (the first family is easy for a plain solver by construction; the second is how a user clicking freely on the map behaves):", "", "| Scenario family | Scenarios | Solver's first plan breaks a rule | Agent: verified | Agent: verified, cut-off orders left out with reasons | Agent: cannot be met as stated (verified fix offered) |", "|---|---|---|---|---|---|"]
+    for name in dict.fromkeys(family(r) for r in rows):
+        grp = [r for r in rows if family(r) == name]
+        st = lambda k: sum(r["agent_status"] == k for r in grp)
+        out.append(f"| {name} | {len(grp)} | {sum(not r['baseline_audit_ok'] for r in grp)} | {st('verified')} | {st('verified_partial')} | {st('needs_relaxation')} |")
+    out.append("")
     out += ["| Scenario | Request | Solver only | Agent | Iterations | Repairs |", "|---|---|---|---|---|---|"]
     for r in rows:
         base = "ok" if r["baseline_audit_ok"] else "violates " + "+".join(r["baseline_violations"])

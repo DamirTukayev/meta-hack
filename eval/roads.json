@@ -1,0 +1,100 @@
+[
+ {
+  "sample": "columbus",
+  "graph_km": 10.54,
+  "dropped_km": 3.28,
+  "rows": [
+   {
+    "reference": "named streets",
+    "tolerance_m": 8,
+    "recall": 0.5189936215450035,
+    "precision": 0.6477283877931508,
+    "osm_km": 13.8
+   },
+   {
+    "reference": "named streets",
+    "tolerance_m": 15,
+    "recall": 0.5626506024096386,
+    "precision": 0.666961044058483,
+    "osm_km": 13.8
+   },
+   {
+    "reference": "streets + service roads (no parking aisles or driveways)",
+    "tolerance_m": 8,
+    "recall": 0.2583223930982746,
+    "precision": 0.8622313806299676,
+    "osm_km": 41.7
+   },
+   {
+    "reference": "streets + service roads (no parking aisles or driveways)",
+    "tolerance_m": 15,
+    "recall": 0.32192423105776447,
+    "precision": 0.9058973604160534,
+    "osm_km": 41.7
+   },
+   {
+    "reference": "every mapped way, parking aisles and driveways included",
+    "tolerance_m": 8,
+    "recall": 0.17703829994519882,
+    "precision": 0.8839171818271023,
+    "osm_km": 64.2
+   },
+   {
+    "reference": "every mapped way, parking aisles and driveways included",
+    "tolerance_m": 15,
+    "recall": 0.22474578335261525,
+    "precision": 0.9194387204396036,
+    "osm_km": 64.2
+   }
+  ]
+ },
+ {
+  "sample": "memphis",
+  "graph_km": 15.26,
+  "dropped_km": 1.13,
+  "rows": [
+   {
+    "reference": "named streets",
+    "tolerance_m": 8,
+    "recall": 0.6585987261146496,
+    "precision": 0.7626375156663417,
+    "osm_km": 18.4
+   },
+   {
+    "reference": "named streets",
+    "tolerance_m": 15,
+    "recall": 0.7527070063694268,
+    "precision": 0.7904191616766467,
+    "osm_km": 18.4
+   },
+   {
+    "reference": "streets + service roads (no parking aisles or driveways)",
+    "tolerance_m": 8,
+    "recall": 0.3284656039734256,
+    "precision": 0.8225177551872999,
+    "osm_km": 46.0
+   },
+   {
+    "reference": "streets + service roads (no parking aisles or driveways)",
+    "tolerance_m": 15,
+    "recall": 0.4459915522255004,
+    "precision": 0.8447987745439354,
+    "osm_km": 46.0
+   },
+   {
+    "reference": "every mapped way, parking aisles and driveways included",
+    "tolerance_m": 8,
+    "recall": 0.32395486612656743,
+    "precision": 0.8225177551872999,
+    "osm_km": 46.6
+   },
+   {
+    "reference": "every mapped way, parking aisles and driveways included",
+    "tolerance_m": 15,
+    "recall": 0.43986685926018965,
+    "precision": 0.8447987745439354,
+    "osm_km": 46.6
+   }
+  ]
+ }
+]

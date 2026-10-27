@@ -24,6 +24,10 @@ class EvalScenario:
     expect: str | None = None  # "infeasible" when arithmetic proves it
     note: str = ""
     zone: tuple[tuple[float, float], ...] = ()  # an avoided zone drawn as a polygon, like a user would on the map
+    anywhere: bool = False  # orders may lie anywhere outside the zone, even where the zone cuts them off (a user clicking freely)
+
+
+GRID = (250, 600, 950)  # top-left corners of the drawn squares, in image pixels
 
 
 def square(x: float, y: float, size: float = 350) -> tuple[tuple[float, float], ...]:
@@ -31,11 +35,23 @@ def square(x: float, y: float, size: float = 350) -> tuple[tuple[float, float], 
 
 
 SCENARIOS: list[EvalScenario] = [
-    # Zones drawn across the road network (squares of ~340 m, as a user would draw them). The solver does not know
-    # about them on its first pass; whether its shortest paths cross them depends on the geometry.
-    *[EvalScenario(f"mem-draw-A-{s}", "memphis", 30, 3, "13:00", (), seed=s, zone=square(200, 550)) for s in range(4)],
-    *[EvalScenario(f"mem-draw-B-{s}", "memphis", 30, 3, "13:00", (), seed=s, zone=square(550, 200)) for s in range(3)],
-    *[EvalScenario(f"col-draw-{s}", "columbus", 30, 3, "13:00", (), seed=s, zone=square(200, 550)) for s in range(3)],
+    # Zones drawn the way a user would on the map: a 350 px (~340 m) square at every point of a fixed 3x3 grid on each tile.
+    # The grid is fixed in advance and every square is reported, so no position is chosen by its outcome. The solver does not
+    # know about the zone on its first pass; whether its shortest paths cross it depends on the geometry.
+    *[
+        EvalScenario(f"{tile[:3]}-grid-{i}{j}", tile, 30, 3, "13:00", (), zone=square(x, y))
+        for tile in ("memphis", "columbus")
+        for i, x in enumerate(GRID)
+        for j, y in enumerate(GRID)
+    ],
+    # The same squares, but the orders are placed anywhere on the roads outside the square, as a user clicking freely would:
+    # some of them end up cut off from the depot by the zone.
+    *[
+        EvalScenario(f"{tile[:3]}-any-{i}{j}", tile, 30, 3, "13:00", (), zone=square(x, y), anywhere=True)
+        for tile in ("memphis", "columbus")
+        for i, x in enumerate(GRID)
+        for j, y in enumerate(GRID)
+    ],
     # Zones found by Muse Spark from the image ("avoid the industrial zone", ...)
     EvalScenario("col-ind-40-3", "columbus", 40, 3, "12:00", ("industrial",), seed=0),
     EvalScenario("col-com-20-2", "columbus", 20, 2, "11:00", ("commercial",), seed=0),

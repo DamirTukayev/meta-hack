@@ -4,82 +4,80 @@
   "v1": {
    "samples": {
     "columbus": {
-     "stability": 0.726,
-     "stability_min": 0.639,
+     "stability": 0.701,
+     "stability_min": 0.624,
      "zones_per_run": [
-      13,
-      11,
-      12
+      10,
+      9,
+      7
      ],
-     "covered_share": 0.707,
-     "overlap_share": 0.033,
+     "covered_share": 0.798,
+     "overlap_share": 0.059,
      "excess_green_by_kind": {
-      "commercial": 7.7,
-      "industrial": 7.8,
-      "park_forest": 22.2,
-      "residential": 13.3
+      "commercial": 8.4,
+      "industrial": 8.3,
+      "park_forest": 21.3,
+      "residential": 13.6
      }
     },
     "memphis": {
-     "stability": 0.64,
-     "stability_min": 0.527,
+     "stability": 0.605,
+     "stability_min": 0.532,
      "zones_per_run": [
-      11,
-      8,
+      9,
+      9,
       8
      ],
-     "covered_share": 0.828,
-     "overlap_share": 0.021,
+     "covered_share": 0.843,
+     "overlap_share": 0.015,
      "excess_green_by_kind": {
-      "commercial": 21.2,
-      "industrial": 8.8,
-      "other": 31.5,
-      "park_forest": 32.1,
-      "residential": 22.5
+      "commercial": 12.5,
+      "industrial": 8.9,
+      "park_forest": 32.9,
+      "residential": 23.1
      }
     }
    },
-   "cost_usd": 0.067
+   "cost_usd": 0.0629
   },
   "v2": {
    "samples": {
     "columbus": {
-     "stability": 0.716,
-     "stability_min": 0.682,
+     "stability": 0.775,
+     "stability_min": 0.734,
      "zones_per_run": [
       10,
       11,
-      10
+      12
      ],
-     "covered_share": 0.667,
-     "overlap_share": 0.007,
+     "covered_share": 0.85,
+     "overlap_share": 0.017,
      "excess_green_by_kind": {
-      "commercial": 7.7,
-      "industrial": 7.8,
-      "park_forest": 20.1,
-      "residential": 13.1
+      "commercial": 7.5,
+      "industrial": 8.3,
+      "park_forest": 17.7,
+      "residential": 13.0
      }
     },
     "memphis": {
-     "stability": 0.754,
-     "stability_min": 0.707,
+     "stability": 0.744,
+     "stability_min": 0.709,
      "zones_per_run": [
-      7,
-      6,
-      8
+      5,
+      8,
+      5
      ],
-     "covered_share": 0.764,
-     "overlap_share": 0.002,
+     "covered_share": 0.828,
+     "overlap_share": 0.0,
      "excess_green_by_kind": {
-      "commercial": 8.0,
-      "industrial": 8.6,
-      "other": 26.2,
-      "park_forest": 33.7,
-      "residential": 19.7
+      "industrial": 9.0,
+      "other": 27.2,
+      "park_forest": 35.5,
+      "residential": 20.3
      }
     }
    },
-   "cost_usd": 0.0839
+   "cost_usd": 0.0876
   }
  }
 }

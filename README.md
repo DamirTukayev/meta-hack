@@ -31,15 +31,21 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - **You place the points:** click the depot, click the orders and (optionally) draw a zone to avoid directly on the satellite image — the agent does not invent them unless you tick "Place orders for me"; points snap to the nearest road, and anything the agent adjusts is listed as an assumption.
 - **Web app** (`frontend/`, `backend/orbitroute/api.py`): FastAPI streams the agent run as server-sent events to a React + TypeScript UI. A map with toggleable layers (road mask, graph, zones, orders, routes), plan-by-plan tabs that show the failed plan next to the repaired one, a live six-point verification checklist and the agent's log.
 
+## How accurate is the road graph?
+
+The agent routes only on the roads SAM 3.1 finds, so we measured them against OpenStreetMap on both bundled tiles (`eval/ROADS.md`, `scripts/eval_roads.py`; OSM is used only as a yardstick, © OpenStreetMap contributors, ODbL). Within 15 m: **84-92% of the graph lies on a real mapped road**, and the graph covers **56-75% of the named streets** (32-45% when every service road is counted; parking aisles and driveways are mostly invisible at this resolution). So the graph is trustworthy but incomplete: it finds the street network, not every alley. Two tiles only, and OSM is itself incomplete.
+
+Imagery is requested in Web Mercator so that pixels are square on the ground (0.977 m each); an earlier version asked for a box in degrees, which the imagery service silently stretched by about 30% north-south, so lengths along north-south roads were underestimated. Found by comparing the graph with OSM, fixed, and every number below was recomputed afterwards.
+
 ## Evaluation
 
-20 fixed scenarios on two NAIP tiles plus 20 free-form request phrasings (`eval/RESULTS.md`, reproducible with `scripts/run_eval.py`). Ten scenarios use squares drawn across the road network, the way a user would draw them on the map; the rest use zones found by Muse Spark, plus four requests that are infeasible by arithmetic.
+46 fixed scenarios on two NAIP tiles plus 20 free-form request phrasings (`eval/RESULTS.md`, reproducible with `scripts/run_eval.py`). Eighteen scenarios draw a square zone at each point of a fixed 3x3 grid and place the orders only where a legal route can reach them; eighteen use the same squares but place the orders anywhere, the way a user clicking freely on the map does (some are then cut off by the zone); the rest use zones found by Muse Spark plus four requests that are infeasible by arithmetic. The grid was fixed before running, and every square is reported.
 
-- A plain solver reported **15** plans as feasible; an independent audit found **9 of them (60%) broke a constraint** (10 scenarios entered an avoided zone, 3 missed the deadline, 2 overloaded a truck).
-- The agent returned only plans that passed the same audit: **14/20 verified**; the other **6 were flagged as impossible as stated, each with a verified way out** (4 provably infeasible requests, plus 2 where the avoided residential zone cuts off most streets, so it offers to stop avoiding it).
-- Of the 14 scenarios whose first plan was invalid, 8 were repaired to a verified plan automatically.
-- Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 4.2 s).
-- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (~$0.002 per run), so it adds readable explanations rather than different decisions.
+- How often the plain solver's first plan breaks a rule depends on how the orders are placed: **1 of 18** when orders are placed only where a legal route reaches them, but **17 of 18** when they are placed freely. Across all 46 scenarios the solver reported 41 plans as feasible and an independent audit found **18 of them (44%) broke a constraint**; all 18 were avoided-zone violations. Counting every first-pass plan, the violations were zones 18, deadline 3, capacity 2.
+- The agent returned only plans that passed the same audit. Of the 23 scenarios whose first plan was invalid, **10 ended verified automatically**, all by leaving the 1-5 cut-off orders out of the plan and listing each with its reason (never silently dropped), and **13 were flagged as impossible as stated, each with a verified way out** (the 4 provably infeasible requests among them).
+- Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 2.3 s with prompt v2).
+- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (about $0.005 per run), so it adds readable explanations rather than different decisions.
+- Caveats: the "audit" is the same verifier code the agent uses, applied to the plain solver's plan; a second independent implementation is still to do. An earlier version of this suite, run before the imagery geometry fix, reported 60% invalid plans; that number depended on where its squares happened to fall on a distorted image and is not reproduced here.
 
 ## Public demo safeguards
 
@@ -47,7 +53,7 @@ Runs are limited per IP (20/hour) and per day (300), at most 3 run at once, new 
 
 ## Prompts
 
-The model prompts are versioned text files in `backend/orbitroute/prompts/` (`scene`, `request`, `repair`; `active.json` picks the version in use), not strings buried in code. `scripts/eval_grounding.py` compares scene-prompt versions on real runs (`eval/GROUNDING.md`). There are no human labels for land use, so it measures stability across repeated answers, overlap between zones of different kinds and a vegetation sanity check, not accuracy. Scene prompt v2 is cleaner (zones of different kinds overlap in ~0-1% of the outlined area instead of 2-3%) and about equally or slightly more stable (73% vs 68% mean agreement over 3 repeats; within noise on one of the two images), at ~25% more tokens; v1 stays active so the published evaluation numbers remain reproducible.
+The model prompts are versioned text files in `backend/orbitroute/prompts/` (`scene`, `request`, `repair`; `active.json` picks the version in use), not strings buried in code. `scripts/eval_grounding.py` compares scene-prompt versions on real runs (`eval/GROUNDING.md`). There are no human labels for land use, so it measures stability across repeated answers, overlap between zones of different kinds and a vegetation sanity check, not accuracy. Scene prompt v2 is more stable and cleaner on the current images: 76% vs 65% mean agreement over 3 repeats (78% / 74% against 70% / 60% on the two tiles), and zones of different kinds overlap in ~0-2% of the outlined area instead of 2-6%, at ~25% more tokens. v1 is still the active version because every number in the evaluation above was produced with it; switching to v2 means regenerating the scene answers and rerunning the suite.
 
 ## Open-weight path
 

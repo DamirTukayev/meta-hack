@@ -9,7 +9,7 @@ from PIL import Image
 import orbitroute.api as api
 import orbitroute.areas as areas
 from orbitroute.limits import RateLimiter
-from orbitroute.naip import NoImagery, bbox_around, fetch_tile, has_imagery, in_us
+from orbitroute.naip import NoImagery, bbox_around, fetch_tile, has_imagery, in_us, mercator_bbox
 
 
 def jpeg(array) -> bytes:
@@ -39,7 +39,13 @@ def test_bbox_is_a_square_of_the_requested_size_in_metres():
     w, s, e, n = bbox_around(-83.1, 39.95, 1500)
     height_m = (n - s) * 111_320
     width_m = (e - w) * 111_320 * np.cos(np.radians(39.95))
-    assert height_m == pytest.approx(1500, rel=1e-3) and width_m == pytest.approx(1500, rel=1e-3)
+    assert height_m == pytest.approx(1500, rel=2e-3) and width_m == pytest.approx(1500, rel=2e-3)
+
+
+def test_the_requested_picture_is_square_in_web_mercator_so_pixels_are_square_on_the_ground():
+    x0, y0, x1, y1 = mercator_bbox(-83.1, 39.95, 1500)
+    assert x1 - x0 == pytest.approx(y1 - y0)  # square pixels
+    assert (x1 - x0) * np.cos(np.radians(39.95)) == pytest.approx(1500, rel=1e-3)  # Mercator stretches distances by 1 / cos(lat)
 
 
 def test_us_extent_and_imagery_detection():
@@ -54,7 +60,7 @@ def test_fetch_tile_sends_the_expected_request_and_returns_the_picture():
     seen: list = []
     data, bbox = fetch_tile(-83.1, 39.95, px=64, client=client_returning(textured(), seen=seen))
     assert has_imagery(data) and len(bbox) == 4
-    assert seen[0]["size"] == "64,64" and seen[0]["bboxSR"] == "4326" and seen[0]["f"] == "image"
+    assert seen[0]["size"] == "64,64" and seen[0]["bboxSR"] == "3857" and seen[0]["imageSR"] == "3857" and seen[0]["f"] == "image"
 
 
 def test_places_without_coverage_raise_a_clear_error():
