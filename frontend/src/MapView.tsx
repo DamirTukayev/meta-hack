@@ -45,6 +45,8 @@ export default function MapView(props: {
   const editing = mode !== 'browse' && state.status !== 'running'
   const draft = state.status === 'idle' || state.status === 'error' || props.stale // your points, drawn on the map and draggable
   const [drag, setDrag] = useState<{ kind: 'depot' | 'order'; i: number } | null>(null)
+  const [heroOff, setHeroOff] = useState(false) // "Place my own points" closes the welcome card so the map underneath can be clicked
+  useEffect(() => setHeroOff(false), [sample.name]) // a new image gets the card again
   useEffect(() => {
     if (state.errorPoint) setLayers((l) => ({ ...l, graph: true, roads: true })) // show the roads that were found next to the offending point
   }, [state.errorPoint])
@@ -287,13 +289,13 @@ export default function MapView(props: {
           )}
         </svg>
         {state.status === 'running' && <div className="map-stage"><span className="spinner" />{state.stage}</div>}
-        {state.status === 'idle' && !custom.depot && custom.orders.length === 0 && !props.auto && (
+        {state.status === 'idle' && !heroOff && !custom.depot && custom.orders.length === 0 && !props.auto && (
           <div className="hero" role="region" aria-label="Get started">
             <h3>Plan deliveries from a satellite photo</h3>
             <p>Place a depot and some orders, say what to avoid, and the agent plans the routes — then checks its own work.</p>
             <div className="hero-actions">
               <button className="primary inline" onClick={props.onQuickStart}>▶ Try it with 20 random orders</button>
-              <button className="chip" onClick={() => props.onMode('depot')}>Place my own points</button>
+              <button className="chip" onClick={() => { setHeroOff(true); props.onMode('depot') }}>Place my own points</button>
               <button className="chip" onClick={props.onPickArea}>Choose another area</button>
             </div>
           </div>
