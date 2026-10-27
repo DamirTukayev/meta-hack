@@ -36,6 +36,7 @@ def main() -> None:
         out["scenarios"] = {"summary": summarize_scenarios(rows), "rows": rows}
     if a.parse or both:
         parse_client = MetaClient(s, guard, provider="baseten") if a.provider == "baseten" else client
+        parse_guard = guard_for(s, "baseten") if a.provider == "baseten" else guard  # each provider has its own spend counter
         from orbitroute.prompts import active_version
 
         version = a.prompt_version or active_version("request")

@@ -64,4 +64,10 @@ SCENARIOS: list[EvalScenario] = [
     EvalScenario("inf-time-50-3", "memphis", 50, 3, "09:00", ("industrial",), expect="infeasible", note="50 x 4 min / 3 trucks = 67 min > 60 min"),
     EvalScenario("inf-capacity-40", "columbus", 40, 3, "12:00", ("industrial",), capacity=10, expect="infeasible", note="3 trucks x 10 units < 40 orders"),
     EvalScenario("inf-capacity-24", "memphis", 24, 2, "12:00", ("industrial",), capacity=10, expect="infeasible", note="2 trucks x 10 units < 24 orders"),
+    # Flood relief on the Hurricane Harvey photo: the zones are the standing water SAM finds, so a plain solver (which knows
+    # the roads as they were) drives through it. Orders where a legal route reaches them, and orders placed anywhere.
+    *[EvalScenario(f"hou-flood-{s}", "houston-harvey", 20, 3, "14:00", ("flooded",), seed=s) for s in range(4)],
+    *[EvalScenario(f"hou-flood-any-{s}", "houston-harvey", 20, 3, "14:00", ("flooded",), seed=s, anywhere=True) for s in range(4)],
+    *[EvalScenario(f"houb-flood-{s}", "houston-harvey-b", 20, 3, "14:00", ("flooded",), seed=s) for s in range(4)],
+    *[EvalScenario(f"houb-flood-any-{s}", "houston-harvey-b", 20, 3, "14:00", ("flooded",), seed=s, anywhere=True) for s in range(4)],
 ]

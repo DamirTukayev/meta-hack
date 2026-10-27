@@ -40,6 +40,8 @@ if "scenarios" in res:
     def family(r: dict) -> str:
         if "-grid-" in r["id"]:
             return "Drawn zone, orders only where a legal route can reach them"
+        if r["id"].startswith(("hou-flood", "houb-flood")):
+            return "Flood relief on two Hurricane Harvey photos: water found by SAM (orders reachable, or placed anywhere)"
         if "-any-" in r["id"]:
             return "Drawn zone, orders placed anywhere (some are cut off by the zone)"
         return "Zones found by Muse Spark, plus provably infeasible requests"
@@ -60,7 +62,7 @@ parse_keys = [k for k in res if k.startswith("parsing")]
 if parse_keys:
     n = res[parse_keys[0]]["cases"]
     out += [
-        f"## Request parsing ({n} free-form phrasings), by model and prompt version",
+        f"## Request parsing ({n} free-form phrasings; {res[parse_keys[-1]]['cases']} from prompt v3 on, which adds 4 flood phrasings), by model and prompt version",
         "",
         "| Model | Request prompt | Exact match | Field accuracy | Mean latency | Cost |",
         "|---|---|---|---|---|---|",
@@ -70,7 +72,7 @@ if parse_keys:
         provider = "Muse Spark Open (open weights, Baseten)" if "baseten" in k else "Muse Spark 1.3 (Meta API)"
         version = k.rsplit("_", 1)[-1] if k.rsplit("_", 1)[-1].startswith("v") else "v1"
         out.append(f"| {provider} | {version} | {p['exact_match_cases']}/{p['cases']} | {p['field_accuracy']:.1%} | {p['mean_seconds']} s | ${p['cost_usd']} |")
-    out += ["", "Prompt v2 states the field rules explicitly (default objective, what counts as a capacity, how to read a time range). It fixed every miss of the open-weight model (11/20 -> 20/20) without hurting the Meta model.", "- Limitation: the cases are written by the project author, so this measures robustness to paraphrase, not to the wild.", ""]
+    out += ["", "Prompt v2 states the field rules explicitly (default objective, what counts as a capacity, how to read a time range). It fixed every miss of the open-weight model (11/20 -> 20/20) without hurting the Meta model.", "Prompt v3 adds the \"flooded\" zone kind (floodwater, roads under water) to the field rules.", "- Limitation: the cases are written by the project author, so this measures robustness to paraphrase, not to the wild.", ""]
     for k in parse_keys:
         for f in res[k]["failures"]:
             out.append(f"- `{k}`: `{f['text']}` — {f['error'] or ', '.join(f'{a}: expected {v[0]}, got {v[1]}' for a, v in f['wrong'].items())}")

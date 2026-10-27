@@ -1,0 +1,48 @@
+[
+ {
+  "sample": "houston-harvey",
+  "flooded_share_of_photo": 0.2023527357313368,
+  "flood_zones": 28,
+  "graph_km": 15.49,
+  "graph_under_water_km": 1.06,
+  "rows": [
+   {
+    "reference": "named streets",
+    "mapped_km": 16.37,
+    "under_water_km": 0.06,
+    "under_water_share": 0.0034009546539379475,
+    "seen_by_graph_when_under_water": 1.0
+   },
+   {
+    "reference": "streets + service roads (no parking aisles or driveways)",
+    "mapped_km": 28.5,
+    "under_water_km": 2.02,
+    "under_water_share": 0.07099780701754387,
+    "seen_by_graph_when_under_water": 0.24903474903474904
+   }
+  ]
+ },
+ {
+  "sample": "houston-harvey-b",
+  "flooded_share_of_photo": 0.16046142578125,
+  "flood_zones": 63,
+  "graph_km": 7.17,
+  "graph_under_water_km": 1.63,
+  "rows": [
+   {
+    "reference": "named streets",
+    "mapped_km": 27.04,
+    "under_water_km": 9.08,
+    "under_water_share": 0.33563226691702175,
+    "seen_by_graph_when_under_water": 0.11952662721893491
+   },
+   {
+    "reference": "streets + service roads (no parking aisles or driveways)",
+    "mapped_km": 38.71,
+    "under_water_km": 11.13,
+    "under_water_share": 0.2874946391180403,
+    "seen_by_graph_when_under_water": 0.11319761319761319
+   }
+  ]
+ }
+]

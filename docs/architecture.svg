@@ -27,8 +27,8 @@
   <!-- inputs -->
   <rect class="box" x="30" y="70" width="230" height="100"/>
   <text x="46" y="94" class="hw">SATELLITE IMAGE</text>
-  <text x="46" y="114" class="t">USGS NAIP aerial photo,</text>
-  <text x="46" y="131" class="t">1.5 km square, any US area</text>
+  <text x="46" y="114" class="t">USGS NAIP or NOAA storm photo,</text>
+  <text x="46" y="131" class="t">1.5 km square, US only</text>
   <text x="46" y="156" class="l">public domain</text>
 
   <rect class="box" x="30" y="250" width="230" height="100"/>
@@ -38,14 +38,15 @@
   <text x="46" y="336" class="l">typed, or spoken (Muse Voice)</text>
 
   <!-- understand -->
-  <rect class="model" x="310" y="40" width="390" height="100"/>
+  <rect class="model" x="310" y="40" width="390" height="112"/>
   <text x="326" y="64" class="h">SAM 3.1  ·  SEE THE ROADS</text>
   <text x="326" y="86" class="t">two tilings of the photo, masks united</text>
   <text x="326" y="103" class="t">mask → skeleton → road graph with</text>
   <text x="326" y="120" class="t">gap bridging and speed classes</text>
+  <text x="326" y="141" class="l">also finds flood water, for "avoid the floods"</text>
 
-  <rect class="model" x="310" y="160" width="390" height="80"/>
-  <text x="326" y="184" class="h">MUSE SPARK (VISION)  ·  READ THE LAND</text>
+  <rect class="model" x="310" y="164" width="390" height="76"/>
+  <text x="326" y="186" class="h">MUSE SPARK (VISION)  ·  READ THE LAND</text>
   <text x="326" y="206" class="t">outlines residential / industrial /</text>
   <text x="326" y="223" class="t">commercial / park zones and warehouses</text>
 

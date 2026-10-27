@@ -142,7 +142,9 @@ function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => 
   if (state.status === 'error') return <div className="result idle">No plan was made. The reason is in the red message above.</div>
   if (!r) return <div className="result idle">{state.status === 'running' ? 'The agent is working on it…' : 'No plan yet.'}</div>
   const total = state.problem?.n_orders ?? r.plan.served
-  const excluded = Object.keys(r.excluded).length
+  const shown = props.relax !== null ? r.relaxations[props.relax] : undefined
+  const leftOut = Object.keys(shown ? shown.report.excluded : r.excluded)
+  const excluded = leftOut.length
   const trucks = r.plan.routes.length
   const label = r.status === 'verified' ? 'VERIFIED' : r.status === 'verified_partial' ? 'VERIFIED · PARTIAL' : r.status === 'needs_relaxation' ? 'CAN’T MEET AS STATED' : 'UNRESOLVED'
   return (
@@ -155,7 +157,7 @@ function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => 
         <div className="tile"><b>{r.report.metrics.total_km}<small> km</small></b><span>total driving</span></div>
       </div>
       <p className="run-meta">{r.seconds}s · ${r.cost_usd.toFixed(3)} · {r.paid_calls} model call{r.paid_calls === 1 ? '' : 's'}</p>
-      {excluded > 0 && <p className="note">{excluded} order{excluded > 1 ? 's' : ''} left out — they cannot be reached without entering an avoided zone: {Object.keys(r.excluded).join(', ')}.</p>}
+      {excluded > 0 && <p className="note">{excluded} order{excluded > 1 ? 's' : ''} left out — they cannot be reached without entering an avoided zone: {leftOut.join(', ')}.</p>}
       {r.status === 'needs_relaxation' && (
         <div className="relax">
           <p className="note">The request is not feasible as stated. Smallest changes that work (each one verified):</p>
@@ -318,7 +320,7 @@ export default function App() {
         </aside>
       </main>
       {picking && <AreaPicker onClose={() => setPicking(false)} onChosen={onArea} />}
-      <footer>Imagery: USGS NAIP (public domain). Built solo for the Meta Global AI Developer Hackathon.</footer>
+      <footer>Imagery: USGS NAIP and NOAA Emergency Response Imagery (public domain). Built solo for the Meta Global AI Developer Hackathon.</footer>
     </div>
   )
 }

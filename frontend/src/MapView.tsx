@@ -10,6 +10,7 @@ const ZONE_COLORS: Record<string, string> = {
   residential: '#3b82f6',
   park_forest: '#22c55e',
   other: '#9ca3af',
+  flooded: '#14d4c4',
   custom: '#e879f9',
 }
 
@@ -234,6 +235,17 @@ export default function MapView(props: {
             ))}
           {layers.orders &&
             state.orders.map((o, i) => <circle key={i} cx={o[0]} cy={o[1]} r={5 * u} fill="#e5e7eb" stroke="#000000" strokeWidth={1.5 * u} opacity={plan ? 0.0 : 0.9} />)}
+          {layers.orders && Object.keys(report?.excluded ?? {}).map((id) => {
+            const o = state.orders[Number(id) - 1]
+            if (!o) return null
+            return (
+              <g key={'x' + id}>
+                <title>{`Order #${id} is left out: ${report?.excluded[id]}`}</title>
+                <circle cx={o[0]} cy={o[1]} r={18 * u} fill="#1a0000" fillOpacity={0.85} stroke="#ff4d4d" strokeWidth={4 * u} strokeDasharray={`${5 * u} ${4 * u}`} />
+                <text x={o[0]} y={o[1] + 8 * u} textAnchor="middle" fontSize={24 * u} fontWeight={800} fill="#ff4d4d">×</text>
+              </g>
+            )
+          })}
           {layers.orders && !props.stale &&
             plan?.routes.map((r, ri) =>
               r.stops.map((st, k) => {
@@ -291,8 +303,17 @@ export default function MapView(props: {
         {state.status === 'running' && <div className="map-stage"><span className="spinner" />{state.stage}</div>}
         {state.status === 'idle' && !heroOff && !custom.depot && custom.orders.length === 0 && !props.auto && (
           <div className="hero" role="region" aria-label="Get started">
-            <h3>Plan deliveries from a satellite photo</h3>
-            <p>Place a depot and some orders, say what to avoid, and the agent plans the routes — then checks its own work.</p>
+            {sample.event ? (
+              <>
+                <h3>Plan relief deliveries through the flood</h3>
+                <p>A navigator knows the roads as they were before {sample.event}. This is the photo taken during it: the agent finds the water, keeps the trucks out of it and checks its own plan.</p>
+              </>
+            ) : (
+              <>
+                <h3>Plan deliveries from a satellite photo</h3>
+                <p>Place a depot and some orders, say what to avoid, and the agent plans the routes — then checks its own work.</p>
+              </>
+            )}
             <div className="hero-actions">
               <button className="primary inline" onClick={props.onQuickStart}>▶ Try it with 20 random orders</button>
               <button className="chip" onClick={() => { setHeroOff(true); props.onMode('depot') }}>Place my own points</button>
@@ -334,7 +355,7 @@ export default function MapView(props: {
       <div className="legend">
         <span className="legend-title" title="Muse Spark outlines these areas on the image; the outlines are approximate.">Land use</span>
         {Array.from(new Set(state.zones.map((z) => z.kind))).map((k) => (
-          <span key={k}><i style={{ background: ZONE_COLORS[k] }} />{k === 'custom' ? 'your zone' : k.replace('_', '/')}{avoid.includes(k) ? ' — trucks avoid it' : ''}</span>
+          <span key={k}><i style={{ background: ZONE_COLORS[k] }} />{k === 'custom' ? 'your zone' : k === 'flooded' ? 'flood water' : k.replace('_', '/')}{avoid.includes(k) ? ' — trucks avoid it' : ''}</span>
         ))}
       </div>
       <div className="legend symbols">
@@ -343,6 +364,7 @@ export default function MapView(props: {
         <span><i className="line" />A colour is one truck; arrows show the direction, the dashed part is the way back</span>
         <span><i className="num">2</i>Order number in the circle = the order the truck visits it in; <b>#7</b> = the order's own number</span>
         <span><i className="viol" />Red pulsing road = a plan broke the “avoid” rule there</span>
+        {Object.keys(report?.excluded ?? {}).length > 0 && <span><i className="cut">×</i>Dashed red × = an order left out because the zone cuts it off</span>}
         <span className="credit">{sample.credit}</span>
       </div>
     </div>

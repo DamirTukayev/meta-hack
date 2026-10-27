@@ -97,6 +97,18 @@ def test_prefer_connected_depot_avoids_a_pocket_cut_off_by_the_zone(monkeypatch)
     near_centre, far = (210.0, 210.0), (300.0, 300.0)
     scene.warehouses = [near_centre, far]
     pocket_node = graph.nearest_node(*near_centre)[0]
-    monkeypatch.setattr(sc, "_legally_reachable", lambda g, s, p, node: {node} if node == pocket_node else set(range(40)))
+    monkeypatch.setattr(sc, "_legal_component_sizes", lambda g, s, p: {i: (1 if i == pocket_node else 40) for i in range(len(g.nodes))})
     assert sc.pick_depot(graph, scene, prob) == pocket_node  # default: nearest the centre
     assert sc.pick_depot(graph, scene, prob, prefer_connected=True) == graph.nearest_node(*far)[0]
+
+
+def test_without_a_warehouse_the_depot_goes_to_the_largest_dry_piece_of_road(monkeypatch):
+    from orbitroute.routing import scenario as sc
+
+    graph, scene, prob = grid_graph(), grid_scene(), problem()
+    scene.warehouses = []
+    big = [i for i, (x, y) in enumerate(graph.nodes) if x > 250 and y > 250]  # the piece the "water" leaves connected
+    sizes = {i: (len(big) if i in big else 3) for i in range(len(graph.nodes))}
+    monkeypatch.setattr(sc, "_legal_component_sizes", lambda g, s, p: sizes)
+    depot = sc.pick_depot(graph, scene, prob, prefer_connected=True)
+    assert depot in big

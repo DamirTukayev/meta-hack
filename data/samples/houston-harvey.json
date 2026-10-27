@@ -1,0 +1,24 @@
+{
+ "source": "NOAA NGS Emergency Response Imagery",
+ "dataset": "20170830-rgb",
+ "event": "Hurricane Harvey",
+ "captured": "2017-08-30",
+ "label": "Houston, TX \u2014 flooded subdivision after Hurricane Harvey",
+ "credit": "Imagery: NOAA National Geodetic Survey, Emergency Response Imagery (public domain)",
+ "bbox_lonlat": [
+  -95.70473188593958,
+  29.765502408773926,
+  -95.68920811406039,
+  29.778977138014834
+ ],
+ "bbox_mercator": [
+  -10653802.020049566,
+  3473442.837348368,
+  -10652073.921668785,
+  3475170.935729149
+ ],
+ "span_m": 1500,
+ "width_px": 1536,
+ "height_px": 1536,
+ "m_per_px": 0.9765625
+}

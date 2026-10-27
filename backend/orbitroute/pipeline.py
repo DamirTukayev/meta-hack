@@ -13,12 +13,13 @@ from orbitroute.config import ROOT
 from orbitroute.custom import CustomInputs, apply_custom
 from orbitroute.llm.budget import BudgetGuard, RunBudget
 from orbitroute.llm.client import MetaClient
+from orbitroute.perception.flood import flood_zones, segment_floods
 from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.serialize import graph_json, mask_png, plan_json, report_json, scenario_json, scene_json
 from orbitroute.understanding.request import parse_request
-from orbitroute.understanding.scene import analyze_scene
+from orbitroute.understanding.scene import Scene, analyze_scene
 
 SAMPLES_DIR = ROOT / "data" / "samples"
 
@@ -103,7 +104,16 @@ def run_pipeline(
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
     has_custom = custom is not None and not custom.empty
     problem = parse_request(text, request_text(request, custom, auto_orders, trucks), run=run)
-    notes: list[str] = []
+    flood_note = None
+    if "flooded" in problem.avoid_zone_kinds and not any(z.kind == "flooded" for z in scene.zones):
+        emit(Event("stage", "Finding flooded areas with SAM 3.1", {"stage": "scene"}))
+        found = flood_zones(segment_floods(client, image_bytes, run=run), sample.meta["m_per_px"])
+        scene = Scene(scene.width, scene.height, [*scene.zones, *found], scene.warehouses)
+        covered = sum(z.polygon.area for z in found) / (scene.width * scene.height)
+        emit(Event("scene", f"{len(found)} flooded areas ({covered:.0%} of the photo)" if found else "no flooded areas found", scene_json(scene)))
+        if not found:
+            flood_note = "No flooded areas were found in this photo, so nothing is avoided on that account."
+    notes: list[str] = [flood_note] if flood_note else []
     if trucks and problem.n_vehicles != trucks:
         notes.append(f"Using {trucks} truck{'s' if trucks != 1 else ''} from the Trucks field instead of the {problem.n_vehicles} in the text.")
     if trucks:

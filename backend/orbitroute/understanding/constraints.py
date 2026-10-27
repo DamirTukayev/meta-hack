@@ -8,7 +8,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-ZoneKind = Literal["industrial", "commercial", "residential", "park_forest", "custom"]  # "custom" = a zone the user drew
+ZoneKind = Literal["industrial", "commercial", "residential", "park_forest", "flooded", "custom"]  # "flooded" = standing water found by SAM; "custom" = a zone the user drew
 
 DEFAULT_SHIFT_START = "08:00"
 DEFAULT_DEADLINE = "18:00"
@@ -27,8 +27,8 @@ PARSED_REQUEST_SCHEMA = {
         "service_minutes": {"type": ["number", "null"], "description": "minutes spent at each stop, null if not stated"},
         "avoid_zone_kinds": {
             "type": "array",
-            "items": {"type": "string", "enum": ["industrial", "commercial", "residential", "park_forest"]},
-            "description": "land-use zones the trucks must not drive through",
+            "items": {"type": "string", "enum": ["industrial", "commercial", "residential", "park_forest", "flooded"]},
+            "description": "land-use zones, or flooded areas, the trucks must not drive through",
         },
         "objective": {"type": "string", "enum": ["min_time", "min_distance"]},
         "notes": {"type": "array", "items": {"type": "string"}, "description": "ambiguities in the request"},
