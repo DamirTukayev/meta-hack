@@ -53,3 +53,4 @@ frontend/dist/
 
 # Areas picked on the map (downloaded on demand)
 data/areas/
+budget_state_*.json

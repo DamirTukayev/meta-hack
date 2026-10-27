@@ -591,5 +591,138 @@
   "cost_usd": 0.1074,
   "failures": []
  },
- "eval_cost_usd": 0.0129
+ "eval_cost_usd": 0.0616,
+ "parsing_baseten": {
+  "cases": 20,
+  "exact_match_cases": 11,
+  "field_accuracy": 0.944,
+  "mean_seconds": 4.6,
+  "cost_usd": 0.1218,
+  "failures": [
+   {
+    "text": "Deliver 25 packages with 2 vans before 5pm",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 2.6
+   },
+   {
+    "text": "50 stops, 4 trucks, start at 07:30, finish by 15:00, no driving through residential areas",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 4.1
+   },
+   {
+    "text": "avoid both industrial and residential zones, 35 orders, 3 trucks, by 13:00",
+    "ok": false,
+    "wrong": {
+     "vehicle_capacity": [
+      "None",
+      "35"
+     ]
+    },
+    "error": null,
+    "seconds": 5.7
+   },
+   {
+    "text": "Plan 8 stops for 2 couriers by 10:00",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 2.8
+   },
+   {
+    "text": "28 orders / 4 trucks / deadline 19:00 / keep away from the factories",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 6.4
+   },
+   {
+    "text": "100 orders, 10 trucks, 08:00-16:00",
+    "ok": false,
+    "wrong": {
+     "deadline": [
+      "16:00",
+      "None"
+     ]
+    },
+    "error": null,
+    "seconds": 3.2
+   },
+   {
+    "text": "33 orders, 3 trucks, by 12:00, but don't go through the industrial zone or the commercial area",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 3.3
+   },
+   {
+    "text": "Two trucks, thirty orders, finish by 17:00",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 6.3
+   },
+   {
+    "text": "14 orders on 2 trucks with capacity 8 each, leave at 6:00, done by 10:30",
+    "ok": false,
+    "wrong": {
+     "objective": [
+      "min_time",
+      "min_distance"
+     ]
+    },
+    "error": null,
+    "seconds": 4.1
+   }
+  ]
+ },
+ "parsing_v2": {
+  "cases": 20,
+  "exact_match_cases": 20,
+  "field_accuracy": 1.0,
+  "mean_seconds": 2.3,
+  "cost_usd": 0.0584,
+  "failures": []
+ },
+ "parsing_baseten_v2": {
+  "cases": 20,
+  "exact_match_cases": 20,
+  "field_accuracy": 1.0,
+  "mean_seconds": 2.6,
+  "cost_usd": 0.0616,
+  "failures": []
+ }
 }

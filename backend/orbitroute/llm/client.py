@@ -11,7 +11,7 @@ from typing import Any
 import httpx
 
 from orbitroute.config import Settings
-from orbitroute.llm.budget import BudgetGuard, RunBudget
+from orbitroute.llm.budget import BudgetExceeded, BudgetGuard, RunBudget
 from orbitroute.llm.pricing import SAM_PER_IMAGE_USD, token_cost, token_price
 
 DEFAULT_MODEL = "muse-spark-1.3"
@@ -59,6 +59,32 @@ def _text_chars(messages: list[dict[str, Any]]) -> int:
         elif isinstance(c, list):
             chars += sum(len(p.get("text", "")) for p in c if p.get("type") == "text")
     return chars
+
+
+def guard_for(settings: Settings, provider: str = "meta") -> BudgetGuard:
+    """Each provider has its own credits, so each gets its own persistent spend counter and cap."""
+    if provider == "baseten":
+        return BudgetGuard(settings.baseten_state_path, settings.baseten_budget_cap_usd, settings.paid_calls_enabled)
+    return BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, settings.paid_calls_enabled)
+
+
+class FailoverClient:
+    """Text calls go to `primary`; if it fails (rate limit, no credits left, outage) or its budget is used up, `secondary` answers."""
+
+    def __init__(self, primary: "MetaClient", secondary: "MetaClient"):
+        self.primary, self.secondary = primary, secondary
+
+    def chat_json(self, *args: Any, **kw: Any) -> tuple[Any, ChatResult]:
+        try:
+            return self.primary.chat_json(*args, **kw)
+        except (ApiError, httpx.HTTPError, BudgetExceeded):
+            return self.secondary.chat_json(*args, **kw)
+
+    def chat(self, *args: Any, **kw: Any) -> ChatResult:
+        try:
+            return self.primary.chat(*args, **kw)
+        except (ApiError, httpx.HTTPError, BudgetExceeded):
+            return self.secondary.chat(*args, **kw)
 
 
 class MetaClient:

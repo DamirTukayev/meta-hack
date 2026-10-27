@@ -22,7 +22,7 @@ from orbitroute.config import ROOT, Settings
 from orbitroute.custom import CustomInputs, PlacementError
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard
 from orbitroute.limits import RateLimiter
-from orbitroute.llm.client import ApiError, MetaClient
+from orbitroute.llm.client import ApiError, FailoverClient, MetaClient, guard_for
 from orbitroute.naip import NoImagery
 from orbitroute.pipeline import get_sample, list_samples, run_pipeline
 
@@ -48,7 +48,7 @@ guard = BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, se
 _client: MetaClient | None = None
 
 
-_text_client: MetaClient | None = None
+_text_client = None
 
 
 def get_client() -> MetaClient:
@@ -63,8 +63,8 @@ def get_text_client() -> MetaClient:
     global _text_client
     if settings.reasoning_provider != "baseten":
         return get_client()
-    if _text_client is None:
-        _text_client = MetaClient(settings, guard, provider="baseten")
+    if _text_client is None:  # open-weight first, the Meta API as a safety net
+        _text_client = FailoverClient(MetaClient(settings, guard_for(settings, "baseten"), provider="baseten"), get_client())
     return _text_client
 
 

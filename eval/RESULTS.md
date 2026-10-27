@@ -42,11 +42,26 @@ Muse Spark as the repair planner (instead of the deterministic policy), on 6 sce
 | inf-capacity-40 | 40 orders, 3 trucks, by 12:00, avoid industrial | violates capacity | needs_relaxation | 1 | propose_relaxation |
 | inf-capacity-24 | 24 orders, 2 trucks, by 12:00, avoid industrial | violates capacity | needs_relaxation | 1 | propose_relaxation |
 
-## Request parsing with Muse Spark (20 free-form phrasings)
+## Request parsing (20 free-form phrasings), by model and prompt version
 
-- Exact match on every field: **20/20**
-- Field-level accuracy: **100.0%**
-- Mean latency 4.2 s, total cost $0.1074
+| Model | Request prompt | Exact match | Field accuracy | Mean latency | Cost |
+|---|---|---|---|---|---|
+| Muse Spark 1.3 (Meta API) | v1 | 20/20 | 100.0% | 4.2 s | $0.1074 |
+| Muse Spark Open (open weights, Baseten) | v1 | 11/20 | 94.4% | 4.6 s | $0.1218 |
+| Muse Spark 1.3 (Meta API) | v2 | 20/20 | 100.0% | 2.3 s | $0.0584 |
+| Muse Spark Open (open weights, Baseten) | v2 | 20/20 | 100.0% | 2.6 s | $0.0616 |
+
+Prompt v2 states the field rules explicitly (default objective, what counts as a capacity, how to read a time range). It fixed every miss of the open-weight model (11/20 -> 20/20) without hurting the Meta model.
 - Limitation: the cases are written by the project author, so this measures robustness to paraphrase, not to the wild.
 
-Evaluation cost: $0.0129
+- `parsing_baseten`: `Deliver 25 packages with 2 vans before 5pm` — objective: expected min_time, got min_distance
+- `parsing_baseten`: `50 stops, 4 trucks, start at 07:30, finish by 15:00, no driving through residential areas` — objective: expected min_time, got min_distance
+- `parsing_baseten`: `avoid both industrial and residential zones, 35 orders, 3 trucks, by 13:00` — vehicle_capacity: expected None, got 35
+- `parsing_baseten`: `Plan 8 stops for 2 couriers by 10:00` — objective: expected min_time, got min_distance
+- `parsing_baseten`: `28 orders / 4 trucks / deadline 19:00 / keep away from the factories` — objective: expected min_time, got min_distance
+- `parsing_baseten`: `100 orders, 10 trucks, 08:00-16:00` — deadline: expected 16:00, got None
+- `parsing_baseten`: `33 orders, 3 trucks, by 12:00, but don't go through the industrial zone or the commercial area` — objective: expected min_time, got min_distance
+- `parsing_baseten`: `Two trucks, thirty orders, finish by 17:00` — objective: expected min_time, got min_distance
+- `parsing_baseten`: `14 orders on 2 trucks with capacity 8 each, leave at 6:00, done by 10:30` — objective: expected min_time, got min_distance
+
+Evaluation cost: $0.0616

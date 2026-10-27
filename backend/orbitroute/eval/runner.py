@@ -148,7 +148,7 @@ def _hhmm(s: int) -> str:
     return f"{s // 3600:02d}:{(s % 3600) // 60:02d}"
 
 
-def run_parse_eval(client: MetaClient, guard: BudgetGuard, log=print) -> dict:
+def run_parse_eval(client: MetaClient, guard: BudgetGuard, log=print, prompt_version: str | None = None) -> dict:
     run = guard.new_run(2.0)
     results = []
     for text, expected in CASES:
@@ -156,7 +156,7 @@ def run_parse_eval(client: MetaClient, guard: BudgetGuard, log=print) -> dict:
                 "service_minutes": None, "avoid": set(), "objective": "min_time", **expected}
         t0 = time.perf_counter()
         try:
-            got = _actual(parse_request(client, text, run=run))
+            got = _actual(parse_request(client, text, run=run, prompt_version=prompt_version))
             error = None
         except Exception as exc:  # a parse failure counts as all fields wrong
             got, error = {}, str(exc)
