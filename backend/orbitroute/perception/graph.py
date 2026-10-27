@@ -200,7 +200,7 @@ def build_road_graph(
     min_component_px: int = 400,
     spur_px: float = 25,
     densify_px: float = 40,
-    bridge_px: float = 70,
+    bridge_px: float = 110,
 ) -> RoadGraph:
     clean = clean_mask(mask, close_radius, min_component_px)
     dt = ndi.distance_transform_edt(clean)

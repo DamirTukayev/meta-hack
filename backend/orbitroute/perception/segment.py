@@ -21,10 +21,12 @@ from orbitroute.llm.client import MetaClient
 from orbitroute.perception.sam import parse_instances, response_text
 
 CACHE_DIR = ROOT / "data" / "cache"
-# 6x6 tiles of ~256 px: narrow residential streets are only found when each tile is small. On a suburban
-# area 3x3 tiles found 4.8 km of road, 5x5 found 14.2 km and 6x6 found 18.3 km (about $0.09 per image).
+# Narrow residential streets are only found when each tile is small, and different tilings find different streets,
+# so the masks of several tilings are united. Measured against OpenStreetMap on two tiles (eval/ROADS.md): one 6x6
+# tiling finds 66% of the named streets, 6x6 + 12x12 finds 77% at the same precision (about $0.45 per new image).
 DEFAULT_TILES = 6
 DEFAULT_OVERLAP = 48
+DEFAULT_TILINGS = ((6, 48), (12, 28))  # (tiles per side, overlap in px)
 MIN_CONFIDENCE = 0.0  # SAM confidences on thin roads are low (~0.5); filtering is left to later stages
 
 
@@ -91,3 +93,25 @@ def segment_concept(
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(cache, mask=mask)
     return mask
+
+
+def segment_roads(
+    client: MetaClient,
+    image_bytes: bytes,
+    *,
+    run: RunBudget | None = None,
+    tilings: tuple[tuple[int, int], ...] = DEFAULT_TILINGS,
+    use_cache: bool = True,
+) -> np.ndarray:
+    """The road mask the product uses: the union of the "road" masks of several tilings (each cached on its own)."""
+    mask: np.ndarray | None = None
+    for n, overlap in tilings:
+        part = segment_concept(client, image_bytes, "road", n=n, overlap=overlap, run=run, use_cache=use_cache)
+        mask = part if mask is None else mask | part
+    assert mask is not None
+    return mask
+
+
+def cache_names(image_bytes: bytes, tilings: tuple[tuple[int, int], ...] = DEFAULT_TILINGS) -> list[str]:
+    key = hashlib.sha256(image_bytes).hexdigest()[:16]
+    return [f"sam_{key}_road_{n}x{n}_o{o}.npz" for n, o in tilings]

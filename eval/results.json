@@ -4,35 +4,35 @@
    "scenarios": 46,
    "baseline": {
     "solver_says_feasible": 41,
-    "invalid_after_independent_audit": 18,
-    "invalid_rate_among_claimed_feasible": 0.439,
+    "invalid_after_independent_audit": 21,
+    "invalid_rate_among_claimed_feasible": 0.512,
     "violation_kinds_in_scenarios": {
-     "zones": 18,
+     "zones": 22,
      "deadline": 3,
      "capacity": 2
     }
    },
    "agent": {
     "status_counts": {
-     "needs_relaxation": 13,
-     "verified": 23,
-     "verified_partial": 10
+     "needs_relaxation": 11,
+     "verified": 24,
+     "verified_partial": 11
     },
-    "scenarios_with_a_first_pass_violation": 23,
-    "of_those_ended_verified": 10,
-    "mean_iterations": 1.67,
-    "mean_seconds": 6.6,
+    "scenarios_with_a_first_pass_violation": 26,
+    "of_those_ended_verified": 15,
+    "mean_iterations": 1.78,
+    "mean_seconds": 6.5,
     "final_plan_passes_audit": 46,
     "provably_infeasible": 4,
     "infeasible_correctly_flagged": 4,
-    "verified_but_partial": 10
+    "verified_but_partial": 11
    },
    "model_decider": {
     "runs": 6,
-    "reached_verified": 2,
-    "mean_cost_usd": 0.0047
+    "reached_verified": 5,
+    "mean_cost_usd": 0.0035
    },
-   "verified_scenarios": 33
+   "verified_scenarios": 35
   },
   "rows": [
    {
@@ -109,15 +109,27 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": true,
-    "baseline_violations": {},
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
     "agent_status": "verified",
-    "agent_iterations": 1,
-    "agent_actions": [],
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0017
+    }
    },
    {
     "id": "mem-grid-11",
@@ -138,7 +150,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 2.1
    },
    {
     "id": "mem-grid-12",
@@ -193,31 +205,15 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": false,
-    "baseline_violations": {
-     "zones": 2
-    },
-    "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
-    "agent_actions": [
-     "ban_violating_edges",
-     "propose_relaxation"
-    ],
+    "baseline_audit_ok": true,
+    "baseline_violations": {},
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
     "excluded_orders": 0,
-    "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 2151 m through it)"
-    ],
+    "relaxations": [],
     "final_report_ok": true,
-    "seconds": 11.6,
-    "model_decider": {
-     "status": "needs_relaxation",
-     "actions": [
-      "ban_violating_edges",
-      "propose_relaxation"
-     ],
-     "iterations": 2,
-     "cost_usd": 0.0048
-    }
+    "seconds": 2.0
    },
    {
     "id": "mem-grid-22",
@@ -335,15 +331,27 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": true,
-    "baseline_violations": {},
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
     "agent_status": "verified",
-    "agent_iterations": 1,
-    "agent_actions": [],
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.002
+    }
    },
    {
     "id": "col-grid-12",
@@ -398,15 +406,27 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": true,
-    "baseline_violations": {},
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
     "agent_status": "verified",
-    "agent_iterations": 1,
-    "agent_actions": [],
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 4.1,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0021
+    }
    },
    {
     "id": "col-grid-22",
@@ -452,10 +472,10 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 1888 m through it)"
+     "stop avoiding the drawn zone (the plan drives 1491 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6,
+    "seconds": 11.7,
     "model_decider": {
      "status": "needs_relaxation",
      "actions": [
@@ -463,7 +483,7 @@
       "propose_relaxation"
      ],
      "iterations": 2,
-     "cost_usd": 0.0055
+     "cost_usd": 0.005
     }
    },
    {
@@ -498,7 +518,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0043
+     "cost_usd": 0.0049
     }
    },
    {
@@ -522,7 +542,7 @@
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 2,
+    "excluded_orders": 4,
     "relaxations": [],
     "final_report_ok": true,
     "seconds": 6.1,
@@ -533,7 +553,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0046
+     "cost_usd": 0.0053
     }
    },
    {
@@ -559,19 +579,10 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 1615 m through it)"
+     "stop avoiding the drawn zone (the plan drives 908 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6,
-    "model_decider": {
-     "status": "needs_relaxation",
-     "actions": [
-      "ban_violating_edges",
-      "propose_relaxation"
-     ],
-     "iterations": 2,
-     "cost_usd": 0.0048
-    }
+    "seconds": 11.6
    },
    {
     "id": "mem-any-11",
@@ -596,19 +607,10 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 1698 m through it)"
+     "stop avoiding the drawn zone (the plan drives 1292 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6,
-    "model_decider": {
-     "status": "needs_relaxation",
-     "actions": [
-      "ban_violating_edges",
-      "propose_relaxation"
-     ],
-     "iterations": 2,
-     "cost_usd": 0.0043
-    }
+    "seconds": 11.6
    },
    {
     "id": "mem-any-12",
@@ -675,20 +677,18 @@
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 1
     },
-    "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "agent_status": "verified_partial",
+    "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
-     "propose_relaxation"
+     "exclude_unreachable"
     ],
-    "excluded_orders": 0,
-    "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 2151 m through it)"
-    ],
+    "excluded_orders": 4,
+    "relaxations": [],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 6.1
    },
    {
     "id": "mem-any-22",
@@ -737,10 +737,10 @@
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 2,
+    "excluded_orders": 4,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.0
+    "seconds": 6.1
    },
    {
     "id": "col-any-01",
@@ -784,13 +784,69 @@
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 1,
+    "excluded_orders": 3,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.0
+    "seconds": 6.1
    },
    {
     "id": "col-any-10",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "13:00",
+    "avoid": [
+     "drawn zone"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "stop avoiding the drawn zone (the plan drives 953 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 11.6
+   },
+   {
+    "id": "col-any-11",
+    "sample": "columbus",
+    "orders": 30,
+    "trucks": 3,
+    "deadline": "13:00",
+    "avoid": [
+     "drawn zone"
+    ],
+    "expect": null,
+    "baseline_solver_feasible": true,
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges",
+     "propose_relaxation"
+    ],
+    "excluded_orders": 0,
+    "relaxations": [
+     "stop avoiding the drawn zone (the plan drives 1988 m through it)"
+    ],
+    "final_report_ok": true,
+    "seconds": 11.6
+   },
+   {
+    "id": "col-any-12",
     "sample": "columbus",
     "orders": 30,
     "trucks": 3,
@@ -816,58 +872,6 @@
     "seconds": 6.1
    },
    {
-    "id": "col-any-11",
-    "sample": "columbus",
-    "orders": 30,
-    "trucks": 3,
-    "deadline": "13:00",
-    "avoid": [
-     "drawn zone"
-    ],
-    "expect": null,
-    "baseline_solver_feasible": true,
-    "baseline_audit_ok": false,
-    "baseline_violations": {
-     "zones": 1
-    },
-    "agent_status": "verified_partial",
-    "agent_iterations": 3,
-    "agent_actions": [
-     "ban_violating_edges",
-     "exclude_unreachable"
-    ],
-    "excluded_orders": 3,
-    "relaxations": [],
-    "final_report_ok": true,
-    "seconds": 6.0
-   },
-   {
-    "id": "col-any-12",
-    "sample": "columbus",
-    "orders": 30,
-    "trucks": 3,
-    "deadline": "13:00",
-    "avoid": [
-     "drawn zone"
-    ],
-    "expect": null,
-    "baseline_solver_feasible": true,
-    "baseline_audit_ok": false,
-    "baseline_violations": {
-     "zones": 1
-    },
-    "agent_status": "verified_partial",
-    "agent_iterations": 3,
-    "agent_actions": [
-     "ban_violating_edges",
-     "exclude_unreachable"
-    ],
-    "excluded_orders": 1,
-    "relaxations": [],
-    "final_report_ok": true,
-    "seconds": 6.0
-   },
-   {
     "id": "col-any-20",
     "sample": "columbus",
     "orders": 30,
@@ -880,7 +884,7 @@
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 1
     },
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
@@ -890,7 +894,7 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 2003 m through it)"
+     "stop avoiding the drawn zone (the plan drives 2305 m through it)"
     ],
     "final_report_ok": true,
     "seconds": 11.6
@@ -910,18 +914,16 @@
     "baseline_violations": {
      "zones": 2
     },
-    "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "agent_status": "verified_partial",
+    "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
-     "propose_relaxation"
+     "exclude_unreachable"
     ],
-    "excluded_orders": 0,
-    "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 1696 m through it)"
-    ],
+    "excluded_orders": 5,
+    "relaxations": [],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 6.1
    },
    {
     "id": "col-any-22",
@@ -938,18 +940,16 @@
     "baseline_violations": {
      "zones": 1
     },
-    "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "agent_status": "verified_partial",
+    "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
-     "propose_relaxation"
+     "exclude_unreachable"
     ],
-    "excluded_orders": 0,
-    "relaxations": [
-     "stop avoiding the drawn zone (the plan drives 882 m through it)"
-    ],
+    "excluded_orders": 4,
+    "relaxations": [],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 6.1
    },
    {
     "id": "col-ind-40-3",
@@ -1046,15 +1046,19 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": true,
-    "baseline_violations": {},
+    "baseline_audit_ok": false,
+    "baseline_violations": {
+     "zones": 1
+    },
     "agent_status": "verified",
-    "agent_iterations": 1,
-    "agent_actions": [],
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 4.1
    },
    {
     "id": "col-res-30-1-tight",
@@ -1069,22 +1073,24 @@
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
     "baseline_violations": {
-     "deadline": 1
+     "deadline": 1,
+     "zones": 1
     },
     "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "agent_iterations": 3,
     "agent_actions": [
+     "ban_violating_edges",
      "resolve_longer",
      "propose_relaxation"
     ],
     "excluded_orders": 0,
     "relaxations": [
      "use 3 trucks instead of 1",
-     "move the deadline from 09:00 to 10:15",
-     "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 0 m through the zone)"
+     "move the deadline from 09:00 to 10:30",
+     "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 102 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 28.6
+    "seconds": 30.7
    },
    {
     "id": "inf-time-12-1",
@@ -1109,12 +1115,12 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "use 2 trucks instead of 1",
+     "use 3 trucks instead of 1",
      "move the deadline from 08:30 to 09:00",
-     "stop avoiding the residential zone and use 2 trucks instead of 1 (the plan drives 0 m through the zone)"
+     "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 7 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 25.6
+    "seconds": 28.6
    },
    {
     "id": "inf-time-50-3",
@@ -1139,11 +1145,12 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "move the deadline from 09:00 to 09:15",
-     "stop avoiding the industrial zone and move the deadline from 09:00 to 09:15 (the plan drives 0 m through the zone)"
+     "use 4 trucks instead of 3",
+     "move the deadline from 09:00 to 09:30",
+     "stop avoiding the industrial zone and use 4 trucks instead of 3 (the plan drives 0 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 31.8
+    "seconds": 25.7
    },
    {
     "id": "inf-capacity-40",
@@ -1158,7 +1165,7 @@
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
     "baseline_violations": {
-     "capacity": 1
+     "capacity": 2
     },
     "agent_status": "needs_relaxation",
     "agent_iterations": 1,
@@ -1211,7 +1218,7 @@
   "cost_usd": 0.1074,
   "failures": []
  },
- "eval_cost_usd": 0.0284,
+ "eval_cost_usd": 0.0211,
  "parsing_baseten": {
   "cases": 20,
   "exact_match_cases": 11,

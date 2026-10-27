@@ -16,7 +16,7 @@ from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.overlay import draw_plan
-from orbitroute.perception.segment import segment_concept
+from orbitroute.perception.segment import segment_roads
 from orbitroute.routing.matrix import build_matrix
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.routing.solver import solve_vrp
@@ -41,7 +41,7 @@ def main() -> None:
     client = MetaClient(s, guard)
     run = guard.new_run(s.run_cap_usd)
 
-    mask = segment_concept(client, image_bytes, "road", run=run)
+    mask = segment_roads(client, image_bytes, run=run)
     graph = build_road_graph(mask, meta["m_per_px"])
     scene = analyze_scene(client, image_bytes, run=run)
     problem = parse_request(client, a.request, run=run)

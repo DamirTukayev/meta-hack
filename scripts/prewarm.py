@@ -8,13 +8,13 @@ import hashlib
 import shutil
 
 from orbitroute.config import PREWARMED_DIR, ROOT
-from orbitroute.perception.segment import DEFAULT_OVERLAP, DEFAULT_TILES
+from orbitroute.perception.segment import cache_names
 
 CACHE = ROOT / "data" / "cache"
 PREWARMED_DIR.mkdir(parents=True, exist_ok=True)
 for jpg in sorted((ROOT / "data" / "samples").glob("*.jpg")):
     h = hashlib.sha256(jpg.read_bytes()).hexdigest()[:16]
-    wanted = [f"sam_{h}_road_{DEFAULT_TILES}x{DEFAULT_TILES}_o{DEFAULT_OVERLAP}.npz", f"scene_{h}.json"]
+    wanted = [*cache_names(jpg.read_bytes()), f"scene_{h}.json"]
     for name in wanted:
         src = CACHE / name
         if not src.exists():

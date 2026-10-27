@@ -14,7 +14,7 @@ from orbitroute.custom import CustomInputs, apply_custom
 from orbitroute.llm.budget import BudgetGuard, RunBudget
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.graph import build_road_graph
-from orbitroute.perception.segment import segment_concept
+from orbitroute.perception.segment import segment_roads
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.serialize import graph_json, mask_png, plan_json, report_json, scenario_json, scene_json
 from orbitroute.understanding.request import parse_request
@@ -92,7 +92,7 @@ def run_pipeline(
     image_bytes = sample.image_bytes
 
     emit(Event("stage", "Segmenting roads with SAM 3.1 (tiled)", {"stage": "perception"}))
-    mask = segment_concept(client, image_bytes, "road", run=run)
+    mask = segment_roads(client, image_bytes, run=run)
     graph = build_road_graph(mask, sample.meta["m_per_px"])
     emit(Event("perception", f"Road graph: {graph.stats['nodes']} nodes, {graph.stats['road_km']} km of road", {"mask": mask_png(mask), "graph": graph_json(graph)}))
 

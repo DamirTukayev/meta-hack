@@ -99,11 +99,11 @@ def test_committed_prewarmed_answers_cover_the_bundled_samples():
     import hashlib
 
     from orbitroute.config import PREWARMED_DIR, ROOT, resolve_cached
-    from orbitroute.perception.segment import DEFAULT_OVERLAP, DEFAULT_TILES
+    from orbitroute.perception.segment import cache_names
 
     for jpg in (ROOT / "data" / "samples").glob("*.jpg"):
         h = hashlib.sha256(jpg.read_bytes()).hexdigest()[:16]
-        for name in (f"sam_{h}_road_{DEFAULT_TILES}x{DEFAULT_TILES}_o{DEFAULT_OVERLAP}.npz", f"scene_{h}.json"):
+        for name in (*cache_names(jpg.read_bytes()), f"scene_{h}.json"):
             assert (PREWARMED_DIR / name).exists(), f"{name} is not pre-warmed for {jpg.stem}"
 
 

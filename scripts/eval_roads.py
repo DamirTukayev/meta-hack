@@ -24,7 +24,7 @@ from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
 from orbitroute.naip import to_mercator
 from orbitroute.perception.graph import build_road_graph
-from orbitroute.perception.segment import segment_concept
+from orbitroute.perception.segment import segment_roads
 from orbitroute.pipeline import get_sample
 
 CACHE = ROOT / "data" / "cache"
@@ -56,7 +56,7 @@ def evaluate(name: str, client: MetaClient, guard: BudgetGuard) -> dict:
     W, H = sm.meta["width_px"], sm.meta["height_px"]
     m_per_px = sm.meta["m_per_px"]
     x0, y0, x1, y1 = sm.meta["bbox_mercator"]
-    mask = segment_concept(client, sm.image_bytes, "road", run=guard.new_run(1))
+    mask = segment_roads(client, sm.image_bytes, run=guard.new_run(1))
     graph = build_road_graph(mask, m_per_px)
     osm = fetch_osm(name, sm.meta["bbox_lonlat"])
 

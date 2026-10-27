@@ -40,10 +40,10 @@ MAX_REQUEST_CHARS = 400
 settings = Settings.load()
 log = logging.getLogger("orbitroute")
 AREA_EXAMPLES = ["by 12:00, avoid the industrial zone", "by 12:00, avoid the residential area"]
-# New map areas cost a download plus (on first use) about $0.035 of model calls, so they are rate limited.
-area_limit_ip = RateLimiter(max_events=6, window_s=3600)
-area_limit_all = RateLimiter(max_events=40, window_s=3600)
-# Every run costs model calls (about $0.006-0.02, more on a new area), so runs are limited too.
+# New map areas cost a download plus (on first use) about $0.45 of SAM calls (two tilings), so they are rate limited.
+area_limit_ip = RateLimiter(max_events=4, window_s=3600)
+area_limit_all = RateLimiter(max_events=12, window_s=3600)
+# Every run costs model calls (about $0.006-0.02 on a bundled sample, about $0.5 on a new area), so runs are limited too.
 run_limit_ip = RateLimiter(max_events=settings.run_limit_per_ip_hour, window_s=3600)
 run_limit_day = RateLimiter(max_events=settings.run_limit_per_day, window_s=86400)
 asr_limit_ip = RateLimiter(max_events=30, window_s=3600)
