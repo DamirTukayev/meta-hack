@@ -119,7 +119,7 @@ export function useRun(paceMs = 420) {
   }, [stop])
 
   const start = useCallback(
-    (body: { sample: string; request: string; decider?: 'model' | 'policy'; custom?: object }) => {
+    (body: { sample: string; request: string; decider?: 'model' | 'policy'; custom?: object; trucks?: number; auto_orders?: number }) => {
       stop()
       finished.current = false
       t0.current = 0

@@ -37,18 +37,35 @@ EXAMPLES = {
 }
 LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphis": "Memphis, TN — logistics district"}
 MAX_REQUEST_CHARS = 400
+settings = Settings.load()
 log = logging.getLogger("orbitroute")
 AREA_EXAMPLES = ["by 12:00, avoid the industrial zone", "by 12:00, avoid the residential area"]
 # New map areas cost a download plus (on first use) about $0.035 of model calls, so they are rate limited.
 area_limit_ip = RateLimiter(max_events=6, window_s=3600)
 area_limit_all = RateLimiter(max_events=40, window_s=3600)
+# Every run costs model calls (about $0.006-0.02, more on a new area), so runs are limited too.
+run_limit_ip = RateLimiter(max_events=settings.run_limit_per_ip_hour, window_s=3600)
+run_limit_day = RateLimiter(max_events=settings.run_limit_per_day, window_s=86400)
+asr_limit_ip = RateLimiter(max_events=30, window_s=3600)
+asr_limit_all = RateLimiter(max_events=400, window_s=86400)
+MAX_AUDIO_BYTES = 2_000_000  # about 60 s of 16 kHz mono 16-bit PCM
+_active = {"n": 0}
+_active_lock = threading.Lock()
 
-settings = Settings.load()
 guard = BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, settings.paid_calls_enabled)
 _client: MetaClient | None = None
 
 
 _text_client = None
+
+
+def client_ip(request: Request) -> str:
+    """The caller's address. Behind a reverse proxy (TRUST_PROXY=1) the first X-Forwarded-For entry is used."""
+    if settings.trust_proxy:
+        forwarded = request.headers.get("x-forwarded-for", "")
+        if forwarded:
+            return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
 
 
 def get_client() -> MetaClient:
@@ -87,6 +104,37 @@ def sample_dict(s) -> dict:
         "image": f"/api/samples/{s.name}/image",
         "credit": "Imagery: USGS NAIP (public domain)",
     }
+
+
+@app.post("/api/transcribe")
+async def transcribe(request: Request) -> dict:
+    """Speech to text for the request box: the browser records a short WAV, Muse Voice Transcribe turns it into text."""
+    if not guard.paid_calls_enabled:
+        raise HTTPException(503, "The demo is paused right now. Please try again later.")
+    wait = max(asr_limit_ip.check(client_ip(request)), asr_limit_all.check("all"))
+    if wait:
+        raise HTTPException(429, f"Too many voice requests right now. Try again in {int(wait // 60) + 1} min.", headers={"Retry-After": str(int(wait) + 1)})
+    audio = await request.body()
+    if not audio:
+        raise HTTPException(400, "No audio received.")
+    if len(audio) > MAX_AUDIO_BYTES:
+        raise HTTPException(413, "The recording is too long (limit about 60 seconds).")
+    loop = asyncio.get_running_loop()
+    try:
+        text = await loop.run_in_executor(None, lambda: get_client().transcribe(audio))
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+    except BudgetExceeded as exc:
+        raise HTTPException(503, f"Budget guard: {exc}")
+    except Exception:
+        raise HTTPException(502, "Speech recognition did not answer. Please type the request instead.")
+    return {"text": text}
+
+
+@app.get("/api/usage")
+def usage() -> dict:
+    """Estimated spend per provider from our own counters. The providers' dashboards remain the source of truth."""
+    return {"meta": guard.summary(), "baseten": guard_for(settings, "baseten").summary(), "reasoning_provider": settings.reasoning_provider}
 
 
 @app.get("/api/samples")
@@ -140,11 +188,20 @@ class RunRequest(BaseModel):
 
 
 @app.post("/api/run")
-async def run(body: RunRequest) -> StreamingResponse:
+async def run(body: RunRequest, request: Request) -> StreamingResponse:
     try:
         smp = get_sample(body.sample)
     except KeyError:
         raise HTTPException(404, "unknown sample")
+    if not guard.paid_calls_enabled:
+        raise HTTPException(503, "The demo is paused right now. Please try again later.")
+    wait = max(run_limit_ip.check(client_ip(request)), run_limit_day.check("all"))
+    if wait:
+        raise HTTPException(429, f"Too many runs right now. Try again in {int(wait // 60) + 1} min.", headers={"Retry-After": str(int(wait) + 1)})
+    with _active_lock:
+        if _active["n"] >= settings.max_concurrent_runs:
+            raise HTTPException(429, "The agent is busy with other runs. Try again in a few seconds.", headers={"Retry-After": "10"})
+        _active["n"] += 1
     request, seed, decider, custom, auto_orders, trucks = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks
     q: queue.Queue = queue.Queue()
     done = object()
@@ -168,6 +225,8 @@ async def run(body: RunRequest) -> StreamingResponse:
             log.exception("run failed")
             q.put(("failure", {"message": f"Unexpected error ({type(exc).__name__}). The run was stopped; please try again."}))
         finally:
+            with _active_lock:
+                _active["n"] -= 1
             q.put(done)
 
     threading.Thread(target=work, daemon=True).start()

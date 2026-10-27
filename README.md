@@ -25,6 +25,7 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 
 - **Choose any US area on a map:** pick a place (search or presets), and the app downloads the USGS NAIP aerial image of a 1.5 km square around it. Imagery is public domain; the map search uses OpenStreetMap's Nominatim (© OpenStreetMap contributors). Dense downtowns with tall shadows give sparser road graphs; suburban and industrial areas work best.
 - **See how each truck drives:** arrows show the direction of travel, stops are numbered in visiting order, a per-truck card lists the sequence with arrival times, and "Replay the drive" animates the routes.
+- **Speak the request:** a microphone button records a few seconds, the browser encodes a 16 kHz WAV, and Muse Voice Transcribe turns it into the request text (about $0.0002 per clip). Limited per IP and per day.
 - **Edit the plan:** drag the depot or any order, add or remove points, then Replan; the old plan stays faded until you do.
 - **Trucks are a field, not a sentence:** set the number of trucks with a stepper; the one-line request only carries the deadline and what to avoid.
 - **You place the points:** click the depot, click the orders and (optionally) draw a zone to avoid directly on the satellite image — the agent does not invent them unless you tick "Place orders for me"; points snap to the nearest road, and anything the agent adjusts is listed as an assumption.
@@ -39,6 +40,10 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 - Of the 14 scenarios whose first plan was invalid, 8 were repaired to a verified plan automatically.
 - Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 4.2 s).
 - Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (~$0.002 per run), so it adds readable explanations rather than different decisions.
+
+## Public demo safeguards
+
+Runs are limited per IP (20/hour) and per day (300), at most 3 run at once, new map areas are limited separately, voice clips are capped at 60 s, and `DEMO_PAID_CALLS_ENABLED=false` pauses everything that costs money. The two bundled sample images ship with pre-computed SAM and zone answers (`data/prewarmed/`), so a fresh server pays nothing for them. Every provider has its own spend counter and cap (`/api/usage`).
 
 ## Prompts
 

@@ -32,3 +32,5 @@ def token_cost(model: str, input_tokens: int, output_tokens: int, cached_tokens:
         + cached_tokens * price.cached_input_per_m
         + output_tokens * price.output_per_m
     ) / 1_000_000
+
+ASR_PER_HOUR_USD = 0.18  # Muse Voice Transcribe, per hour of audio

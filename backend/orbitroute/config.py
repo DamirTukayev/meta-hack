@@ -9,6 +9,16 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[2]
+PREWARMED_DIR = ROOT / "data" / "prewarmed"  # committed model answers for the bundled samples, so a fresh deployment pays nothing
+
+
+def resolve_cached(cache_dir: Path, name: str) -> Path:
+    """The cache file to read or write: the live cache first, then the committed pre-warmed copy."""
+    live = cache_dir / name
+    if live.exists():
+        return live
+    shipped = PREWARMED_DIR / name
+    return shipped if shipped.exists() else live
 
 
 @dataclass(frozen=True)
@@ -25,6 +35,10 @@ class Settings:
     reasoning_provider: str  # "meta" or "baseten": which endpoint serves the text-reasoning steps
     baseten_budget_cap_usd: float
     baseten_state_path: Path
+    run_limit_per_ip_hour: int = 20
+    run_limit_per_day: int = 300
+    max_concurrent_runs: int = 3
+    trust_proxy: bool = False
 
     @classmethod
     def load(cls) -> "Settings":
@@ -43,4 +57,8 @@ class Settings:
             # Baseten credits ($100) are a separate pot from the Meta credits; our estimate of their price is conservative
             baseten_budget_cap_usd=float(os.environ.get("BASETEN_BUDGET_CAP_USD", "60")),
             baseten_state_path=Path(os.environ.get("BASETEN_BUDGET_STATE_PATH", ROOT / "budget_state_baseten.json")),
+            run_limit_per_ip_hour=int(os.environ.get("RUN_LIMIT_PER_IP_HOUR", "20")),
+            run_limit_per_day=int(os.environ.get("RUN_LIMIT_PER_DAY", "300")),
+            max_concurrent_runs=int(os.environ.get("MAX_CONCURRENT_RUNS", "3")),
+            trust_proxy=os.environ.get("TRUST_PROXY", "").lower() in ("1", "true"),
         )

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { arrowsAlong, buildGeo, pointAt, upTo } from './routeGeometry'
+import Timeline from './Timeline'
 import type { Custom, Iteration, Mode, PlanGeo, ReportGeo, RunState, Sample, XY } from './types'
 
 export const ROUTE_COLORS = ['#f43f5e', '#38bdf8', '#4ade80', '#fb923c', '#c084fc', '#2dd4bf']
@@ -36,6 +37,8 @@ export default function MapView(props: {
   stale: boolean
   onDrag: (kind: 'depot' | 'order', i: number, xy: XY) => void
   onEditPlan: () => void
+  onQuickStart: () => void
+  onPickArea: () => void
 }) {
   const { sample, state, plan, report, mode, custom } = props
   const svgRef = useRef<SVGSVGElement>(null)
@@ -284,7 +287,17 @@ export default function MapView(props: {
           )}
         </svg>
         {state.status === 'running' && <div className="map-stage"><span className="spinner" />{state.stage}</div>}
-        {state.status === 'idle' && !custom.depot && custom.orders.length === 0 && !props.auto && <div className="map-hint">Click the map to place the <b>depot</b>, then your <b>orders</b></div>}
+        {state.status === 'idle' && !custom.depot && custom.orders.length === 0 && !props.auto && (
+          <div className="hero" role="region" aria-label="Get started">
+            <h3>Plan deliveries from a satellite photo</h3>
+            <p>Place a depot and some orders, say what to avoid, and the agent plans the routes — then checks its own work.</p>
+            <div className="hero-actions">
+              <button className="primary inline" onClick={props.onQuickStart}>▶ Try it with 20 random orders</button>
+              <button className="chip" onClick={() => props.onMode('depot')}>Place my own points</button>
+              <button className="chip" onClick={props.onPickArea}>Choose another area</button>
+            </div>
+          </div>
+        )}
       </div>
       {plan && plan.routes.length > 0 && (
         <div className="drive">
@@ -312,6 +325,7 @@ export default function MapView(props: {
               )
             })}
           </div>
+          <Timeline plan={plan} problem={state.problem} />
           <p className="trucks-note">Arrows show the direction of travel and the dashed leg is the way back to the depot. The number in the circle is the order a truck visits the stop in (it restarts for every truck); the tag like #7 is the order's own number from when you placed it. The agent chooses the visiting sequence itself, to keep the driving time as short as possible. One trip per truck{state.problem ? `; capacity ${state.problem.capacity} order${state.problem.capacity === 1 ? '' : 's'} each` : ''}.</p>
         </div>
       )}

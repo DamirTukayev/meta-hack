@@ -29,6 +29,8 @@ export interface Problem {
   n_vehicles: number
   capacity: number
   avoid_zone_kinds: string[]
+  shift_start_s?: number
+  deadline_s?: number
   assumptions: string[]
   notes: string[]
 }

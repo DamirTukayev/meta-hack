@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import base64
+import io
 import json
+import wave
 import time
 from dataclasses import dataclass
 from typing import Any
@@ -12,7 +14,7 @@ import httpx
 
 from orbitroute.config import Settings
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard, RunBudget
-from orbitroute.llm.pricing import SAM_PER_IMAGE_USD, token_cost, token_price
+from orbitroute.llm.pricing import ASR_PER_HOUR_USD, SAM_PER_IMAGE_USD, token_cost, token_price
 
 DEFAULT_MODEL = "muse-spark-1.3"
 SAM_MODEL = "sam-3.1"
@@ -197,6 +199,28 @@ class MetaClient:
         data = self._post("/responses", body)
         self._guard.record(SAM_PER_IMAGE_USD, label, run)
         return data, SAM_PER_IMAGE_USD
+
+    def transcribe(self, wav: bytes, *, max_seconds: float = 60.0, run: RunBudget | None = None, label: str = "asr") -> str:
+        """Speech to text with Muse Voice Transcribe. `wav` must be a PCM WAV file (the endpoint accepts WAV only)."""
+        try:
+            with wave.open(io.BytesIO(wav)) as w:
+                seconds = w.getnframes() / float(w.getframerate())
+        except (wave.Error, EOFError) as exc:
+            raise ValueError(f"not a valid WAV file: {exc}") from exc
+        if seconds > max_seconds:
+            raise ValueError(f"the recording is {seconds:.0f} s long; the limit is {max_seconds:.0f} s")
+        cost = seconds / 3600 * ASR_PER_HOUR_USD
+        self._guard.check(cost, run)
+        request = json.dumps({"model": "muse-voice-transcribe-1.0", "audioEncoding": "WAV", "mode": "PUSH_TO_TALK"})
+        resp = self._http.post(
+            "/asr/transcribe",
+            files={"request": (None, request, "application/json"), "audio": ("speech.wav", wav, "audio/wav")},
+            headers={"Accept": "application/json"},
+        )
+        if resp.status_code >= 400:
+            raise ApiError(resp.status_code, resp.text)
+        self._guard.record(cost, label, run)
+        return str(resp.json().get("transcript", "")).strip()
 
     def _post(self, path: str, body: dict[str, Any]) -> dict[str, Any]:
         for attempt in range(MAX_RETRIES + 1):

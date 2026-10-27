@@ -15,7 +15,7 @@ from PIL import Image
 from shapely.geometry import Point, Polygon
 from shapely.prepared import prep
 
-from orbitroute.config import ROOT
+from orbitroute.config import ROOT, resolve_cached
 from orbitroute.llm.budget import RunBudget
 from orbitroute import prompts
 from orbitroute.llm.client import MetaClient, image_part
@@ -114,7 +114,7 @@ def analyze_scene(
     version, prompt = prompts.load("scene", prompt_version)
     # v1 keeps its original cache file name, so answers cached before prompts were versioned stay valid
     suffix = "" if version == "v1" else f"_{version}"
-    cache = CACHE_DIR / f"scene_{hashlib.sha256(image_bytes).hexdigest()[:16]}{suffix}.json"
+    cache = resolve_cached(CACHE_DIR, f"scene_{hashlib.sha256(image_bytes).hexdigest()[:16]}{suffix}.json")
     if use_cache and cache.exists():
         return scene_from_raw(json.loads(cache.read_text()), width, height)
 
