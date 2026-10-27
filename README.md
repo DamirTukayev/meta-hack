@@ -6,7 +6,7 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 
 ## What it does
 
-1. **SAM 3.1** segments roads from a satellite image (36 overlapping tiles, so narrow streets are found) and the pixels become a road graph.
+1. **SAM 3.1** segments roads from a satellite image (two overlapping tilings, 6x6 and 12x12, united, so narrow streets are found) and the pixels become a road graph.
 2. **Muse Spark** reads the request ("40 orders, 3 trucks, by 18:00, avoid the industrial zone") and the image, and produces formal routing constraints.
 3. A vehicle-routing **solver** builds the routes.
 4. The **agent verifies** the plan independently, repairs violated constraints and re-solves until the plan is valid, or explains why it cannot be.
@@ -33,7 +33,9 @@ An AI agent that turns a satellite image and a plain-English request into a **ve
 
 ## How accurate is the road graph?
 
-The agent routes only on the roads SAM 3.1 finds, so we measured them against OpenStreetMap on both bundled tiles (`eval/ROADS.md`, `scripts/eval_roads.py`; OSM is used only as a yardstick, © OpenStreetMap contributors, ODbL). Within 15 m: **84-92% of the graph lies on a real mapped road**, and the graph covers **56-75% of the named streets** (32-45% when every service road is counted; parking aisles and driveways are mostly invisible at this resolution). So the graph is trustworthy but incomplete: it finds the street network, not every alley. Two tiles only, and OSM is itself incomplete.
+The agent routes only on the roads SAM 3.1 finds, so we measured them against OpenStreetMap on both bundled tiles (`eval/ROADS.md`, `scripts/eval_roads.py`; OSM is used only as a yardstick, © OpenStreetMap contributors, ODbL). Within 15 m: **86-91% of the graph lies on a real mapped road**, and the graph covers **73-86% of the named streets** (48-53% when every service road is counted; parking aisles and driveways are mostly invisible at this resolution). So the graph is trustworthy but incomplete: it finds the street network, not every alley. Two tiles only, and OSM is itself incomplete.
+
+How it got there (all measured with the same script, `eval/ROADS.md`): one 6x6 tiling found 66% of the named streets on average; other SAM prompts ("street", "driveway", "alley", "paved road") added nothing, because "road" is the only concept SAM answers well; finer tilings find different streets, so the union of a 6x6 and a 12x12 tiling reaches 77% at the same precision, and bridging gaps up to 110 px (instead of 70) adds a little more. The price is a new map area costing about $0.45 of SAM calls instead of $0.09, so new areas are rate limited more tightly; the two bundled samples ship pre-computed.
 
 Imagery is requested in Web Mercator so that pixels are square on the ground (0.977 m each); an earlier version asked for a box in degrees, which the imagery service silently stretched by about 30% north-south, so lengths along north-south roads were underestimated. Found by comparing the graph with OSM, fixed, and every number below was recomputed afterwards.
 
@@ -41,10 +43,10 @@ Imagery is requested in Web Mercator so that pixels are square on the ground (0.
 
 46 fixed scenarios on two NAIP tiles plus 20 free-form request phrasings (`eval/RESULTS.md`, reproducible with `scripts/run_eval.py`). Eighteen scenarios draw a square zone at each point of a fixed 3x3 grid and place the orders only where a legal route can reach them; eighteen use the same squares but place the orders anywhere, the way a user clicking freely on the map does (some are then cut off by the zone); the rest use zones found by Muse Spark plus four requests that are infeasible by arithmetic. The grid was fixed before running, and every square is reported.
 
-- How often the plain solver's first plan breaks a rule depends on how the orders are placed: **1 of 18** when orders are placed only where a legal route reaches them, but **17 of 18** when they are placed freely. Across all 46 scenarios the solver reported 41 plans as feasible and an independent audit found **18 of them (44%) broke a constraint**; all 18 were avoided-zone violations. Counting every first-pass plan, the violations were zones 18, deadline 3, capacity 2.
-- The agent returned only plans that passed the same audit. Of the 23 scenarios whose first plan was invalid, **10 ended verified automatically**, all by leaving the 1-5 cut-off orders out of the plan and listing each with its reason (never silently dropped), and **13 were flagged as impossible as stated, each with a verified way out** (the 4 provably infeasible requests among them).
+- How often the plain solver's first plan breaks a rule depends on how the orders are placed: **3 of 18** when orders are placed only where a legal route reaches them, but **17 of 18** when they are placed freely. Across all 46 scenarios the solver reported 41 plans as feasible and an independent audit found **21 of them (51%) broke a constraint**, all of them avoided-zone violations. Counting every first-pass plan, the violations were zones 22, deadline 3, capacity 2.
+- The agent returned only plans that passed the same audit. Of the 26 scenarios whose first plan was invalid, **15 ended verified automatically** (4 by re-routing around the zone; 11 by leaving 1-5 cut-off orders out, each listed with its reason, never silently dropped) and **11 were flagged as impossible as stated, each with a verified way out** (the 4 provably infeasible requests among them).
 - Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; mean 2.3 s with prompt v2).
-- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (about $0.005 per run), so it adds readable explanations rather than different decisions.
+- Muse Spark as the repair planner chose the same actions as the deterministic policy in 6/6 runs (about $0.004 per run), so it adds readable explanations rather than different decisions.
 - Caveats: the "audit" is the same verifier code the agent uses, applied to the plain solver's plan; a second independent implementation is still to do. An earlier version of this suite, run before the imagery geometry fix, reported 60% invalid plans; that number depended on where its squares happened to fall on a distorted image and is not reproduced here.
 
 ## Public demo safeguards

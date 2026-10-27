@@ -7,27 +7,27 @@ as a yardstick (© OpenStreetMap contributors, ODbL; used for measurement only, 
   SAM also finds paved lot aisles and driveways that really exist and that OSM tags as parking aisles, so precision against named streets alone understates it.
 - **Recall**: share of the OSM road length that lies within the tolerance of the graph (how much of the street network did the agent find?).
 
-## columbus  (graph 10.54 km kept, 3.28 km dropped as disconnected)
+## columbus  (graph 19.18 km kept, 1.27 km dropped as disconnected)
 
 | OSM reference | Tolerance | Precision | Recall | OSM length |
 |---|---|---|---|---|
-| named streets | 8 m | 65% | 52% | 13.8 km |
-| named streets | 15 m | 67% | 56% | 13.8 km |
-| streets + service roads (no parking aisles or driveways) | 8 m | 86% | 26% | 41.7 km |
-| streets + service roads (no parking aisles or driveways) | 15 m | 91% | 32% | 41.7 km |
-| every mapped way, parking aisles and driveways included | 8 m | 88% | 18% | 64.2 km |
-| every mapped way, parking aisles and driveways included | 15 m | 92% | 22% | 64.2 km |
+| named streets | 8 m | 46% | 65% | 13.8 km |
+| named streets | 15 m | 49% | 73% | 13.8 km |
+| streets + service roads (no parking aisles or driveways) | 8 m | 77% | 39% | 41.7 km |
+| streets + service roads (no parking aisles or driveways) | 15 m | 82% | 48% | 41.7 km |
+| every mapped way, parking aisles and driveways included | 8 m | 86% | 29% | 64.2 km |
+| every mapped way, parking aisles and driveways included | 15 m | 91% | 37% | 64.2 km |
 
-## memphis  (graph 15.26 km kept, 1.13 km dropped as disconnected)
+## memphis  (graph 19.41 km kept, 0.73 km dropped as disconnected)
 
 | OSM reference | Tolerance | Precision | Recall | OSM length |
 |---|---|---|---|---|
-| named streets | 8 m | 76% | 66% | 18.4 km |
-| named streets | 15 m | 79% | 75% | 18.4 km |
-| streets + service roads (no parking aisles or driveways) | 8 m | 82% | 33% | 46.0 km |
-| streets + service roads (no parking aisles or driveways) | 15 m | 84% | 45% | 46.0 km |
-| every mapped way, parking aisles and driveways included | 8 m | 82% | 32% | 46.6 km |
-| every mapped way, parking aisles and driveways included | 15 m | 84% | 44% | 46.6 km |
+| named streets | 8 m | 71% | 75% | 18.4 km |
+| named streets | 15 m | 75% | 86% | 18.4 km |
+| streets + service roads (no parking aisles or driveways) | 8 m | 83% | 40% | 46.0 km |
+| streets + service roads (no parking aisles or driveways) | 15 m | 86% | 53% | 46.0 km |
+| every mapped way, parking aisles and driveways included | 8 m | 83% | 40% | 46.6 km |
+| every mapped way, parking aisles and driveways included | 15 m | 86% | 53% | 46.6 km |
 
 Limits: two 1.5 km tiles only. OSM is itself incomplete and the imagery and OSM are from different dates, so recall is a lower bound on the
 true share of streets found. Parking aisles, driveways and alleys are mostly invisible to SAM at this resolution, which is why the second reference

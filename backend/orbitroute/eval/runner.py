@@ -14,7 +14,7 @@ from orbitroute.eval.scenarios import SCENARIOS, EvalScenario
 from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.graph import build_road_graph
-from orbitroute.perception.segment import segment_concept
+from orbitroute.perception.segment import segment_roads
 from orbitroute.pipeline import get_sample
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.understanding.constraints import ParsedRequest, hhmm_to_seconds, resolve
@@ -30,7 +30,7 @@ class World:
 
 def load_world(client: MetaClient, name: str, run) -> World:
     s = get_sample(name)
-    graph = build_road_graph(segment_concept(client, s.image_bytes, "road", run=run), s.meta["m_per_px"])
+    graph = build_road_graph(segment_roads(client, s.image_bytes, run=run), s.meta["m_per_px"])
     return World(graph, analyze_scene(client, s.image_bytes, run=run))
 
 

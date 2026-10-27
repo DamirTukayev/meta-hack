@@ -47,7 +47,7 @@ class Settings:
             api_key=os.environ.get("MODEL_API_KEY", ""),
             base_url=os.environ.get("META_BASE_URL", "https://api.meta.ai/v1"),
             budget_hard_cap_usd=float(os.environ.get("BUDGET_HARD_CAP_USD", "100")),
-            run_cap_usd=float(os.environ.get("RUN_CAP_USD", "0.50")),
+            run_cap_usd=float(os.environ.get("RUN_CAP_USD", "1.00")),
             paid_calls_enabled=os.environ.get("DEMO_PAID_CALLS_ENABLED", "true").lower() == "true",
             budget_state_path=Path(os.environ.get("BUDGET_STATE_PATH", ROOT / "budget_state.json")),
             baseten_api_key=os.environ.get("BASETEN_API_KEY", ""),

@@ -9,43 +9,43 @@ Baseline = the first solve of the same solver, returned as is (what a pipeline w
 | | Solver only (no verifier) | OrbitRoute agent |
 |---|---|---|
 | Plans the solver reports as feasible | 41/46 | — |
-| Of those, plans that break a constraint on independent audit | **18** (44%) | 0 — every plan returned as verified passed the audit |
-| Scenarios with a first-pass violation → ended verified | — | 10/23 (including those that leave cut-off orders out with a reason; the other 13 cannot be met as stated; see the tables) |
+| Of those, plans that break a constraint on independent audit | **21** (51%) | 0 — every plan returned as verified passed the audit |
+| Scenarios with a first-pass violation → ended verified | — | 15/26 (including those that leave cut-off orders out with a reason; the other 11 cannot be met as stated; see the tables) |
 | Provably infeasible requests flagged with a verified fix | 0/4 (solver returns a plan anyway) | 4/4 |
-| Final status | — | needs_relaxation: 13, verified: 23, verified_partial: 10 |
-| Mean iterations / mean wall time | 1 | 1.67 / 6.6 s |
+| Final status | — | needs_relaxation: 11, verified: 24, verified_partial: 11 |
+| Mean iterations / mean wall time | 1 | 1.78 / 6.5 s |
 
-Violation kinds seen in first-pass plans (scenarios affected): zones 18, deadline 3, capacity 2.
+Violation kinds seen in first-pass plans (scenarios affected): zones 22, deadline 3, capacity 2.
 
-Muse Spark as the repair planner (instead of the deterministic policy), on 6 scenarios with a first-pass violation: it chose exactly the policy's actions in 6/6 runs and 2/6 ended verified (4 flagged as infeasible as stated); mean cost $0.0047 per run. In this suite the model adds readable reasons, not different decisions.
+Muse Spark as the repair planner (instead of the deterministic policy), on 6 scenarios with a first-pass violation: it chose exactly the policy's actions in 6/6 runs and 5/6 ended verified (1 flagged as infeasible as stated); mean cost $0.0035 per run. In this suite the model adds readable reasons, not different decisions.
 
 By kind of scenario (the first family is easy for a plain solver by construction; the second is how a user clicking freely on the map behaves):
 
 | Scenario family | Scenarios | Solver's first plan breaks a rule | Agent: verified | Agent: verified, cut-off orders left out with reasons | Agent: cannot be met as stated (verified fix offered) |
 |---|---|---|---|---|---|
-| Drawn zone, orders only where a legal route can reach them | 18 | 1 | 17 | 0 | 1 |
-| Drawn zone, orders placed anywhere (some are cut off by the zone) | 18 | 17 | 1 | 10 | 7 |
-| Zones found by Muse Spark, plus provably infeasible requests | 10 | 5 | 5 | 0 | 5 |
+| Drawn zone, orders only where a legal route can reach them | 18 | 3 | 18 | 0 | 0 |
+| Drawn zone, orders placed anywhere (some are cut off by the zone) | 18 | 17 | 1 | 11 | 6 |
+| Zones found by Muse Spark, plus provably infeasible requests | 10 | 6 | 5 | 0 | 5 |
 
 | Scenario | Request | Solver only | Agent | Iterations | Repairs |
 |---|---|---|---|---|---|
 | mem-grid-00 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | mem-grid-01 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | mem-grid-02 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
-| mem-grid-10 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
+| mem-grid-10 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
 | mem-grid-11 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | mem-grid-12 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | mem-grid-20 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
-| mem-grid-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
+| mem-grid-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | mem-grid-22 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | col-grid-00 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | col-grid-01 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | col-grid-02 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | col-grid-10 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
-| col-grid-11 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
+| col-grid-11 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
 | col-grid-12 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | col-grid-20 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
-| col-grid-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
+| col-grid-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified | 2 | ban_violating_edges |
 | col-grid-22 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | mem-any-00 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
 | mem-any-01 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
@@ -54,23 +54,23 @@ By kind of scenario (the first family is easy for a plain solver by construction
 | mem-any-11 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
 | mem-any-12 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
 | mem-any-20 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
-| mem-any-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
+| mem-any-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
 | mem-any-22 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
 | col-any-00 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
 | col-any-01 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | ok | verified | 1 | — |
 | col-any-02 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
-| col-any-10 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
-| col-any-11 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
+| col-any-10 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
+| col-any-11 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
 | col-any-12 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
 | col-any-20 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
-| col-any-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
-| col-any-22 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | needs_relaxation | 2 | ban_violating_edges, propose_relaxation |
+| col-any-21 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
+| col-any-22 | 30 orders, 3 trucks, by 13:00, avoid drawn zone | violates zones | verified_partial | 3 | ban_violating_edges, exclude_unreachable |
 | col-ind-40-3 | 40 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
 | col-com-20-2 | 20 orders, 2 trucks, by 11:00, avoid commercial | ok | verified | 1 | — |
 | mem-ind-30-3 | 30 orders, 3 trucks, by 12:00, avoid industrial | ok | verified | 1 | — |
 | mem-res-25-2 | 25 orders, 2 trucks, by 11:00, avoid residential | ok | verified | 1 | — |
-| col-res-30-3 | 30 orders, 3 trucks, by 12:00, avoid residential | ok | verified | 1 | — |
-| col-res-30-1-tight | 30 orders, 1 trucks, by 09:00, avoid residential | violates deadline | needs_relaxation | 2 | resolve_longer, propose_relaxation |
+| col-res-30-3 | 30 orders, 3 trucks, by 12:00, avoid residential | violates zones | verified | 2 | ban_violating_edges |
+| col-res-30-1-tight | 30 orders, 1 trucks, by 09:00, avoid residential | violates deadline+zones | needs_relaxation | 3 | ban_violating_edges, resolve_longer, propose_relaxation |
 | inf-time-12-1 | 12 orders, 1 trucks, by 08:30, avoid residential | violates deadline | needs_relaxation | 2 | resolve_longer, propose_relaxation |
 | inf-time-50-3 | 50 orders, 3 trucks, by 09:00, avoid industrial | violates deadline | needs_relaxation | 2 | resolve_longer, propose_relaxation |
 | inf-capacity-40 | 40 orders, 3 trucks, by 12:00, avoid industrial | violates capacity | needs_relaxation | 1 | propose_relaxation |
@@ -98,4 +98,4 @@ Prompt v2 states the field rules explicitly (default objective, what counts as a
 - `parsing_baseten`: `Two trucks, thirty orders, finish by 17:00` — objective: expected min_time, got min_distance
 - `parsing_baseten`: `14 orders on 2 trucks with capacity 8 each, leave at 6:00, done by 10:30` — objective: expected min_time, got min_distance
 
-Evaluation cost: $0.0284
+Evaluation cost: $0.0211
