@@ -7,7 +7,7 @@ import json
 from dataclasses import dataclass
 
 from orbitroute.config import ROOT
-from orbitroute.naip import DEFAULT_PX, DEFAULT_SPAN_M, fetch_tile
+from orbitroute.naip import DEFAULT_PX, DEFAULT_SPAN_M, fetch_tile, mercator_bbox
 
 AREAS_DIR = ROOT / "data" / "areas"
 PREFIX = "area-"
@@ -41,6 +41,7 @@ def ensure_area(lat: float, lon: float, *, client=None) -> Area:
                 "lat": lat,
                 "lon": lon,
                 "bbox_lonlat": list(bbox),
+                "bbox_mercator": list(mercator_bbox(lon, lat, DEFAULT_SPAN_M)),
                 "span_m": DEFAULT_SPAN_M,
                 "width_px": DEFAULT_PX,
                 "height_px": DEFAULT_PX,

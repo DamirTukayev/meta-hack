@@ -35,15 +35,17 @@ def load_world(client: MetaClient, name: str, run) -> World:
 
 
 def build_scenario(world: World, sc: EvalScenario):
+    # Depot rule of the product: the warehouse that can reach the most road without entering an avoided zone. The older rule
+    # (warehouse nearest the image centre) often boxed the depot in behind the zone, so orders could only be reached through it.
     parsed = ParsedRequest(
         n_orders=sc.n_orders, n_vehicles=sc.n_vehicles, deadline=sc.deadline, shift_start=sc.shift_start,
         vehicle_capacity=sc.capacity, avoid_zone_kinds=list(sc.avoid),
     )
     problem = resolve(parsed)
     if sc.zone:
-        scenario, *_ = apply_custom(world.graph, world.scene, problem, CustomInputs(zone=list(sc.zone)), seed=sc.seed)
+        scenario, *_ = apply_custom(world.graph, world.scene, problem, CustomInputs(zone=list(sc.zone)), seed=sc.seed, prefer_connected=True, ensure_reachable=not sc.anywhere)
         return scenario
-    return make_scenario(world.graph, world.scene, problem, seed=sc.seed)
+    return make_scenario(world.graph, world.scene, problem, seed=sc.seed, prefer_connected=True)
 
 
 def run_scenarios(client: MetaClient, guard: BudgetGuard, *, time_limit_s: float = 2.0, model_decider_on: int = 6, log=print) -> list[dict]:

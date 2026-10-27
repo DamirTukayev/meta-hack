@@ -54,7 +54,7 @@ def _snap(graph: RoadGraph, p: Point, what: str, kind: str, index: int = 0) -> t
     return node, dist_m
 
 
-def apply_custom(graph: RoadGraph, scene: Scene, problem: Problem, custom: CustomInputs, seed: int = 0) -> tuple[Scenario, Problem, Scene, list[str]]:
+def apply_custom(graph: RoadGraph, scene: Scene, problem: Problem, custom: CustomInputs, seed: int = 0, prefer_connected: bool = True, ensure_reachable: bool = True) -> tuple[Scenario, Problem, Scene, list[str]]:
     """Returns the scenario, the (possibly adjusted) problem and scene, and notes for the user."""
     notes: list[str] = []
     for p in [*custom.orders, *custom.zone, *([custom.depot] if custom.depot else [])]:
@@ -99,5 +99,5 @@ def apply_custom(graph: RoadGraph, scene: Scene, problem: Problem, custom: Custo
             notes.append(f"Some orders were snapped to the nearest road (up to {max(snaps):.0f} m).")
         scenario = Scenario(graph, scene, problem, depot_node=depot_node, order_nodes=nodes, seed=seed)
     else:
-        scenario = make_scenario(graph, scene, problem, seed=seed, depot_node=depot_node, prefer_connected=True)
+        scenario = make_scenario(graph, scene, problem, seed=seed, depot_node=depot_node, prefer_connected=prefer_connected, ensure_reachable=ensure_reachable)
     return scenario, problem, scene, notes

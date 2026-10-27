@@ -7,14 +7,14 @@ Active version: `v1`.
 
 | Version | Image | Stability (mean / worst pair) | Zones per run | Outlined share | Overlapping share | Cost |
 |---|---|---|---|---|---|---|
-| v1 | columbus | 73% / 64% | [13, 11, 12] | 71% | 3% | $0.067 (all images) |
-| v1 | memphis | 64% / 53% | [11, 8, 8] | 83% | 2% | $0.067 (all images) |
-| v2 | columbus | 72% / 68% | [10, 11, 10] | 67% | 1% | $0.0839 (all images) |
-| v2 | memphis | 75% / 71% | [7, 6, 8] | 76% | 0% | $0.0839 (all images) |
+| v1 | columbus | 70% / 62% | [10, 9, 7] | 80% | 6% | $0.0629 (all images) |
+| v1 | memphis | 60% / 53% | [9, 9, 8] | 84% | 2% | $0.0629 (all images) |
+| v2 | columbus | 78% / 73% | [10, 11, 12] | 85% | 2% | $0.0876 (all images) |
+| v2 | memphis | 74% / 71% | [5, 8, 5] | 83% | 0% | $0.0876 (all images) |
 
 Excess-green index by zone kind (higher = more vegetation):
 
-- `v1` columbus: commercial +8, industrial +8, park_forest +22, residential +13
-- `v1` memphis: commercial +21, industrial +9, other +32, park_forest +32, residential +22
-- `v2` columbus: commercial +8, industrial +8, park_forest +20, residential +13
-- `v2` memphis: commercial +8, industrial +9, other +26, park_forest +34, residential +20
+- `v1` columbus: commercial +8, industrial +8, park_forest +21, residential +14
+- `v1` memphis: commercial +12, industrial +9, park_forest +33, residential +23
+- `v2` columbus: commercial +8, industrial +8, park_forest +18, residential +13
+- `v2` memphis: industrial +9, other +27, park_forest +36, residential +20

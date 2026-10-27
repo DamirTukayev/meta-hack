@@ -21,11 +21,34 @@ class NoImagery(ValueError):
     """The requested place has no NAIP imagery (outside the US, over water, or not yet flown)."""
 
 
+EARTH_R = 6_378_137.0  # Web Mercator sphere radius, metres
+
+
+def to_mercator(lon: float, lat: float) -> tuple[float, float]:
+    return EARTH_R * math.radians(lon), EARTH_R * math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))
+
+
+def from_mercator(x: float, y: float) -> tuple[float, float]:
+    return math.degrees(x / EARTH_R), math.degrees(2 * math.atan(math.exp(y / EARTH_R)) - math.pi / 2)
+
+
+def mercator_bbox(lon: float, lat: float, span_m: float) -> tuple[float, float, float, float]:
+    """A square of `span_m` metres on the ground, as a Web Mercator box.
+
+    Mercator stretches every distance by 1 / cos(latitude) in both directions, so the box is wider by that factor and
+    the picture comes back with square pixels of span_m / px ground metres. (Asking for a box in degrees does not:
+    the service enlarges it to the pixel aspect ratio and the picture is 30% taller on the ground than it is wide.)
+    """
+    x, y = to_mercator(lon, lat)
+    half = span_m / math.cos(math.radians(lat)) / 2
+    return x - half, y - half, x + half, y + half
+
+
 def bbox_around(lon: float, lat: float, span_m: float) -> tuple[float, float, float, float]:
-    half = span_m / 2
-    dlat = half / 111_320
-    dlon = half / (111_320 * math.cos(math.radians(lat)))
-    return lon - dlon, lat - dlat, lon + dlon, lat + dlat
+    """The same square as (lon_min, lat_min, lon_max, lat_max), for the record."""
+    x0, y0, x1, y1 = mercator_bbox(lon, lat, span_m)
+    (w, s), (e, n) = from_mercator(x0, y0), from_mercator(x1, y1)
+    return w, s, e, n
 
 
 def in_us(lat: float, lon: float) -> bool:
@@ -44,9 +67,9 @@ def fetch_tile(lon: float, lat: float, *, span_m: float = DEFAULT_SPAN_M, px: in
         raise NoImagery("Imagery is only available in the United States (USGS NAIP).")
     bbox = bbox_around(lon, lat, span_m)
     params = {
-        "bbox": ",".join(f"{v:.6f}" for v in bbox),
-        "bboxSR": 4326,
-        "imageSR": 4326,
+        "bbox": ",".join(f"{v:.2f}" for v in mercator_bbox(lon, lat, span_m)),
+        "bboxSR": 3857,
+        "imageSR": 3857,
         "size": f"{px},{px}",
         "format": "jpgpng",
         "f": "image",

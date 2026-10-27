@@ -6,9 +6,10 @@ Usage: uv run python scripts/fetch_naip.py NAME LON LAT [--span-m 1500] [--px 15
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
-from orbitroute.naip import fetch_tile
+from orbitroute.naip import fetch_tile, mercator_bbox
 
 
 def main() -> None:
@@ -25,6 +26,20 @@ def main() -> None:
     a.out.mkdir(parents=True, exist_ok=True)
     path = a.out / f"{a.name}.jpg"
     path.write_bytes(data)
+    path.with_suffix(".json").write_text(
+        json.dumps(
+            {
+                "source": "USGS NAIP",
+                "bbox_lonlat": list(bbox),
+                "bbox_mercator": list(mercator_bbox(a.lon, a.lat, a.span_m)),  # EPSG:3857 box of the picture; its pixels are square
+                "span_m": a.span_m,
+                "width_px": a.px,
+                "height_px": a.px,
+                "m_per_px": a.span_m / a.px,
+            },
+            indent=1,
+        )
+    )
     print(f"{path}  {len(data) // 1024} KB  bbox(lon/lat)={','.join(f'{v:.6f}' for v in bbox)}")
 
 
