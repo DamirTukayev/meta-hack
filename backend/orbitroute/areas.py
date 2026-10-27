@@ -11,6 +11,7 @@ from orbitroute.naip import DEFAULT_PX, DEFAULT_SPAN_M, fetch_tile, mercator_bbo
 
 AREAS_DIR = ROOT / "data" / "areas"
 PREFIX = "area-"
+MAX_AREAS = 300  # picked areas kept on disk; the oldest are deleted beyond this, so downloads cannot fill the disk
 
 
 def area_id(lat: float, lon: float) -> str:
@@ -49,4 +50,13 @@ def ensure_area(lat: float, lon: float, *, client=None) -> Area:
             }
         )
     )
+    _prune(MAX_AREAS)
     return Area(name, created=True)
+
+
+def _prune(keep: int) -> None:
+    """Delete the oldest stored areas beyond `keep` (an image and its sidecar JSON each)."""
+    images = sorted(AREAS_DIR.glob(f"{PREFIX}*.jpg"), key=lambda p: p.stat().st_mtime)
+    for jpg in images[: max(len(images) - keep, 0)]:
+        jpg.unlink(missing_ok=True)
+        jpg.with_suffix(".json").unlink(missing_ok=True)

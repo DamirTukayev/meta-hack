@@ -36,13 +36,15 @@ export interface Problem {
   assumptions: string[]
   notes: string[]
 }
-export interface Relaxation { kind: string; amount: number; description: string; plan: PlanGeo; report: ReportGeo }
+export interface Relaxation { kind: string; amount: number; description: string; plan: PlanGeo; report: ReportGeo; depot?: XY }
+export interface Recommendation { index: number; reason: string; source: string }
 export interface Result {
   status: string
   plan: PlanGeo
   report: ReportGeo
   excluded: Record<string, string>
   relaxations: Relaxation[]
+  recommendation?: Recommendation | null
   seconds: number
   cost_usd: number
   paid_calls: number
@@ -66,6 +68,7 @@ export interface RunState {
   problem?: Problem
   depot?: XY
   orders: XY[]
+  orderTargets: (XY | null)[] // the building behind each agent-placed order
   iterations: Iteration[]
   log: LogEntry[]
   result?: Result

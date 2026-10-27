@@ -27,11 +27,11 @@ Limits, stated plainly: NOAA says this imagery is not intended for navigation, s
 
 ## What happens when you press the button
 
-1. **See.** SAM 3.1 segments the roads in two overlapping tilings of the photo; the masks are united, skeletonised and turned into a road graph (nodes, gap bridging, speed class from road width).
+1. **See.** SAM 3.1 segments the roads in two overlapping tilings of the photo; the masks are united, skeletonised and turned into a road graph (nodes, gap bridging, speed class from road width). It also finds the buildings: when the agent places the orders, they are delivery addresses (a house, served from the nearest road the trucks may use), not random points.
 2. **Understand.** Muse Spark reads the request ("by 12:00, avoid the residential area") into typed constraints and lists every default it had to assume. Muse Spark vision outlines land-use zones and warehouses on the photo; if the request says to avoid floods, SAM also finds the standing water.
 3. **Plan.** PyVRP solves a capacitated routing problem with time windows over travel times on the road graph.
 4. **Verify.** An independent verifier re-simulates every route edge by edge on the road graph and runs six checks: every order served exactly once, fleet size, truck capacity, legs follow real roads, deadline, avoided zones not entered.
-5. **Repair.** On a violation, Muse Spark chooses one action (forbid the violating road segments, forbid the whole zone, leave out unreachable orders, search longer, or propose the smallest relaxation); a deterministic policy is the fallback. The loop is bounded to five repairs and logs every step.
+5. **Repair.** On a violation, Muse Spark chooses one action (forbid the violating road segments, forbid the whole zone, leave out unreachable orders, search longer, or give up and propose relaxations); a deterministic policy is the fallback. The loop is bounded to five repairs and logs every step. When the request cannot be met, every alternative it offers was solved and verified (move the depot to where the orders are, serve only the reachable orders, more trucks, a later deadline, and last of all drive through the zone), and Muse Spark recommends one with a reason. A rule stops it from recommending to drive through a forbidden zone while any other option exists.
 
 ![Architecture: image and request go through SAM 3.1 and Muse Spark into a scenario, which is solved, verified and, on violations, repaired and solved again](docs/architecture.svg)
 
@@ -41,8 +41,8 @@ The agent returns **only plans that passed verification**, or an honest report: 
 
 | Model | Where | What it does |
 |---|---|---|
-| **SAM 3.1** (`sam-3.1`, Meta Model API) | perception | finds the roads on the photo (the only roads the agent routes on) and, after a storm, the standing water |
-| **Muse Spark 1.3** (Meta Model API) | vision, request parsing, repair | outlines zones and warehouses, parses the request into JSON constraints, chooses repair actions |
+| **SAM 3.1** (`sam-3.1`, Meta Model API) | perception | finds the roads on the photo (the only roads the agent routes on), the buildings (delivery addresses) and, after a storm, the standing water |
+| **Muse Spark 1.3** (Meta Model API) | vision, request parsing, repair | outlines zones and warehouses, parses the request into JSON constraints, chooses repair actions, recommends one of the verified alternatives |
 | **Muse Spark Open** (open weights, served by Baseten) | request parsing, repair | the same text steps on open weights: set `REASONING_PROVIDER=baseten` |
 | **Muse Voice Transcribe** | request box | speak the request instead of typing it |
 
@@ -54,8 +54,9 @@ Everything below is produced by scripts in `scripts/` and written to `eval/`; no
 
 **Does the verifier earn its keep?** 62 fixed scenarios on four photos (`eval/RESULTS.md`, `scripts/run_eval.py`). Eighteen draw a zone at each point of a fixed 3x3 grid and place orders only where a legal route can reach them; eighteen use the same zones but place the orders anywhere, the way a user clicking freely does (some are then cut off by the zone); ten use zones found by Muse Spark, four of them requests that are infeasible by arithmetic; sixteen are flood relief on the two Hurricane Harvey photos, with the water found by SAM.
 
-- The plain solver's first plan broke a rule in **3 of 18** grid scenarios and **0 of 8** reachable flood scenarios, but in **17 of 18** and **8 of 8** when orders were placed freely. Across all 62, the solver called 57 plans feasible and an independent audit found **29 of them (51%) broke a constraint**, all of them avoided-zone violations.
-- The agent returned **zero invalid plans**. Of the 34 scenarios whose first plan was invalid, **15 ended verified automatically** (4 by re-routing around the zone; 11 by leaving 1-5 cut-off orders out, each listed with its reason, never silently dropped) and **19 were flagged as impossible as stated, each with a verified way out**: the 4 provably infeasible requests, the freely placed flood scenarios where the water cuts off most orders (it offers to serve the reachable ones), and other cut-off cases.
+- The plain solver's first plan broke a rule in **3 of 18** grid scenarios and **0 of 8** reachable flood scenarios, but in **16 of 18** and **8 of 8** when orders were placed freely. Across all 62, the solver called 57 plans feasible and the audit found **28 of them (49%) broke a constraint**, all of them avoided-zone violations.
+- The audit is a second implementation of the checks, written separately from the verifier the agent runs (exact shapely geometry on the route polylines, `verifier/independent.py`). The two gave the same verdict on **all 124 plans checked** (the first and the returned plan of every scenario), and on every corrupted plan in the differential tests.
+- The agent returned **zero invalid plans**. Of the 33 scenarios whose first plan was invalid, **13 ended verified automatically** (4 by re-routing around the zone; 9 by leaving 1-5 cut-off orders out, each listed with its reason, never silently dropped) and **20 were flagged as impossible as stated, each with a verified way out**: the 4 provably infeasible requests, the freely placed flood scenarios where the water cuts off most orders, and other cut-off cases. In those it offers to move the depot, serve the reachable orders, add trucks, extend the deadline or, last, drive through the zone.
 - Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; about 2.3 s each), and 24/24 once four flood phrasings were added. The open-weight Muse Spark Open does the same, after the prompt was tightened (11/20 with the first prompt).
 - As the repair planner, Muse Spark chose the same actions as the deterministic policy in 6/6 runs (about $0.004 per run): in this suite it adds readable explanations, not different decisions.
 
@@ -76,13 +77,13 @@ For development with hot reload run `npm run dev` in `frontend/` (http://localho
 
 ## Safeguards for a public demo
 
-Model calls cost money, so every one goes through a budget guard: required token caps, a persistent spend counter per provider with a hard cap, a per-run cap, and a kill switch (`DEMO_PAID_CALLS_ENABLED=false`). Runs are limited per IP and per day, at most 3 run at once, new map areas (about $0.45 of SAM calls each) are limited more tightly, and voice clips are capped at 60 s. The two bundled samples ship with pre-computed SAM and zone answers (`data/prewarmed/`), so a fresh server pays nothing for them. API keys live only in `.env` on the backend. Usage per provider: `/api/usage`.
+Model calls cost money, so every one goes through a budget guard: required token caps, a persistent spend counter per provider with a hard cap, a per-run cap, and a kill switch (`DEMO_PAID_CALLS_ENABLED=false`). Runs are limited per IP and per day, at most 3 run at once, new map areas (about $0.45 of SAM calls each) are limited more tightly, and voice clips are capped at 60 s. The two bundled samples ship with pre-computed SAM and zone answers (`data/prewarmed/`), so a fresh server pays nothing for them. A run is abandoned as soon as the browser disconnects, so closing the tab stops the spending. Behind a reverse proxy the caller's address is taken from the right side of `X-Forwarded-For` (`TRUST_PROXY`, `TRUSTED_PROXY_HOPS`), uploads are cut off at their limit while they stream in, and stored map areas are capped. API keys live only in `.env` on the backend. Usage per provider: `/api/usage`.
 
 ## Honest limits
 
 - The road graph is trustworthy but incomplete (see above): it finds the street network, not every alley, and dense, tree-covered blocks lose streets. "Real roads" in the verifier means roads in this graph.
 - Zone outlines come from Muse Spark and have no human-labelled ground truth; `eval/GROUNDING.md` measures how stable they are across repeated answers, not whether they are right.
-- The "independent audit" in the evaluation is the same verifier code the agent uses, applied to the plain solver's plan. A second implementation is still to do.
+- The audit in the evaluation is a second implementation that agrees with the verifier on every plan, but both were written by the same author, so a shared misunderstanding of a rule would pass both. Orders are building centres found by SAM, with neighbouring roofs sometimes merged, and the road graph is still incomplete.
 - Truck capacity is not asked for: a default is assumed and listed with every other assumption. Every order is one unit and each truck makes one trip.
 - US imagery only (USGS NAIP, and NOAA storm photos for the two disaster samples). The evaluation covers two tiles and author-written requests; it measures robustness, not performance in the wild.
 - The microphone path is verified against the server with a real recording, not yet across browsers.
@@ -96,11 +97,11 @@ Model calls cost money, so every one goes through a budget guard: required token
 
 ```
 backend/orbitroute/
-  perception/    SAM tiling, road mask -> graph, flood water -> zones
+  perception/    SAM tiling, road mask -> graph, flood water -> zones, buildings -> addresses
   storm.py       NOAA storm photos from web-map tiles
   understanding/ request parsing, zone grounding
   routing/       scenario, cost matrices, PyVRP solver
-  verifier/      the six independent checks
+  verifier/      the six checks, plus a second implementation used to audit it
   agent/         solve -> verify -> repair loop, relaxations
   llm/           Meta / Baseten client, budget guard
   eval/          scenario and parsing evaluation
@@ -113,3 +114,7 @@ data/            sample images, pre-computed answers, sources
 ## Data sources and licenses
 
 See [data/SOURCES.md](data/SOURCES.md). Imagery: USGS NAIP and NOAA Emergency Response Imagery (both public domain). The map search uses OpenStreetMap's Nominatim and OpenStreetMap data is used only to measure road accuracy: © OpenStreetMap contributors (ODbL). Fonts: JetBrains Mono (OFL).
+
+## License
+
+MIT, see [LICENSE](LICENSE).

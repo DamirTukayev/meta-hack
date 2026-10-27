@@ -4,35 +4,41 @@
    "scenarios": 62,
    "baseline": {
     "solver_says_feasible": 57,
-    "invalid_after_independent_audit": 29,
-    "invalid_rate_among_claimed_feasible": 0.509,
+    "invalid_after_independent_audit": 28,
+    "invalid_rate_among_claimed_feasible": 0.491,
     "violation_kinds_in_scenarios": {
-     "zones": 30,
+     "zones": 29,
      "deadline": 3,
      "capacity": 2
     }
    },
    "agent": {
     "status_counts": {
-     "needs_relaxation": 19,
-     "verified": 32,
-     "verified_partial": 11
+     "needs_relaxation": 20,
+     "verified": 33,
+     "verified_partial": 9
     },
-    "scenarios_with_a_first_pass_violation": 34,
-    "of_those_ended_verified": 15,
-    "mean_iterations": 1.71,
-    "mean_seconds": 6.9,
+    "scenarios_with_a_first_pass_violation": 33,
+    "of_those_ended_verified": 13,
+    "mean_iterations": 1.68,
+    "mean_seconds": 7.0,
     "final_plan_passes_audit": 62,
     "provably_infeasible": 4,
     "infeasible_correctly_flagged": 4,
-    "verified_but_partial": 11
+    "verified_but_partial": 9
    },
    "model_decider": {
     "runs": 6,
     "reached_verified": 5,
-    "mean_cost_usd": 0.0036
+    "mean_cost_usd": 0.004
    },
-   "verified_scenarios": 43
+   "verified_scenarios": 42,
+   "audit": {
+    "plans_compared": 124,
+    "plans_with_a_disagreement": 0,
+    "disagreements": 0,
+    "returned_plans_failing_the_audit": 0
+   }
   },
   "rows": [
    {
@@ -47,13 +53,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -68,13 +77,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -89,13 +101,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -110,9 +125,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 8
     },
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 2,
     "agent_actions": [
@@ -121,6 +138,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 4.0,
     "model_decider": {
      "status": "verified",
@@ -143,13 +161,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -164,13 +185,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -185,13 +209,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -206,13 +233,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -227,13 +257,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -248,13 +281,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -269,13 +305,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -290,13 +329,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -311,13 +353,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -331,27 +376,18 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": false,
-    "baseline_violations": {
-     "zones": 1
-    },
+    "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
+    "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
-    "agent_iterations": 2,
-    "agent_actions": [
-     "ban_violating_edges"
-    ],
+    "agent_iterations": 1,
+    "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 4.1,
-    "model_decider": {
-     "status": "verified",
-     "actions": [
-      "ban_violating_edges"
-     ],
-     "iterations": 2,
-     "cost_usd": 0.002
-    }
+    "final_audit_ok": true,
+    "seconds": 2.0
    },
    {
     "id": "col-grid-12",
@@ -365,13 +401,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -385,15 +424,30 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": true,
-    "baseline_violations": {},
+    "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
+    "baseline_violations": {
+     "zones": 13
+    },
+    "audit_disagreements": [],
     "agent_status": "verified",
-    "agent_iterations": 1,
-    "agent_actions": [],
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "final_audit_ok": true,
+    "seconds": 4.0,
+    "model_decider": {
+     "status": "verified",
+     "actions": [
+      "ban_violating_edges"
+     ],
+     "iterations": 2,
+     "cost_usd": 0.0018
+    }
    },
    {
     "id": "col-grid-21",
@@ -407,9 +461,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 3
     },
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 2,
     "agent_actions": [
@@ -418,6 +474,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 4.1,
     "model_decider": {
      "status": "verified",
@@ -425,7 +482,7 @@
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.0024
+     "cost_usd": 0.0025
     }
    },
    {
@@ -440,13 +497,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -461,9 +521,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 28
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -472,11 +534,13 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 7 reachable orders now and leave the 23 cut-off ones (#2, #3, #4, #5, #6, #7, #8, #9 ...) for later",
-     "stop avoiding the drawn zone (the plan drives 1491 m through it)"
+     "move the depot to the spot marked on the map: 12 of 30 orders become reachable without entering the zone (from the current spot: 8)",
+     "serve the 8 reachable orders now and leave the 22 cut-off ones (#1, #3, #4, #5, #6, #8, #9, #10 ...) for later",
+     "stop avoiding the drawn zone (the plan drives 881 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 13.1,
+    "final_audit_ok": true,
+    "seconds": 14.6,
     "model_decider": {
      "status": "needs_relaxation",
      "actions": [
@@ -484,7 +548,7 @@
       "propose_relaxation"
      ],
      "iterations": 2,
-     "cost_usd": 0.0047
+     "cost_usd": 0.007
     }
    },
    {
@@ -499,18 +563,21 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 19
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 3,
+    "excluded_orders": 4,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1,
     "model_decider": {
      "status": "verified_partial",
@@ -519,7 +586,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0051
+     "cost_usd": 0.0048
     }
    },
    {
@@ -534,18 +601,21 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 44
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 4,
+    "excluded_orders": 5,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1,
     "model_decider": {
      "status": "verified_partial",
@@ -554,7 +624,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0053
+     "cost_usd": 0.0054
     }
    },
    {
@@ -569,9 +639,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 37
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -580,11 +652,13 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 8 reachable orders now and leave the 22 cut-off ones (#2, #3, #4, #5, #6, #11, #12, #13 ...) for later",
-     "stop avoiding the drawn zone (the plan drives 908 m through it)"
+     "move the depot to the spot marked on the map: 16 of 30 orders become reachable without entering the zone (from the current spot: 8)",
+     "serve the 8 reachable orders now and leave the 22 cut-off ones (#2, #4, #6, #7, #8, #9, #10, #11 ...) for later",
+     "stop avoiding the drawn zone (the plan drives 1088 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 13.1
+    "final_audit_ok": true,
+    "seconds": 14.6
    },
    {
     "id": "mem-any-11",
@@ -598,22 +672,27 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 12
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "agent_iterations": 3,
     "agent_actions": [
+     "ban_violating_edges",
      "ban_violating_edges",
      "propose_relaxation"
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 3 reachable orders now and leave the 27 cut-off ones (#1, #2, #3, #4, #5, #6, #7, #8 ...) for later",
-     "stop avoiding the drawn zone (the plan drives 1292 m through it)"
+     "move the depot to the spot marked on the map: 28 of 30 orders become reachable without entering the zone (from the current spot: 2)",
+     "serve the 2 reachable orders now and leave the 28 cut-off ones (#1, #2, #3, #4, #5, #6, #7, #8 ...) for later",
+     "stop avoiding the drawn zone (the plan drives 363 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 13.1
+    "final_audit_ok": true,
+    "seconds": 16.7
    },
    {
     "id": "mem-any-12",
@@ -627,9 +706,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 20
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
@@ -639,6 +720,7 @@
     "excluded_orders": 1,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1
    },
    {
@@ -653,9 +735,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 26
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
@@ -665,6 +749,7 @@
     "excluded_orders": 5,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1
    },
    {
@@ -679,19 +764,25 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 40
     },
-    "agent_status": "verified_partial",
-    "agent_iterations": 3,
+    "audit_disagreements": [],
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
     "agent_actions": [
      "ban_violating_edges",
-     "exclude_unreachable"
+     "propose_relaxation"
     ],
-    "excluded_orders": 4,
-    "relaxations": [],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 23 reachable orders now and leave the 7 cut-off ones (#8, #12, #16, #17, #19, #26, #27) for later",
+     "stop avoiding the drawn zone (the plan drives 1507 m through it)"
+    ],
     "final_report_ok": true,
-    "seconds": 6.1
+    "final_audit_ok": true,
+    "seconds": 13.1
    },
    {
     "id": "mem-any-22",
@@ -705,9 +796,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 18
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
@@ -717,6 +810,7 @@
     "excluded_orders": 1,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1
    },
    {
@@ -731,18 +825,21 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 18
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 4,
+    "excluded_orders": 2,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1
    },
    {
@@ -757,13 +854,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -777,20 +877,18 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": false,
-    "baseline_violations": {
-     "zones": 1
-    },
-    "agent_status": "verified_partial",
-    "agent_iterations": 3,
-    "agent_actions": [
-     "ban_violating_edges",
-     "exclude_unreachable"
-    ],
-    "excluded_orders": 3,
+    "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
+    "baseline_violations": {},
+    "audit_disagreements": [],
+    "agent_status": "verified",
+    "agent_iterations": 1,
+    "agent_actions": [],
+    "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.1
+    "final_audit_ok": true,
+    "seconds": 2.0
    },
    {
     "id": "col-any-10",
@@ -804,22 +902,22 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 20
     },
-    "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "audit_disagreements": [],
+    "agent_status": "verified_partial",
+    "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
-     "propose_relaxation"
+     "exclude_unreachable"
     ],
-    "excluded_orders": 0,
-    "relaxations": [
-     "serve the 23 reachable orders now and leave the 7 cut-off ones (#2, #3, #4, #9, #13, #15, #30) for later",
-     "stop avoiding the drawn zone (the plan drives 953 m through it)"
-    ],
+    "excluded_orders": 3,
+    "relaxations": [],
     "final_report_ok": true,
-    "seconds": 13.1
+    "final_audit_ok": true,
+    "seconds": 6.1
    },
    {
     "id": "col-any-11",
@@ -833,22 +931,22 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 48
     },
-    "agent_status": "needs_relaxation",
-    "agent_iterations": 2,
+    "audit_disagreements": [],
+    "agent_status": "verified_partial",
+    "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
-     "propose_relaxation"
+     "exclude_unreachable"
     ],
-    "excluded_orders": 0,
-    "relaxations": [
-     "serve the 21 reachable orders now and leave the 9 cut-off ones (#1, #5, #18, #19, #21, #22, #25, #26 ...) for later",
-     "stop avoiding the drawn zone (the plan drives 1988 m through it)"
-    ],
+    "excluded_orders": 3,
+    "relaxations": [],
     "final_report_ok": true,
-    "seconds": 13.1
+    "final_audit_ok": true,
+    "seconds": 6.1
    },
    {
     "id": "col-any-12",
@@ -862,18 +960,21 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 4
     },
+    "audit_disagreements": [],
     "agent_status": "verified_partial",
     "agent_iterations": 3,
     "agent_actions": [
      "ban_violating_edges",
      "exclude_unreachable"
     ],
-    "excluded_orders": 5,
+    "excluded_orders": 1,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 6.1
    },
    {
@@ -888,9 +989,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 93
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -899,10 +1002,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 15 reachable orders now and leave the 15 cut-off ones (#6, #7, #9, #11, #12, #13, #16, #17 ...) for later",
-     "stop avoiding the drawn zone (the plan drives 2305 m through it)"
+     "serve the 12 reachable orders now and leave the 18 cut-off ones (#2, #4, #5, #8, #10, #12, #13, #16 ...) for later",
+     "stop avoiding the drawn zone (the plan drives 3364 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.1
    },
    {
@@ -917,19 +1021,25 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 43
     },
-    "agent_status": "verified_partial",
-    "agent_iterations": 3,
+    "audit_disagreements": [],
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
     "agent_actions": [
      "ban_violating_edges",
-     "exclude_unreachable"
+     "propose_relaxation"
     ],
-    "excluded_orders": 5,
-    "relaxations": [],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 23 reachable orders now and leave the 7 cut-off ones (#4, #10, #11, #19, #22, #23, #25) for later",
+     "stop avoiding the drawn zone (the plan drives 1596 m through it)"
+    ],
     "final_report_ok": true,
-    "seconds": 6.1
+    "final_audit_ok": true,
+    "seconds": 13.1
    },
    {
     "id": "col-any-22",
@@ -943,19 +1053,25 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 1
+     "zones": 8
     },
-    "agent_status": "verified_partial",
-    "agent_iterations": 3,
+    "audit_disagreements": [],
+    "agent_status": "needs_relaxation",
+    "agent_iterations": 2,
     "agent_actions": [
      "ban_violating_edges",
-     "exclude_unreachable"
+     "propose_relaxation"
     ],
-    "excluded_orders": 4,
-    "relaxations": [],
+    "excluded_orders": 0,
+    "relaxations": [
+     "serve the 23 reachable orders now and leave the 7 cut-off ones (#5, #7, #19, #21, #24, #26, #28) for later",
+     "stop avoiding the drawn zone (the plan drives 341 m through it)"
+    ],
     "final_report_ok": true,
-    "seconds": 6.1
+    "final_audit_ok": true,
+    "seconds": 13.1
    },
    {
     "id": "col-ind-40-3",
@@ -968,15 +1084,22 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": true,
-    "baseline_violations": {},
+    "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
+    "baseline_violations": {
+     "zones": 3
+    },
+    "audit_disagreements": [],
     "agent_status": "verified",
-    "agent_iterations": 1,
-    "agent_actions": [],
+    "agent_iterations": 2,
+    "agent_actions": [
+     "ban_violating_edges"
+    ],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "final_audit_ok": true,
+    "seconds": 4.1
    },
    {
     "id": "col-com-20-2",
@@ -990,13 +1113,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1011,13 +1137,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1032,13 +1161,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1052,19 +1184,18 @@
     ],
     "expect": null,
     "baseline_solver_feasible": true,
-    "baseline_audit_ok": false,
-    "baseline_violations": {
-     "zones": 1
-    },
+    "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
+    "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
-    "agent_iterations": 2,
-    "agent_actions": [
-     "ban_violating_edges"
-    ],
+    "agent_iterations": 1,
+    "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 4.1
+    "final_audit_ok": true,
+    "seconds": 2.0
    },
    {
     "id": "col-res-30-1-tight",
@@ -1078,25 +1209,26 @@
     "expect": null,
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "deadline": 1,
-     "zones": 1
+     "deadline": 1
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
-    "agent_iterations": 3,
+    "agent_iterations": 2,
     "agent_actions": [
-     "ban_violating_edges",
      "resolve_longer",
      "propose_relaxation"
     ],
     "excluded_orders": 0,
     "relaxations": [
      "use 3 trucks instead of 1",
-     "move the deadline from 09:00 to 10:30",
-     "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 102 m through the zone)"
+     "move the deadline from 09:00 to 10:15",
+     "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 7 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 30.7
+    "final_audit_ok": true,
+    "seconds": 28.6
    },
    {
     "id": "inf-time-12-1",
@@ -1110,9 +1242,11 @@
     "expect": "infeasible",
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
      "deadline": 1
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1121,12 +1255,13 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "use 3 trucks instead of 1",
+     "use 2 trucks instead of 1",
      "move the deadline from 08:30 to 09:00",
-     "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 7 m through the zone)"
+     "stop avoiding the residential zone and use 2 trucks instead of 1 (the plan drives 7 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 28.6
+    "final_audit_ok": true,
+    "seconds": 25.6
    },
    {
     "id": "inf-time-50-3",
@@ -1140,9 +1275,11 @@
     "expect": "infeasible",
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
      "deadline": 3
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1156,6 +1293,7 @@
      "stop avoiding the industrial zone and use 4 trucks instead of 3 (the plan drives 0 m through the zone)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 25.8
    },
    {
@@ -1170,21 +1308,26 @@
     "expect": "infeasible",
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "capacity": 2
+     "capacity": 3,
+     "zones": 3
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
-    "agent_iterations": 1,
+    "agent_iterations": 2,
     "agent_actions": [
+     "ban_violating_edges",
      "propose_relaxation"
     ],
     "excluded_orders": 0,
     "relaxations": [
      "use 4 trucks instead of 3",
-     "stop avoiding the industrial zone and use 4 trucks instead of 3 (the plan drives 0 m through the zone)"
+     "stop avoiding the industrial zone and use 4 trucks instead of 3 (the plan drives 102 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 9.6
+    "final_audit_ok": true,
+    "seconds": 11.7
    },
    {
     "id": "inf-capacity-24",
@@ -1198,9 +1341,11 @@
     "expect": "infeasible",
     "baseline_solver_feasible": false,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
      "capacity": 1
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 1,
     "agent_actions": [
@@ -1212,6 +1357,7 @@
      "stop avoiding the industrial zone and use 3 trucks instead of 2 (the plan drives 0 m through the zone)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 9.6
    },
    {
@@ -1226,13 +1372,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1247,13 +1396,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1268,13 +1420,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1289,13 +1444,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1310,9 +1468,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 54
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1321,10 +1481,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 8 reachable orders now and leave the 12 cut-off ones (#2, #3, #6, #7, #9, #10, #11, #12 ...) for later",
+     "serve the 9 reachable orders now and leave the 11 cut-off ones (#2, #3, #8, #9, #10, #11, #12, #13 ...) for later",
      "stop avoiding the flooded zone (the plan drives 1842 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.1
    },
    {
@@ -1339,9 +1500,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 42
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1350,10 +1513,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 5 reachable orders now and leave the 15 cut-off ones (#1, #2, #3, #5, #6, #8, #9, #10 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 2020 m through it)"
+     "serve the 13 reachable orders now and leave the 7 cut-off ones (#1, #4, #6, #9, #10, #16, #20) for later",
+     "stop avoiding the flooded zone (the plan drives 1406 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.1
    },
    {
@@ -1368,9 +1532,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 40
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1379,10 +1545,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 8 reachable orders now and leave the 12 cut-off ones (#1, #2, #4, #5, #6, #7, #8, #9 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 1842 m through it)"
+     "serve the 11 reachable orders now and leave the 9 cut-off ones (#2, #9, #10, #12, #13, #14, #15, #19 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1389 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.1
    },
    {
@@ -1397,9 +1564,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 50
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1408,10 +1577,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #2, #3, #5, #8, #9, #10, #11 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 1763 m through it)"
+     "serve the 10 reachable orders now and leave the 10 cut-off ones (#2, #5, #7, #9, #11, #13, #14, #15 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1612 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.1
    },
    {
@@ -1426,13 +1596,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1447,13 +1620,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1468,13 +1644,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1489,13 +1668,16 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": true,
+    "baseline_verifier_ok": true,
     "baseline_violations": {},
+    "audit_disagreements": [],
     "agent_status": "verified",
     "agent_iterations": 1,
     "agent_actions": [],
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 2.0
    },
    {
@@ -1510,9 +1692,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 60
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1521,10 +1705,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #2, #4, #5, #9, #10, #11, #13 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 2460 m through it)"
+     "serve the 9 reachable orders now and leave the 11 cut-off ones (#1, #2, #4, #5, #6, #7, #8, #13 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1858 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.0
    },
    {
@@ -1539,9 +1724,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 64
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1550,10 +1737,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 6 reachable orders now and leave the 14 cut-off ones (#1, #2, #3, #4, #5, #9, #10, #11 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 2077 m through it)"
+     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #2, #3, #6, #7, #8, #10, #11 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1944 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.0
    },
    {
@@ -1568,9 +1756,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 52
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1579,10 +1769,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 7 reachable orders now and leave the 13 cut-off ones (#1, #3, #4, #8, #9, #10, #11, #12 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 2468 m through it)"
+     "serve the 11 reachable orders now and leave the 9 cut-off ones (#2, #3, #4, #8, #11, #13, #14, #15 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 1624 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.0
    },
    {
@@ -1597,9 +1788,11 @@
     "expect": null,
     "baseline_solver_feasible": true,
     "baseline_audit_ok": false,
+    "baseline_verifier_ok": false,
     "baseline_violations": {
-     "zones": 2
+     "zones": 74
     },
+    "audit_disagreements": [],
     "agent_status": "needs_relaxation",
     "agent_iterations": 2,
     "agent_actions": [
@@ -1608,10 +1801,11 @@
     ],
     "excluded_orders": 0,
     "relaxations": [
-     "serve the 8 reachable orders now and leave the 12 cut-off ones (#1, #2, #3, #5, #6, #8, #10, #11 ...) for later",
-     "stop avoiding the flooded zone (the plan drives 2867 m through it)"
+     "serve the 8 reachable orders now and leave the 12 cut-off ones (#1, #2, #3, #5, #7, #8, #9, #10 ...) for later",
+     "stop avoiding the flooded zone (the plan drives 2409 m through it)"
     ],
     "final_report_ok": true,
+    "final_audit_ok": true,
     "seconds": 13.0
    }
   ]
@@ -1624,7 +1818,7 @@
   "cost_usd": 0.1074,
   "failures": []
  },
- "eval_cost_usd": 0.0217,
+ "eval_cost_usd": 0.0237,
  "parsing_baseten": {
   "cases": 20,
   "exact_match_cases": 11,

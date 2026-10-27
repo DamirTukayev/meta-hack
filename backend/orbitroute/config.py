@@ -39,6 +39,7 @@ class Settings:
     run_limit_per_day: int = 300
     max_concurrent_runs: int = 3
     trust_proxy: bool = False
+    trusted_proxy_hops: int = 1  # proxies in front of the app; the client is that many entries from the right of X-Forwarded-For
 
     @classmethod
     def load(cls) -> "Settings":
@@ -61,4 +62,5 @@ class Settings:
             run_limit_per_day=int(os.environ.get("RUN_LIMIT_PER_DAY", "300")),
             max_concurrent_runs=int(os.environ.get("MAX_CONCURRENT_RUNS", "3")),
             trust_proxy=os.environ.get("TRUST_PROXY", "").lower() in ("1", "true"),
+            trusted_proxy_hops=max(int(os.environ.get("TRUSTED_PROXY_HOPS", "1")), 1),
         )

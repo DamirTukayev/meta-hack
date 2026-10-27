@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 
 from orbitroute.agent.events import Emit, Event, silent
 from orbitroute.agent.relax import RelaxationOption, find_relaxations
-from orbitroute.agent.repair import Decider, DecisionContext, PolicyDecider
+from orbitroute.agent.repair import Decider, DecisionContext, PolicyDecider, Recommendation
 from orbitroute.llm.budget import BudgetExceeded
 from orbitroute.routing.matrix import CostMatrix, build_matrix
 from orbitroute.routing.scenario import Scenario
@@ -39,6 +39,7 @@ class AgentResult:
     excluded: dict[int, str]
     relaxations: list[RelaxationOption] = field(default_factory=list)
     seconds: float = 0.0
+    recommendation: Recommendation | None = None  # which relaxation option the agent recommends, and why
 
 
 def run_agent(
@@ -114,8 +115,10 @@ def run_agent(
             for o in options:
                 emit(Event("relaxation", f"smallest fix: {o.description}", {"kind": o.kind, "amount": o.amount}))
             if options:
-                best = options[0]
-                return AgentResult("needs_relaxation", best.scenario, best.plan, best.report, matrix, iterations, excluded, options, time.perf_counter() - t0)
+                rec = decider.recommend(options, p)
+                emit(Event("recommendation", f"recommended: {options[rec.index].description} ({rec.reason})", {"index": rec.index, "reason": rec.reason, "source": rec.source}))
+                best = options[rec.index]
+                return AgentResult("needs_relaxation", best.scenario, best.plan, best.report, matrix, iterations, excluded, options, time.perf_counter() - t0, rec)
             emit(Event("final", "no relaxation within limits makes this feasible", {"status": "unresolved"}))
             break
 

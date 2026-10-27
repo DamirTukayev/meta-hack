@@ -40,6 +40,7 @@ export default function MapView(props: {
   onEditPlan: () => void
   onQuickStart: () => void
   onPickArea: () => void
+  depotOverride?: XY // a relaxation that moves the depot: where it goes
 }) {
   const { sample, state, plan, report, mode, custom } = props
   const svgRef = useRef<SVGSVGElement>(null)
@@ -55,6 +56,7 @@ export default function MapView(props: {
   const [layers, setLayers] = useState<Layers>({ roads: true, graph: false, zones: true, orders: true, routes: true })
   const u = sample.width / 1536 // marker size unit, so overlays scale with the image
   const avoid = state.problem?.avoid_zone_kinds ?? []
+  const depot = props.depotOverride ?? state.depot
 
   // Replay of the drive: progress 0..1 along the longest route (null = show the finished plan).
   const [progress, setProgress] = useState<number | null>(null)
@@ -235,6 +237,16 @@ export default function MapView(props: {
             ))}
           {layers.orders &&
             state.orders.map((o, i) => <circle key={i} cx={o[0]} cy={o[1]} r={5 * u} fill="#e5e7eb" stroke="#000000" strokeWidth={1.5 * u} opacity={plan ? 0.0 : 0.9} />)}
+          {layers.orders && state.orderTargets.map((t, i) => {
+            const o = state.orders[i]
+            if (!t || !o) return null
+            return (
+              <g key={'b' + i} opacity={0.9}>
+                <line x1={o[0]} y1={o[1]} x2={t[0]} y2={t[1]} stroke="#ffb000" strokeWidth={1.6 * u} strokeDasharray={`${3 * u} ${2.5 * u}`} />
+                <rect x={t[0] - 5 * u} y={t[1] - 5 * u} width={10 * u} height={10 * u} fill="#ffb000" stroke="#000000" strokeWidth={1.4 * u}><title>{`Order ${i + 1}: a building found by SAM 3.1, served from the nearest road`}</title></rect>
+              </g>
+            )
+          })}
           {layers.orders && Object.keys(report?.excluded ?? {}).map((id) => {
             const o = state.orders[Number(id) - 1]
             if (!o) return null
@@ -293,10 +305,10 @@ export default function MapView(props: {
               <text x={custom.depot[0]} y={custom.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
             </g>
           )}
-          {state.depot && !props.stale && (
+          {depot && !props.stale && (
             <g>
-              <rect x={state.depot[0] - 16 * u} y={state.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#000000" stroke="#facc15" strokeWidth={4 * u} />
-              <text x={state.depot[0]} y={state.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
+              <rect x={depot[0] - 16 * u} y={depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#000000" stroke="#facc15" strokeWidth={4 * u} />
+              <text x={depot[0]} y={depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
             </g>
           )}
         </svg>
@@ -364,6 +376,7 @@ export default function MapView(props: {
         <span><i className="line" />A colour is one truck; arrows show the direction, the dashed part is the way back</span>
         <span><i className="num">2</i>Order number in the circle = the order the truck visits it in; <b>#7</b> = the order's own number</span>
         <span><i className="viol" />Red pulsing road = a plan broke the “avoid” rule there</span>
+        {state.orderTargets.some(Boolean) && <span><i className="bld" />Amber square = the building an order belongs to; the dashed line is the road it is served from</span>}
         {Object.keys(report?.excluded ?? {}).length > 0 && <span><i className="cut">×</i>Dashed red × = an order left out because the zone cuts it off</span>}
         <span className="credit">{sample.credit}</span>
       </div>

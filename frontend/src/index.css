@@ -312,3 +312,6 @@ header .stepper { flex: 1; min-width: 420px; border: 0; background: none; paddin
 .banner.warn { background: #2b1e00; border-color: #7a5300; color: #ffd98a; }
 .banner.warn b { color: var(--accent); }
 .legend i.cut { width: 16px; height: 16px; border-radius: 50%; border: 2px dashed #ff4d4d; color: #ff4d4d; font-style: normal; font-size: 12px; font-weight: 800; line-height: 11px; text-align: center; display: inline-grid; place-items: center; margin-right: 5px; vertical-align: -3px; box-sizing: border-box; }
+.legend i.bld { width: 10px; height: 10px; background: #ffb000; border: 1px solid #000; margin-right: 6px; vertical-align: -1px; }
+.note.rec { color: var(--amber, #ffb000); margin-top: 8px; }
+.note.rec small { color: var(--muted); }

@@ -137,3 +137,33 @@ def test_outside_the_us_and_bad_coordinates_are_rejected(web, monkeypatch):
     c = TestClient(api.app)
     assert c.post("/api/areas", json={"lat": 48.85, "lon": 2.35}).status_code == 422
     assert c.post("/api/areas", json={"lat": 120, "lon": 0}).status_code == 422
+
+
+def test_rate_limiter_forgets_callers_whose_events_expired():
+    import orbitroute.limits as limits
+
+    now = [0.0]
+    lim = RateLimiter(1, 60, clock=lambda: now[0])
+    old_max = limits.MAX_KEYS
+    limits.MAX_KEYS = 3
+    try:
+        for i in range(4):
+            lim.check(f"ip{i}")
+        now[0] = 120
+        lim.check("fresh")
+        assert set(lim._events) == {"fresh"}
+    finally:
+        limits.MAX_KEYS = old_max
+
+
+def test_stored_areas_are_capped_and_the_oldest_go_first(tmp_path, monkeypatch):
+    import os
+
+    monkeypatch.setattr(areas, "AREAS_DIR", tmp_path)
+    for i in range(5):
+        (tmp_path / f"area-{i}.jpg").write_bytes(b"x")
+        (tmp_path / f"area-{i}.json").write_text("{}")
+        os.utime(tmp_path / f"area-{i}.jpg", (1000 + i, 1000 + i))
+    areas._prune(3)
+    assert sorted(p.stem for p in tmp_path.glob("*.jpg")) == ["area-2", "area-3", "area-4"]
+    assert sorted(p.stem for p in tmp_path.glob("*.json")) == ["area-2", "area-3", "area-4"]

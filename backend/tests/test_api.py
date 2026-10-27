@@ -196,16 +196,87 @@ def test_concurrent_runs_are_capped_and_the_slot_is_released_afterwards(monkeypa
     assert api._active["n"] == 0  # the finished run gave its slot back
 
 
-def test_client_ip_trusts_the_proxy_header_only_when_asked(monkeypatch):
+def test_client_ip_trusts_only_the_entries_a_proxy_wrote(monkeypatch):
     from types import SimpleNamespace
 
-    req = SimpleNamespace(headers={"x-forwarded-for": "203.0.113.9, 10.0.0.1"}, client=SimpleNamespace(host="10.0.0.1"))
-    assert api.client_ip(req) == "10.0.0.1"
-    object.__setattr__(api.settings, "trust_proxy", True)
+    def ip(header, hops=1, trust=True):
+        object.__setattr__(api.settings, "trust_proxy", trust)
+        object.__setattr__(api.settings, "trusted_proxy_hops", hops)
+        req = SimpleNamespace(headers={"x-forwarded-for": header}, client=SimpleNamespace(host="10.0.0.1"))
+        return api.client_ip(req)
+
     try:
-        assert api.client_ip(req) == "203.0.113.9"
+        assert ip("203.0.113.9", trust=False) == "10.0.0.1"  # not behind a proxy: the header is ignored
+        assert ip("203.0.113.9") == "203.0.113.9"
+        assert ip("1.2.3.4, 203.0.113.9") == "203.0.113.9"  # a caller-written first entry cannot pick the bucket
+        assert ip("203.0.113.9, 198.51.100.7", hops=2) == "203.0.113.9"  # two proxies (CDN + load balancer)
+        assert ip("", hops=1) == "10.0.0.1" and ip("198.51.100.7", hops=2) == "10.0.0.1"  # too short: fall back to the peer
     finally:
         object.__setattr__(api.settings, "trust_proxy", False)
+        object.__setattr__(api.settings, "trusted_proxy_hops", 1)
+
+
+def test_the_area_limit_is_counted_per_client_address_behind_a_proxy(monkeypatch, tmp_path):
+    import orbitroute.areas as areas
+    from orbitroute.limits import RateLimiter
+    from test_areas import textured
+
+    monkeypatch.setattr(areas, "AREAS_DIR", tmp_path)
+    monkeypatch.setattr(api, "AREAS_DIR", tmp_path)
+    monkeypatch.setattr(areas, "fetch_tile", lambda lon, lat, **kw: (textured(), (0.0, 0.0, 1.0, 1.0)))
+    monkeypatch.setattr(api, "area_limit_ip", RateLimiter(1, 3600))
+    monkeypatch.setattr(api, "area_limit_all", RateLimiter(50, 3600))
+    object.__setattr__(api.settings, "trust_proxy", True)
+    try:
+        c = TestClient(api.app)
+        a, b = {"x-forwarded-for": "198.51.100.1"}, {"x-forwarded-for": "198.51.100.2"}
+        assert c.post("/api/areas", json={"lat": 30.0, "lon": -90.0}, headers=a).status_code == 200
+        assert c.post("/api/areas", json={"lat": 31.0, "lon": -90.0}, headers=a).status_code == 429  # same caller
+        assert c.post("/api/areas", json={"lat": 32.0, "lon": -90.0}, headers=b).status_code == 200  # another caller is not blocked
+    finally:
+        object.__setattr__(api.settings, "trust_proxy", False)
+
+
+def test_an_oversized_recording_is_refused_without_reading_it_all(monkeypatch):
+    monkeypatch.setattr(api, "asr_limit_ip", api.RateLimiter(100, 60))
+    monkeypatch.setattr(api, "asr_limit_all", api.RateLimiter(100, 60))
+    c = TestClient(api.app)
+    big = b"x" * (api.MAX_AUDIO_BYTES + 1)
+    assert c.post("/api/transcribe", content=big).status_code == 413
+    # a chunked upload with no Content-Length is cut off at the limit as well
+    assert c.post("/api/transcribe", content=(big[i : i + 65536] for i in range(0, len(big), 65536))).status_code == 413
+
+
+def test_a_run_is_abandoned_when_the_client_goes_away(monkeypatch):
+    import threading
+
+    started, release = threading.Event(), threading.Event()
+    seen = {}
+
+    def slow_pipeline(sample, request, *, emit, **kw):
+        emit(Event("stage", "one", {}))
+        started.set()
+        release.wait(5)
+        try:
+            emit(Event("stage", "two", {}))  # reached after the disconnect
+            seen["finished"] = True
+        except api.RunCancelled:
+            seen["cancelled"] = True
+            raise
+
+    monkeypatch.setattr(api, "run_pipeline", slow_pipeline)
+    monkeypatch.setattr(api, "get_client", lambda: object())
+    monkeypatch.setattr(api, "run_limit_ip", api.RateLimiter(100, 60))
+    monkeypatch.setattr(api, "run_limit_day", api.RateLimiter(100, 60))
+    c = TestClient(api.app)
+    with c.stream("POST", "/api/run", json={"sample": "columbus", "request": "30 orders"}) as r:
+        next(r.iter_lines())  # the first event arrives, then the "browser" closes the connection
+    release.set()
+    for _ in range(50):
+        if seen:
+            break
+        threading.Event().wait(0.1)
+    assert seen == {"cancelled": True}
 
 
 def test_transcribe_endpoint_returns_text_and_enforces_limits(monkeypatch):

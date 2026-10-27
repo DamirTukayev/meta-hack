@@ -7,7 +7,7 @@ import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
 
-const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', final: '■' }
+const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', recommendation: '★', final: '■' }
 
 function fmtT(s: number) {
   return `${Math.max(s, 0).toFixed(1)}s`
@@ -22,7 +22,7 @@ function RequestPanel(props: {
   onRequest: (r: string) => void
   onPlan: () => void
   state: RunState
-  custom: Custom
+  custom: Custom; agentPlaced: boolean
   auto: boolean
   autoCount: number
   canPlan: boolean
@@ -65,7 +65,7 @@ function RequestPanel(props: {
       <ul className="checklist-mini">
         <li className={custom.depot ? 'ok' : ''}>{custom.depot ? '✓' : '○'} Depot {custom.depot ? 'placed' : 'not placed'}</li>
         <li className={custom.orders.length > 0 || props.auto ? 'ok' : ''}>
-          {custom.orders.length > 0 || props.auto ? '✓' : '○'} {custom.orders.length > 0 ? `${custom.orders.length} order${custom.orders.length > 1 ? 's' : ''} placed by you` : props.auto ? `${props.autoCount} random orders (agent places them)` : 'Orders not placed'}
+          {custom.orders.length > 0 || props.auto ? '✓' : '○'} {custom.orders.length > 0 ? `${custom.orders.length} order${custom.orders.length > 1 ? 's' : ''} placed ${props.agentPlaced ? 'by the agent (drag to move)' : 'by you'}` : props.auto ? `${props.autoCount} random orders (agent places them)` : 'Orders not placed'}
         </li>
         <li className={custom.zoneClosed ? 'ok' : 'opt'}>{custom.zoneClosed ? '✓ Your avoid-zone drawn' : '○ Zone to avoid (optional)'}</li>
       </ul>
@@ -162,8 +162,9 @@ function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => 
         <div className="relax">
           <p className="note">The request is not feasible as stated. Smallest changes that work (each one verified):</p>
           {r.relaxations.map((o, i) => (
-            <button key={o.kind} className={'chip ' + (props.relax === i ? 'on' : '')} onClick={() => props.onShowRelax(props.relax === i ? null : i)}>{o.description}</button>
+            <button key={o.kind} className={'chip ' + (props.relax === i ? 'on' : '')} onClick={() => props.onShowRelax(props.relax === i ? null : i)}>{r.recommendation?.index === i ? '★ ' : ''}{o.description}</button>
           ))}
+          {r.recommendation && <p className="note rec">★ Recommended: {r.recommendation.reason} <small>({r.recommendation.source === 'model' ? 'Muse Spark' : 'rules'})</small></p>}
         </div>
       )}
     </div>
@@ -184,6 +185,9 @@ export default function App() {
   const [stale, setStale] = useState(false) // inputs changed after a plan was made: the plan on the map is out of date
   const [picking, setPicking] = useState(false)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
+  const customRef = useRef(custom)
+  customRef.current = custom
+  const [agentPlaced, setAgentPlaced] = useState(false) // the orders on the map came from the agent, not from clicks
 
   useEffect(() => {
     fetch('/api/samples').then((r) => r.json()).then((s: Sample[]) => {
@@ -194,23 +198,25 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (state.result?.status === 'needs_relaxation') setRelax(0)
+    if (state.result?.status === 'needs_relaxation') setRelax(state.result.recommendation?.index ?? 0)
   }, [state.result])
 
   // When a run finishes its depot and orders become editable points (also the ones the agent placed itself).
   useEffect(() => {
     if (state.status !== 'done' || !state.depot) return
+    setAgentPlaced(customRef.current.orders.length === 0)
     setCustom((c) => ({ ...c, depot: c.depot ?? state.depot, orders: c.orders.length ? c.orders : state.orders }))
     setAuto(false)
   }, [state.status, state.depot, state.orders])
 
   const sample = samples.find((s) => s.name === name)
-  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setMode('depot'); setAuto(false); setStale(false); reset() }
+  const onSample = (n: string) => { setName(n); setRequest(samples.find((s) => s.name === n)?.examples[0] ?? ''); setCustom(emptyCustom); setAgentPlaced(false); setMode('depot'); setAuto(false); setStale(false); reset() }
   const onArea = (s: Sample) => {
     setSamples((list) => (list.some((x) => x.name === s.name) ? list : [...list, s]))
     setName(s.name)
     setRequest(s.examples[0] ?? '')
     setCustom(emptyCustom)
+    setAgentPlaced(false)
     setMode('depot')
     setAuto(false)
     setStale(false)
@@ -235,6 +241,7 @@ export default function App() {
   // Changing the inputs after a plan keeps the old plan on screen (faded) and marks it out of date.
   const edit = (next: Custom) => {
     if (state.status === 'done') setStale(true) // after an error the banner stays until the next plan, so the map does not jump while you drag
+    if (next.orders !== custom.orders) setAgentPlaced(false)
     setCustom(next)
   }
   // One click: let the agent place 20 orders and plan with the first example sentence.
@@ -286,7 +293,7 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">
@@ -304,6 +311,7 @@ export default function App() {
           )}
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
           <MapView
+            depotOverride={relaxed?.depot}
             sample={sample} state={state} selected={sel} plan={plan} report={report}
             mode={mode} custom={custom} onMode={setMode} onClick={onMapClick}
             onCloseZone={() => edit({ ...custom, zoneClosed: true })}
