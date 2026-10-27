@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from orbitroute.config import ROOT
+from orbitroute.config import ROOT, resolve_cached
 from orbitroute.llm.budget import RunBudget
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.sam import parse_instances, response_text
@@ -48,7 +48,7 @@ def tile_windows(width: int, height: int, n: int, overlap: int) -> list[tuple[in
 
 def _cache_path(image_bytes: bytes, concept: str, n: int, overlap: int) -> Path:
     key = hashlib.sha256(image_bytes).hexdigest()[:16]
-    return CACHE_DIR / f"sam_{key}_{concept.replace(' ', '_')}_{n}x{n}_o{overlap}.npz"
+    return resolve_cached(CACHE_DIR, f"sam_{key}_{concept.replace(' ', '_')}_{n}x{n}_o{overlap}.npz")
 
 
 def segment_concept(

@@ -78,3 +78,42 @@ def test_failover_uses_the_secondary_when_the_open_weight_side_fails_or_runs_out
     for err in (ApiError(429, "rate limited"), ApiError(402, "no credits"), BudgetExceeded("cap")):
         backup = Side(result={"v": "backup"})
         assert FailoverClient(Side(error=err), backup).chat_json("m")[0] == {"v": "backup"} and backup.calls == 1
+
+
+def wav_bytes(seconds: float, rate: int = 16000) -> bytes:
+    import io
+    import wave
+
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(b"\x00\x00" * int(seconds * rate))
+    return buf.getvalue()
+
+
+def test_transcribe_sends_the_multipart_request_and_charges_by_audio_length(tmp_path):
+    seen = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["url"], seen["accept"] = str(request.url), request.headers["accept"]
+        seen["body"] = request.content
+        return httpx.Response(200, json={"transcript": "  by noon, avoid the industrial zone  ", "audioDurationMs": 3000, "turns": []})
+
+    guard = BudgetGuard(tmp_path / "b.json", 100.0)
+    client = MetaClient(settings(budget_state_path=tmp_path / "b.json"), guard, provider="meta", transport=httpx.MockTransport(handler))
+    assert client.transcribe(wav_bytes(3.0)) == "by noon, avoid the industrial zone"
+    assert seen["url"] == "https://api.meta.ai/v1/asr/transcribe" and seen["accept"] == "application/json"
+    assert b"muse-voice-transcribe-1.0" in seen["body"] and b'"audioEncoding": "WAV"' in seen["body"] and b"RIFF" in seen["body"]
+    assert guard.total_spent() == pytest.approx(3.0 / 3600 * 0.18)
+
+
+def test_transcribe_rejects_non_wav_and_overlong_audio_before_spending(tmp_path):
+    guard = BudgetGuard(tmp_path / "b.json", 100.0)
+    client = MetaClient(settings(budget_state_path=tmp_path / "b.json"), guard, transport=httpx.MockTransport(lambda r: httpx.Response(500)))
+    with pytest.raises(ValueError, match="not a valid WAV"):
+        client.transcribe(b"definitely not audio")
+    with pytest.raises(ValueError, match="limit is 60 s"):
+        client.transcribe(wav_bytes(61))
+    assert guard.total_spent() == 0

@@ -54,3 +54,13 @@ def test_token_cost_matches_published_spark_1_3_rates():
 
 def test_sam_price_is_per_image():
     assert SAM_PER_IMAGE_USD == pytest.approx(0.0025)
+
+
+def test_summary_reports_the_running_tally_largest_label_first(tmp_path):
+    guard = make_guard(tmp_path, cap=50.0)
+    guard.record(0.01, "chat")
+    guard.record(0.5, "sam")
+    guard.record(0.25, "sam")
+    s = guard.summary()
+    assert s["spent_usd"] == pytest.approx(0.76) and s["cap_usd"] == 50.0 and s["calls"] == 3
+    assert list(s["by_label"]) == ["sam", "chat"]

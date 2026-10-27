@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import AreaPicker from './AreaPicker'
+import Stepper from './Stepper'
+import { useVoice } from './useVoice'
 import MapView, { IterationTabs } from './MapView'
 import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
@@ -30,6 +32,7 @@ function RequestPanel(props: {
 }) {
   const { sample, state, custom } = props
   const running = state.status === 'running'
+  const voice = useVoice(props.onRequest)
   return (
     <section className="panel request">
       <h2>Request</h2>
@@ -40,7 +43,7 @@ function RequestPanel(props: {
       <button className="link" onClick={props.onPickArea} disabled={running}>＋ Choose another area on the map</button>
       <div className="field-row">
         <label htmlFor="trucks">Trucks</label>
-        <div className="stepper">
+        <div className="count">
           <button type="button" onClick={() => props.onTrucks(Math.max(1, props.trucks - 1))} disabled={running || props.trucks <= 1} aria-label="Fewer trucks">−</button>
           <input id="trucks" type="number" min={1} max={30} value={props.trucks} disabled={running} onChange={(e) => props.onTrucks(Math.max(1, Math.min(30, Number(e.target.value) || 1)))} />
           <button type="button" onClick={() => props.onTrucks(Math.min(30, props.trucks + 1))} disabled={running || props.trucks >= 30} aria-label="More trucks">+</button>
@@ -48,6 +51,14 @@ function RequestPanel(props: {
       </div>
       <label>Time and what to avoid</label>
       <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="by 18:00, avoid the industrial zone" />
+      <div className="voice">
+        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || voice.phase === 'sending' || !voice.supported} aria-pressed={voice.phase === 'recording'}>
+          {voice.phase === 'recording' ? '■ Stop' : voice.phase === 'sending' ? 'Listening to it…' : '🎙 Speak'}
+        </button>
+        <span className="voice-note">
+          {voice.phase === 'recording' ? 'Recording… say the time and what to avoid.' : voice.error ? <em className="err">{voice.error}</em> : voice.heard ? <>Heard: “{voice.heard}”</> : 'or say it — Muse Voice Transcribe'}
+        </span>
+      </div>
       <div className="examples">
         {sample?.examples.map((ex) => <button key={ex} className="example" onClick={() => props.onRequest(ex)} disabled={running}>{ex}</button>)}
       </div>
@@ -137,13 +148,13 @@ function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => 
   return (
     <div className={`result ${r.status}`}>
       <div className="verdict">{label}</div>
-      <div className="stats">
-        <span><b>{r.plan.served}/{total}</b> orders</span>
-        <span><b>{trucks}</b> truck{trucks === 1 ? '' : 's'}</span>
-        <span>back by <b>{r.report.metrics.last_return}</b></span>
-        <span><b>{r.report.metrics.total_km}</b> km</span>
-        <span>{r.seconds}s · ${r.cost_usd.toFixed(3)} · {r.paid_calls} model calls</span>
+      <div className="tiles">
+        <div className="tile"><b>{r.plan.served}<small>/{total}</small></b><span>orders served</span></div>
+        <div className="tile"><b>{trucks}</b><span>truck{trucks === 1 ? '' : 's'} used</span></div>
+        <div className="tile"><b>{r.report.metrics.last_return}</b><span>last truck back</span></div>
+        <div className="tile"><b>{r.report.metrics.total_km}<small> km</small></b><span>total driving</span></div>
       </div>
+      <p className="run-meta">{r.seconds}s · ${r.cost_usd.toFixed(3)} · {r.paid_calls} model call{r.paid_calls === 1 ? '' : 's'}</p>
       {excluded > 0 && <p className="note">{excluded} order{excluded > 1 ? 's' : ''} left out — they cannot be reached without entering an avoided zone: {Object.keys(r.excluded).join(', ')}.</p>}
       {r.status === 'needs_relaxation' && (
         <div className="relax">
@@ -224,6 +235,18 @@ export default function App() {
     if (state.status === 'done') setStale(true) // after an error the banner stays until the next plan, so the map does not jump while you drag
     setCustom(next)
   }
+  // One click: let the agent place 20 orders and plan with the first example sentence.
+  const onQuickStart = () => {
+    setAuto(true)
+    setAutoCount(20)
+    const req = request.trim() || sample?.examples[0] || 'by 12:00, avoid the industrial zone'
+    setRequest(req)
+    setPinned(null)
+    setRelax(null)
+    setStale(false)
+    setMode('browse')
+    start({ sample: name, request: req, trucks, auto_orders: 20 })
+  }
   const onDrag = (kind: 'depot' | 'order', i: number, xy: XY) => {
     if (kind === 'depot') edit({ ...custom, depot: xy })
     else edit({ ...custom, orders: custom.orders.map((o, k) => (k === i ? xy : o)) })
@@ -277,6 +300,7 @@ export default function App() {
               <button className="primary inline" onClick={onPlan} disabled={!canPlan}>Replan</button>
             </div>
           )}
+          <Stepper state={state} />
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
           <MapView
             sample={sample} state={state} selected={sel} plan={plan} report={report}
@@ -285,6 +309,7 @@ export default function App() {
             onClear={() => { edit(emptyCustom); setMode('depot'); setAuto(false) }}
             auto={auto} autoCount={autoCount} onAuto={setAuto} onAutoCount={setAutoCount}
             stale={stale} onDrag={onDrag} onEditPlan={onEditPlan}
+            onQuickStart={onQuickStart} onPickArea={() => setPicking(true)}
           />
           <ResultBar state={state} relax={relax} onShowRelax={setRelax} />
         </div>

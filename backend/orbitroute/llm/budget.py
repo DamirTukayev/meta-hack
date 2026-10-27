@@ -23,6 +23,16 @@ class BudgetGuard:
     paid_calls_enabled: bool = True
     _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
+    def summary(self) -> dict:
+        """Our own running tally (an estimate from token counts, not the provider's invoice)."""
+        state = self._read()
+        return {
+            "spent_usd": round(state.get("total_usd", 0.0), 4),
+            "cap_usd": self.hard_cap_usd,
+            "calls": state.get("calls", 0),
+            "by_label": {k: round(v, 4) for k, v in sorted(state.get("by_label", {}).items(), key=lambda kv: -kv[1])},
+        }
+
     def total_spent(self) -> float:
         return self._read().get("total_usd", 0.0)
 

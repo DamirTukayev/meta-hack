@@ -148,3 +148,80 @@ def test_a_bad_point_is_reported_with_the_marker_to_highlight(monkeypatch):
     r = TestClient(api.app).post("/api/run", json={"sample": "columbus", "request": "by 12:00"})
     kind, data = sse_events(r.text)[0]
     assert kind == "failure" and data["point"] == {"kind": "order", "index": 2}
+
+
+def _fast_pipeline(monkeypatch):
+    monkeypatch.setattr(api, "run_pipeline", lambda sample, request, *, emit, **kw: emit(Event("result", "ok", {})))
+    monkeypatch.setattr(api, "get_client", lambda: object())
+    monkeypatch.setattr(api, "run_limit_day", api.RateLimiter(1000, 86400))
+
+
+def test_runs_are_limited_per_ip(monkeypatch):
+    _fast_pipeline(monkeypatch)
+    monkeypatch.setattr(api, "run_limit_ip", api.RateLimiter(2, 3600))
+    c = TestClient(api.app)
+    body = {"sample": "columbus", "request": "by 12:00"}
+    assert c.post("/api/run", json=body).status_code == 200
+    assert c.post("/api/run", json=body).status_code == 200
+    r = c.post("/api/run", json=body)
+    assert r.status_code == 429 and "Try again" in r.json()["detail"] and "retry-after" in r.headers
+
+
+def test_runs_have_a_daily_ceiling_for_everyone(monkeypatch):
+    _fast_pipeline(monkeypatch)
+    monkeypatch.setattr(api, "run_limit_ip", api.RateLimiter(1000, 3600))
+    monkeypatch.setattr(api, "run_limit_day", api.RateLimiter(1, 86400))
+    c = TestClient(api.app)
+    body = {"sample": "columbus", "request": "by 12:00"}
+    assert c.post("/api/run", json=body).status_code == 200
+    assert c.post("/api/run", json=body).status_code == 429
+
+
+def test_the_pause_switch_stops_runs_before_anything_is_spent(monkeypatch):
+    _fast_pipeline(monkeypatch)
+    monkeypatch.setattr(api.guard, "paid_calls_enabled", False)
+    r = TestClient(api.app).post("/api/run", json={"sample": "columbus", "request": "by 12:00"})
+    assert r.status_code == 503 and "paused" in r.json()["detail"]
+
+
+def test_concurrent_runs_are_capped_and_the_slot_is_released_afterwards(monkeypatch):
+    _fast_pipeline(monkeypatch)
+    monkeypatch.setattr(api, "run_limit_ip", api.RateLimiter(1000, 3600))
+    c = TestClient(api.app)
+    body = {"sample": "columbus", "request": "by 12:00"}
+    monkeypatch.setitem(api._active, "n", api.settings.max_concurrent_runs)  # all slots taken
+    assert c.post("/api/run", json=body).status_code == 429
+    monkeypatch.setitem(api._active, "n", 0)
+    assert c.post("/api/run", json=body).status_code == 200
+    assert api._active["n"] == 0  # the finished run gave its slot back
+
+
+def test_client_ip_trusts_the_proxy_header_only_when_asked(monkeypatch):
+    from types import SimpleNamespace
+
+    req = SimpleNamespace(headers={"x-forwarded-for": "203.0.113.9, 10.0.0.1"}, client=SimpleNamespace(host="10.0.0.1"))
+    assert api.client_ip(req) == "10.0.0.1"
+    object.__setattr__(api.settings, "trust_proxy", True)
+    try:
+        assert api.client_ip(req) == "203.0.113.9"
+    finally:
+        object.__setattr__(api.settings, "trust_proxy", False)
+
+
+def test_transcribe_endpoint_returns_text_and_enforces_limits(monkeypatch):
+    class Fake:
+        def transcribe(self, audio):
+            if audio == b"bad":
+                raise ValueError("not a valid WAV file: nope")
+            return "by noon, avoid the residential area"
+
+    monkeypatch.setattr(api, "get_client", lambda: Fake())
+    monkeypatch.setattr(api, "asr_limit_ip", api.RateLimiter(3, 3600))
+    monkeypatch.setattr(api, "asr_limit_all", api.RateLimiter(100, 86400))
+    c = TestClient(api.app)
+    ok = c.post("/api/transcribe", content=b"RIFFxxxx", headers={"content-type": "audio/wav"})
+    assert ok.status_code == 200 and ok.json() == {"text": "by noon, avoid the residential area"}
+    assert c.post("/api/transcribe", content=b"bad").status_code == 400
+    assert c.post("/api/transcribe", content=b"").status_code == 400
+    assert c.post("/api/transcribe", content=b"x" * (api.MAX_AUDIO_BYTES + 1)).status_code in (413, 429)
+    assert c.post("/api/transcribe", content=b"RIFFxxxx").status_code == 429  # the per-IP limit of 3 is used up

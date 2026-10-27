@@ -93,3 +93,30 @@ def test_vegetation_index_is_higher_for_green_cells():
     labels[:, :10], labels[:, 10:] = 4, 1  # park_forest left, industrial right
     g = greenness_by_kind(labels, exg)
     assert g["park_forest"] > 100 and abs(g["industrial"]) < 5
+
+
+def test_committed_prewarmed_answers_cover_the_bundled_samples():
+    import hashlib
+
+    from orbitroute.config import PREWARMED_DIR, ROOT, resolve_cached
+    from orbitroute.perception.segment import DEFAULT_OVERLAP, DEFAULT_TILES
+
+    for jpg in (ROOT / "data" / "samples").glob("*.jpg"):
+        h = hashlib.sha256(jpg.read_bytes()).hexdigest()[:16]
+        for name in (f"sam_{h}_road_{DEFAULT_TILES}x{DEFAULT_TILES}_o{DEFAULT_OVERLAP}.npz", f"scene_{h}.json"):
+            assert (PREWARMED_DIR / name).exists(), f"{name} is not pre-warmed for {jpg.stem}"
+
+
+def test_resolve_cached_prefers_the_live_cache_then_the_shipped_copy(tmp_path, monkeypatch):
+    import orbitroute.config as cfg
+
+    shipped = tmp_path / "shipped"
+    shipped.mkdir()
+    (shipped / "a.json").write_text("{}")
+    monkeypatch.setattr(cfg, "PREWARMED_DIR", shipped)
+    live = tmp_path / "live"
+    live.mkdir()
+    assert cfg.resolve_cached(live, "a.json") == shipped / "a.json"  # only shipped has it
+    (live / "a.json").write_text("{}")
+    assert cfg.resolve_cached(live, "a.json") == live / "a.json"  # live wins
+    assert cfg.resolve_cached(live, "new.json") == live / "new.json"  # to be written to the live cache
