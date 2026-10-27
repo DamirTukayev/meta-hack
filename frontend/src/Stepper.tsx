@@ -30,7 +30,6 @@ export function stepStates(s: RunState): Record<string, StepState> {
 }
 
 export default function Stepper({ state }: { state: RunState }) {
-  if (state.status === 'idle') return null
   const st = stepStates(state)
   return (
     <ol className="stepper" aria-label="Agent progress">

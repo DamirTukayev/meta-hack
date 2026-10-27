@@ -3,7 +3,7 @@ import { arrowsAlong, buildGeo, pointAt, upTo } from './routeGeometry'
 import Timeline from './Timeline'
 import type { Custom, Iteration, Mode, PlanGeo, ReportGeo, RunState, Sample, XY } from './types'
 
-export const ROUTE_COLORS = ['#f43f5e', '#38bdf8', '#4ade80', '#fb923c', '#c084fc', '#2dd4bf']
+export const ROUTE_COLORS = ['#ff4d4d', '#5fd0ff', '#ffb000', '#7ee787', '#c792ea', '#ff9ecb']
 const ZONE_COLORS: Record<string, string> = {
   industrial: '#ef4444',
   commercial: '#f59e0b',
@@ -197,7 +197,7 @@ export default function MapView(props: {
                   {/* the whole route, faded while replaying; the last leg (back to the depot) is dashed */}
                   {g.legs.map((leg, li) => (
                     <g key={li} opacity={replay ? 0.35 : 1}>
-                      <polyline points={pts(leg)} fill="none" stroke="#0b1220" strokeOpacity={0.55} strokeWidth={9 * u} strokeLinejoin="round" strokeLinecap="round" />
+                      <polyline points={pts(leg)} fill="none" stroke="#000000" strokeOpacity={0.55} strokeWidth={9 * u} strokeLinejoin="round" strokeLinecap="round" />
                       <polyline points={pts(leg)} fill="none" stroke={color} strokeWidth={5 * u} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={li === g.legs.length - 1 ? `${12 * u} ${9 * u}` : undefined} />
                     </g>
                   ))}
@@ -205,7 +205,7 @@ export default function MapView(props: {
                   {/* direction of travel */}
                   {g.legs.map((leg, li) =>
                     arrowsAlong(leg, 150 * u).map((a, ai) => (
-                      <polygon key={`${li}-${ai}`} points={`${7 * u},0 ${-5 * u},${-5.5 * u} ${-5 * u},${5.5 * u}`} transform={`translate(${a.xy[0]} ${a.xy[1]}) rotate(${(a.angle * 180) / Math.PI})`} fill="#fff" stroke="#0b1220" strokeWidth={1.6 * u} strokeLinejoin="round" />
+                      <polygon key={`${li}-${ai}`} points={`${7 * u},0 ${-5 * u},${-5.5 * u} ${-5 * u},${5.5 * u}`} transform={`translate(${a.xy[0]} ${a.xy[1]}) rotate(${(a.angle * 180) / Math.PI})`} fill="#fff" stroke="#000000" strokeWidth={1.6 * u} strokeLinejoin="round" />
                     )),
                   )}
                   {replay && (() => {
@@ -231,7 +231,7 @@ export default function MapView(props: {
               </g>
             ))}
           {layers.orders &&
-            state.orders.map((o, i) => <circle key={i} cx={o[0]} cy={o[1]} r={5 * u} fill="#e5e7eb" stroke="#0b1220" strokeWidth={1.5 * u} opacity={plan ? 0.0 : 0.9} />)}
+            state.orders.map((o, i) => <circle key={i} cx={o[0]} cy={o[1]} r={5 * u} fill="#e5e7eb" stroke="#000000" strokeWidth={1.5 * u} opacity={plan ? 0.0 : 0.9} />)}
           {layers.orders && !props.stale &&
             plan?.routes.map((r, ri) =>
               r.stops.map((st, k) => {
@@ -242,11 +242,11 @@ export default function MapView(props: {
                   <g key={`${r.vehicle}-${st.order}`} opacity={visited ? 1 : 0.5} onMouseEnter={() => setHover({ vehicle: r.vehicle, stop: k })} onMouseLeave={() => setHover(null)}>
                     <title>{`Truck ${r.vehicle + 1} · stop ${k + 1} of ${r.stops.length} · order #${st.order} · arrives ${clock(st.arrive_s)}`}</title>
                     {hot && <circle cx={st.xy[0]} cy={st.xy[1]} r={24 * u} fill="none" stroke="#fff" strokeWidth={3 * u} />}
-                    <circle cx={st.xy[0]} cy={st.xy[1]} r={14 * u} fill={visited ? color : '#0b1220'} stroke={visited ? '#fff' : color} strokeWidth={3 * u} />
+                    <circle cx={st.xy[0]} cy={st.xy[1]} r={14 * u} fill={visited ? color : '#000000'} stroke={visited ? '#fff' : color} strokeWidth={3 * u} />
                     <text x={st.xy[0]} y={st.xy[1] + 5 * u} textAnchor="middle" fontSize={14 * u} fontWeight={800} fill="#fff">{k + 1}</text>
                     {/* the order's own number (the one you gave it when placing it), next to its visiting order */}
                     <g transform={`translate(${st.xy[0] + 12 * u} ${st.xy[1] - 27 * u})`}>
-                      <rect width={(10 + 9 * String(st.order).length) * u} height={16 * u} rx={8 * u} fill="#0b1220" fillOpacity={0.88} stroke={color} strokeWidth={1.5 * u} />
+                      <rect width={(10 + 9 * String(st.order).length) * u} height={16 * u} rx={8 * u} fill="#000000" fillOpacity={0.88} stroke={color} strokeWidth={1.5 * u} />
                       <text x={((10 + 9 * String(st.order).length) / 2) * u} y={11.5 * u} textAnchor="middle" fontSize={11 * u} fontWeight={700} fill="#fff">{`#${st.order}`}</text>
                     </g>
                   </g>
@@ -267,21 +267,21 @@ export default function MapView(props: {
             <g key={'d' + i} className="grab" onMouseDown={startDrag('order', i)}>
               <title>{`Your order ${i + 1} — drag to move, click to remove`}</title>
               {state.errorPoint?.kind === 'order' && state.errorPoint.index === i && <circle cx={o[0]} cy={o[1]} r={30 * u} fill="none" stroke="#ef4444" strokeWidth={5 * u} className="pulse" />}
-              <circle cx={o[0]} cy={o[1]} r={15 * u} fill="#f8fafc" stroke="#0b1220" strokeWidth={3 * u} />
-              <text x={o[0]} y={o[1] + 5.2 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#0b1220">{i + 1}</text>
+              <circle cx={o[0]} cy={o[1]} r={15 * u} fill="#f8fafc" stroke="#000000" strokeWidth={3 * u} />
+              <text x={o[0]} y={o[1] + 5.2 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#000000">{i + 1}</text>
             </g>
           ))}
           {draft && custom.depot && (
             <g className="grab" onMouseDown={startDrag('depot', 0)}>
               <title>Depot — drag to move it</title>
               {state.errorPoint?.kind === 'depot' && <circle cx={custom.depot[0]} cy={custom.depot[1]} r={32 * u} fill="none" stroke="#ef4444" strokeWidth={5 * u} className="pulse" />}
-              <rect x={custom.depot[0] - 16 * u} y={custom.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#0b1220" stroke="#facc15" strokeWidth={4 * u} strokeDasharray={`${6 * u} ${4 * u}`} />
+              <rect x={custom.depot[0] - 16 * u} y={custom.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#000000" stroke="#facc15" strokeWidth={4 * u} strokeDasharray={`${6 * u} ${4 * u}`} />
               <text x={custom.depot[0]} y={custom.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
             </g>
           )}
           {state.depot && !props.stale && (
             <g>
-              <rect x={state.depot[0] - 16 * u} y={state.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#0b1220" stroke="#facc15" strokeWidth={4 * u} />
+              <rect x={state.depot[0] - 16 * u} y={state.depot[1] - 16 * u} width={32 * u} height={32 * u} rx={6 * u} fill="#000000" stroke="#facc15" strokeWidth={4 * u} />
               <text x={state.depot[0]} y={state.depot[1] + 5 * u} textAnchor="middle" fontSize={15 * u} fontWeight={800} fill="#facc15">D</text>
             </g>
           )}

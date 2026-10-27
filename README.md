@@ -55,6 +55,10 @@ The text-reasoning steps (turning the request into constraints, choosing the rep
 
 Measured on the 20 free-form requests (`eval/RESULTS.md`): with the first request prompt Muse Spark Open parsed 11/20 exactly (it defaulted to "shortest distance" and misread a few fields); after the field rules were spelled out in prompt v2 it parses **20/20**, in about 2.6 s per request, the same as Muse Spark 1.3. Its repair decisions were checked on four scenarios and matched the deterministic policy in all of them.
 
+## Design
+
+The interface uses an "Instrument" design system: black canvas, amber accent, hairline borders, square corners and a self-hosted monospace face (JetBrains Mono, OFL), so the satellite imagery and the routes carry the colour.
+
 ## Run the app locally
 
 ```bash
