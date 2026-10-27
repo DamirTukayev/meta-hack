@@ -30,7 +30,7 @@
    "model_decider": {
     "runs": 6,
     "reached_verified": 5,
-    "mean_cost_usd": 0.0035
+    "mean_cost_usd": 0.0036
    },
    "verified_scenarios": 35
   },
@@ -128,7 +128,7 @@
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.0017
+     "cost_usd": 0.0016
     }
    },
    {
@@ -150,7 +150,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.1
+    "seconds": 2.0
    },
    {
     "id": "mem-grid-12",
@@ -255,7 +255,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 2.1
    },
    {
     "id": "col-grid-01",
@@ -276,7 +276,7 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 2.0
+    "seconds": 2.1
    },
    {
     "id": "col-grid-02",
@@ -343,14 +343,14 @@
     "excluded_orders": 0,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 4.0,
+    "seconds": 4.1,
     "model_decider": {
      "status": "verified",
      "actions": [
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.002
+     "cost_usd": 0.0024
     }
    },
    {
@@ -425,7 +425,7 @@
       "ban_violating_edges"
      ],
      "iterations": 2,
-     "cost_usd": 0.0021
+     "cost_usd": 0.002
     }
    },
    {
@@ -475,7 +475,7 @@
      "stop avoiding the drawn zone (the plan drives 1491 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.7,
+    "seconds": 11.6,
     "model_decider": {
      "status": "needs_relaxation",
      "actions": [
@@ -483,7 +483,7 @@
       "propose_relaxation"
      ],
      "iterations": 2,
-     "cost_usd": 0.005
+     "cost_usd": 0.0054
     }
    },
    {
@@ -510,7 +510,7 @@
     "excluded_orders": 3,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.1,
+    "seconds": 6.2,
     "model_decider": {
      "status": "verified_partial",
      "actions": [
@@ -518,7 +518,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0049
+     "cost_usd": 0.0047
     }
    },
    {
@@ -545,7 +545,7 @@
     "excluded_orders": 4,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.1,
+    "seconds": 6.3,
     "model_decider": {
      "status": "verified_partial",
      "actions": [
@@ -553,7 +553,7 @@
       "exclude_unreachable"
      ],
      "iterations": 3,
-     "cost_usd": 0.0053
+     "cost_usd": 0.0056
     }
    },
    {
@@ -610,7 +610,7 @@
      "stop avoiding the drawn zone (the plan drives 1292 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 11.8
    },
    {
     "id": "mem-any-12",
@@ -869,7 +869,7 @@
     "excluded_orders": 5,
     "relaxations": [],
     "final_report_ok": true,
-    "seconds": 6.1
+    "seconds": 6.2
    },
    {
     "id": "col-any-20",
@@ -897,7 +897,7 @@
      "stop avoiding the drawn zone (the plan drives 2305 m through it)"
     ],
     "final_report_ok": true,
-    "seconds": 11.6
+    "seconds": 11.8
    },
    {
     "id": "col-any-21",
@@ -1120,7 +1120,7 @@
      "stop avoiding the residential zone and use 3 trucks instead of 1 (the plan drives 7 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 28.6
+    "seconds": 29.0
    },
    {
     "id": "inf-time-50-3",
@@ -1150,7 +1150,7 @@
      "stop avoiding the industrial zone and use 4 trucks instead of 3 (the plan drives 0 m through the zone)"
     ],
     "final_report_ok": true,
-    "seconds": 25.7
+    "seconds": 25.8
    },
    {
     "id": "inf-capacity-40",
@@ -1218,7 +1218,7 @@
   "cost_usd": 0.1074,
   "failures": []
  },
- "eval_cost_usd": 0.0211,
+ "eval_cost_usd": 0.0217,
  "parsing_baseten": {
   "cases": 20,
   "exact_match_cases": 11,

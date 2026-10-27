@@ -17,7 +17,7 @@ Baseline = the first solve of the same solver, returned as is (what a pipeline w
 
 Violation kinds seen in first-pass plans (scenarios affected): zones 22, deadline 3, capacity 2.
 
-Muse Spark as the repair planner (instead of the deterministic policy), on 6 scenarios with a first-pass violation: it chose exactly the policy's actions in 6/6 runs and 5/6 ended verified (1 flagged as infeasible as stated); mean cost $0.0035 per run. In this suite the model adds readable reasons, not different decisions.
+Muse Spark as the repair planner (instead of the deterministic policy), on 6 scenarios with a first-pass violation: it chose exactly the policy's actions in 6/6 runs and 5/6 ended verified (1 flagged as infeasible as stated); mean cost $0.0036 per run. In this suite the model adds readable reasons, not different decisions.
 
 By kind of scenario (the first family is easy for a plain solver by construction; the second is how a user clicking freely on the map behaves):
 
@@ -98,4 +98,4 @@ Prompt v2 states the field rules explicitly (default objective, what counts as a
 - `parsing_baseten`: `Two trucks, thirty orders, finish by 17:00` — objective: expected min_time, got min_distance
 - `parsing_baseten`: `14 orders on 2 trucks with capacity 8 each, leave at 6:00, done by 10:30` — objective: expected min_time, got min_distance
 
-Evaluation cost: $0.0211
+Evaluation cost: $0.0217
