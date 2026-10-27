@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+  <title>OrbitRoute: how an image and a request become a verified plan</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a8a8a"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ff4d4d"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7ee787"/></marker>
+    <style>
+      .box{fill:#0b0b0b;stroke:#2a2a2a;stroke-width:1.5}
+      .model{fill:#0b0b0b;stroke:#ffb000;stroke-width:1.5}
+      .ok{fill:#07140a;stroke:#7ee787;stroke-width:1.5}
+      .warn{fill:#160b0b;stroke:#ff4d4d;stroke-width:1.5}
+      .h{fill:#ffb000;font-size:13px;font-weight:700;letter-spacing:.06em}
+      .hg{fill:#7ee787;font-size:13px;font-weight:700;letter-spacing:.06em}
+      .hr{fill:#ff4d4d;font-size:13px;font-weight:700;letter-spacing:.06em}
+      .hw{fill:#e6e6e6;font-size:13px;font-weight:700;letter-spacing:.06em}
+      .t{fill:#bdbdbd;font-size:12px}
+      .l{fill:#8a8a8a;font-size:11px}
+      .ln{stroke:#8a8a8a;stroke-width:1.5;fill:none}
+      .lr{stroke:#ff4d4d;stroke-width:1.5;fill:none}
+      .lg{stroke:#7ee787;stroke-width:1.5;fill:none}
+    </style>
+  </defs>
+  <rect width="1200" height="675" fill="#000"/>
+
+  <text x="30" y="30" class="h">HOW IT WORKS</text>
+
+  <!-- inputs -->
+  <rect class="box" x="30" y="70" width="230" height="100"/>
+  <text x="46" y="94" class="hw">SATELLITE IMAGE</text>
+  <text x="46" y="114" class="t">USGS NAIP aerial photo,</text>
+  <text x="46" y="131" class="t">1.5 km square, any US area</text>
+  <text x="46" y="156" class="l">public domain</text>
+
+  <rect class="box" x="30" y="250" width="230" height="100"/>
+  <text x="46" y="274" class="hw">REQUEST</text>
+  <text x="46" y="294" class="t">"by 12:00, avoid the</text>
+  <text x="46" y="311" class="t">residential area"</text>
+  <text x="46" y="336" class="l">typed, or spoken (Muse Voice)</text>
+
+  <!-- understand -->
+  <rect class="model" x="310" y="40" width="390" height="100"/>
+  <text x="326" y="64" class="h">SAM 3.1  ·  SEE THE ROADS</text>
+  <text x="326" y="86" class="t">two tilings of the photo, masks united</text>
+  <text x="326" y="103" class="t">mask → skeleton → road graph with</text>
+  <text x="326" y="120" class="t">gap bridging and speed classes</text>
+
+  <rect class="model" x="310" y="160" width="390" height="80"/>
+  <text x="326" y="184" class="h">MUSE SPARK (VISION)  ·  READ THE LAND</text>
+  <text x="326" y="206" class="t">outlines residential / industrial /</text>
+  <text x="326" y="223" class="t">commercial / park zones and warehouses</text>
+
+  <rect class="model" x="310" y="260" width="390" height="95"/>
+  <text x="326" y="284" class="h">MUSE SPARK / SPARK OPEN  ·  UNDERSTAND</text>
+  <text x="326" y="306" class="t">request → typed constraints: deadline,</text>
+  <text x="326" y="323" class="t">trucks, what to avoid; each assumed</text>
+  <text x="326" y="340" class="t">default is listed (20/20 requests parsed)</text>
+
+  <path class="ln" d="M260 100 L310 90" marker-end="url(#a)"/>
+  <path class="ln" d="M260 140 L310 200" marker-end="url(#a)"/>
+  <path class="ln" d="M260 300 L310 305" marker-end="url(#a)"/>
+
+  <!-- scenario -->
+  <rect class="box" x="760" y="100" width="230" height="140"/>
+  <text x="776" y="124" class="hw">SCENARIO</text>
+  <text x="776" y="146" class="t">road graph</text>
+  <text x="776" y="163" class="t">zones + warehouses</text>
+  <text x="776" y="180" class="t">constraints + assumptions</text>
+  <text x="776" y="197" class="t">depot and orders on roads</text>
+  <text x="776" y="224" class="l">points snap to the nearest road</text>
+  <path class="ln" d="M700 90 L730 90 L730 140 L760 140" marker-end="url(#a)"/>
+  <path class="ln" d="M700 200 L760 200" marker-end="url(#a)"/>
+  <path class="ln" d="M700 305 L730 305 L730 215 L760 215" marker-end="url(#a)"/>
+
+  <!-- clicks -->
+  <rect class="box" x="1020" y="100" width="150" height="140"/>
+  <text x="1036" y="124" class="hw">YOUR CLICKS</text>
+  <text x="1036" y="146" class="t">depot</text>
+  <text x="1036" y="163" class="t">orders</text>
+  <text x="1036" y="180" class="t">zone to avoid</text>
+  <text x="1036" y="224" class="l">optional</text>
+  <path class="ln" d="M1020 170 L990 170" marker-end="url(#a)"/>
+
+  <!-- solve / verify -->
+  <rect class="box" x="310" y="420" width="220" height="100"/>
+  <text x="326" y="444" class="hw">SOLVE</text>
+  <text x="326" y="466" class="t">PyVRP: capacity and</text>
+  <text x="326" y="483" class="t">time windows over road</text>
+  <text x="326" y="500" class="t">travel times</text>
+
+  <rect class="box" x="590" y="420" width="250" height="100"/>
+  <text x="606" y="444" class="hw">VERIFY (INDEPENDENT)</text>
+  <text x="606" y="466" class="t">re-simulates every route on</text>
+  <text x="606" y="483" class="t">the road graph, 6 checks:</text>
+  <text x="606" y="500" class="l">coverage · fleet · capacity</text>
+  <text x="606" y="513" class="l">roads · deadline · zones</text>
+
+  <path class="ln" d="M875 240 L875 385 L420 385 L420 420" marker-end="url(#a)"/>
+  <path class="ln" d="M530 470 L590 470" marker-end="url(#a)"/>
+
+  <!-- repair -->
+  <rect class="model" x="310" y="570" width="530" height="90"/>
+  <text x="326" y="592" class="h">REPAIR AGENT  ·  MUSE SPARK CHOOSES THE FIX</text>
+  <text x="326" y="612" class="t">forbid violating road segments · forbid the zone ·</text>
+  <text x="326" y="629" class="t">leave out unreachable orders · search longer ·</text>
+  <text x="326" y="646" class="t">propose the smallest relaxation (rules as fallback)</text>
+  <path class="lr" d="M715 520 L715 570" marker-end="url(#r)"/>
+  <text x="727" y="550" class="hr">violations</text>
+  <path class="lr" d="M310 615 L270 615 L270 470 L310 470" marker-end="url(#r)"/>
+  <text x="38" y="525" class="hr">re-solve</text>
+  <text x="38" y="542" class="l">(up to 5 repairs)</text>
+
+  <!-- outcomes -->
+  <rect class="ok" x="920" y="415" width="250" height="110"/>
+  <text x="936" y="439" class="hg">VERIFIED PLAN</text>
+  <text x="936" y="461" class="t">routes, order of stops,</text>
+  <text x="936" y="478" class="t">arrival times on the map</text>
+  <text x="936" y="508" class="l">nothing unverified is returned</text>
+  <path class="lg" d="M840 470 L920 470" marker-end="url(#g)"/>
+  <text x="846" y="462" class="hg" style="font-size:12px">all pass</text>
+
+  <rect class="warn" x="920" y="570" width="250" height="90"/>
+  <text x="936" y="594" class="hr">CANNOT BE MET AS STATED</text>
+  <text x="936" y="616" class="t">says why, and offers fixes that</text>
+  <text x="936" y="633" class="t">were each solved and verified</text>
+  <path class="lr" d="M840 615 L920 615" marker-end="url(#r)"/>
+
+  <!-- legend -->
+  <rect x="1020" y="270" width="14" height="14" class="model"/>
+  <text x="1042" y="282" class="l">Meta model</text>
+  <rect x="1020" y="294" width="14" height="14" class="box"/>
+  <text x="1042" y="306" class="l">plain code</text>
+</svg>
