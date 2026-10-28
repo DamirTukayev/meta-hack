@@ -71,3 +71,24 @@ def test_a_sentence_of_your_own_is_refused_with_a_clear_message(offline):
 def test_new_areas_and_voice_need_a_key(offline):
     assert offline.post("/api/areas", json={"lat": 33.75, "lon": -84.39}).status_code == 503
     assert offline.post("/api/transcribe", content=b"RIFFxxxx").status_code == 503
+
+
+def test_the_zones_are_read_by_the_text_client_so_the_open_weight_model_does_the_vision_too(monkeypatch):
+    import orbitroute.pipeline as pipeline
+    from orbitroute.llm.budget import BudgetGuard
+
+    seen = {}
+
+    class Stop(Exception):
+        pass
+
+    def fake_scene(client, image_bytes, **kw):
+        seen["client"] = client
+        raise Stop
+
+    monkeypatch.setattr(pipeline, "analyze_scene", fake_scene)
+    meta, open_weights = object(), object()
+    guard = BudgetGuard(__import__("pathlib").Path("/tmp/orbitroute-test-budget.json"), 10.0)
+    with pytest.raises(Stop):
+        pipeline.run_pipeline(pipeline.get_sample("columbus"), "by 12:00, avoid the industrial zone", client=meta, text_client=open_weights, guard=guard, run_cap_usd=1.0, emit=lambda e: None)
+    assert seen["client"] is open_weights
