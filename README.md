@@ -42,8 +42,8 @@ The agent returns **only plans that passed verification**, or an honest report: 
 | Model | Where | What it does |
 |---|---|---|
 | **SAM 3.1** (`sam-3.1`, Meta Model API) | perception | finds the roads on the photo (the only roads the agent routes on), the buildings (delivery addresses) and, after a storm, the standing water |
-| **Muse Spark 1.3** (Meta Model API) | vision, request parsing, repair | outlines zones and warehouses, parses the request into JSON constraints, chooses repair actions, recommends one of the verified alternatives |
-| **Muse Spark Open** (open weights, served by Baseten and, as a backup, by a Modal Endpoint) | request parsing, repair | the same text steps on open weights: set `REASONING_PROVIDER=baseten` (or `modal`) |
+| **Muse Spark 1.3** (Meta Model API) | vision, request parsing, repair | the same jobs as Muse Spark Open below, used when no open-weight provider is configured or answers; the recorded zones of the four bundled photos were made by it |
+| **Muse Spark Open** (open weights, served by Baseten and, as a backup, by a Modal Endpoint) | vision, request parsing, repair | outlines zones and warehouses on a new photo (it reads images; on Columbus its zones overlap the Muse Spark 1.3 ones by 0.6-0.8 IoU for residential and industrial), parses the request into JSON constraints, chooses repair actions, recommends one of the verified alternatives: set `REASONING_PROVIDER=baseten` (or `modal`) |
 | **Muse Voice Transcribe** | request box | speak the request instead of typing it |
 
 ## Does it work? The numbers

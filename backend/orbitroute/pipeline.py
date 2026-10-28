@@ -99,7 +99,7 @@ def run_pipeline(
     emit(Event("perception", f"Road graph: {graph.stats['nodes']} nodes, {graph.stats['road_km']} km of road", {"mask": mask_png(mask), "graph": graph_json(graph)}))
 
     emit(Event("stage", "Reading land use and warehouses with Muse Spark", {"stage": "scene"}))
-    scene = analyze_scene(client, image_bytes, run=run)
+    scene = analyze_scene(text, image_bytes, run=run)  # the open-weight model reads images too: the zones come from it when it is configured
     emit(Event("scene", f"{len(scene.zones)} zones, {len(scene.warehouses)} warehouses", scene_json(scene)))
 
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
