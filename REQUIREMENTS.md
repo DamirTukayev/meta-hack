@@ -30,7 +30,7 @@ Official times are Eastern Time. DST ends Nov 1, so UTC+5 = ET + 9 h before Nov 
 | Kickoff | Mon Oct 26, 12:00 | Oct 26, 21:00 |
 | Building period | Oct 27 – Nov 4 | |
 | **Submission deadline** | **Wed Nov 4, 21:00** | **Thu Nov 5, 07:00** |
-| Judging period | Nov 5 – Nov 8 | |
+| Judging period | Nov 4 – Nov 8 (event page) | |
 | Closing ceremony, top 10 announced (5 per track) | Mon Nov 9, 12:00 | Nov 9, 22:00 |
 | Community vote winner | Nov 16 | |
 
@@ -42,6 +42,10 @@ Live sessions (ET, streamed):
 - Fri Oct 30, 12:00 — Fireworks: from inference to training with Muse open models
 - Daily Discord office hours (#office-hours), 10–11 AM ET, except weekends
 - Tue Nov 3 — last full day for submission questions; Wed Nov 4, 21:00 — final office hours
+
+## Re-check against the event page (Oct 28)
+
+The public event page matches these notes on dates (hackathon Oct 26 12:00 PM - Nov 4 9:00 PM ET, submissions due Nov 4 9:00 PM ET, judging Nov 4-8, closing ceremony Nov 9), the two themes, the credits (Meta $150 - claim by Nov 4 9:00 PM ET, each participant on their own, a card on the account is needed; Baseten $100 + 2M TPM; Modal $100) and the eligibility rules (no sanctioned or listed countries, no Meta or Cerebral Valley staff, no government-affiliated individuals, no family or household of those). It says the Indie track is judged on creativity, technical ambition and whether it works. It does **not** restate the new-work-only rule, the video length, the banned project types or the Most Viral mechanics: those come from the Participant Guide and the Official Rules, which "must be accepted by the selected participants". Still to read: the Official Rules, the application overview and event waiver, and the fields of the submission form.
 
 ## Rules
 
@@ -107,7 +111,7 @@ Indie track: 1st $150K · 2nd $100K · 3rd $75K · 4th $50K · 5th $25K.
 | Meta API | $150 — received ✅ (a card on file is required to make API calls; pre-authorization is released in a few days) |
 | Baseten | $100 + 2M TPM — application submitted; **use `meta-models/muse-spark-open-1026`** (the docs say `muse-spark-open` — wrong for this event) |
 | Modal | $100 — application submitted (workspace `tukaevdamirg`) |
-| Fireworks | $25 for shortlisted teams only — optional |
+| Fireworks | the event page (re-checked Oct 28) says $100 in credits for select participants, plus a workshop by Sinan Ozdemir; earlier notes said $25 for shortlisted teams — optional, not applied for |
 
 Credits are not guaranteed and are granted at each partner's discretion.
 

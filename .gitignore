@@ -54,3 +54,6 @@ frontend/dist/
 # Areas picked on the map (downloaded on demand)
 data/areas/
 budget_state_*.json
+
+# Local-only submission answers
+SUBMISSION.md

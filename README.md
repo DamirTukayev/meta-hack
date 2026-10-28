@@ -43,7 +43,7 @@ The agent returns **only plans that passed verification**, or an honest report: 
 |---|---|---|
 | **SAM 3.1** (`sam-3.1`, Meta Model API) | perception | finds the roads on the photo (the only roads the agent routes on), the buildings (delivery addresses) and, after a storm, the standing water |
 | **Muse Spark 1.3** (Meta Model API) | vision, request parsing, repair | outlines zones and warehouses, parses the request into JSON constraints, chooses repair actions, recommends one of the verified alternatives |
-| **Muse Spark Open** (open weights, served by Baseten) | request parsing, repair | the same text steps on open weights: set `REASONING_PROVIDER=baseten` |
+| **Muse Spark Open** (open weights, served by Baseten and, as a backup, by a Modal Endpoint) | request parsing, repair | the same text steps on open weights: set `REASONING_PROVIDER=baseten` (or `modal`) |
 | **Muse Voice Transcribe** | request box | speak the request instead of typing it |
 
 ## Does it work? The numbers
@@ -91,7 +91,7 @@ Model calls cost money, so every one goes through a budget guard: required token
 ## Under the hood
 
 - **Prompts are versioned files** in `backend/orbitroute/prompts/` (`scene`, `request`, `repair`; `active.json` picks the version), compared on real runs. Request prompt v2 took the open-weight model from 11/20 to 20/20 exact parses; scene prompt v2 is more stable on the current tiles (76% vs 65% agreement over three repeats) but v1 stays active because every number above was produced with it.
-- **Open weights with a safety net:** text steps can run on Muse Spark Open via Baseten; if it fails or its separate budget runs out, the call falls back to the Meta API.
+- **Open weights with a safety net:** text steps run on Muse Spark Open, first on Baseten, then, if that fails or its separate budget runs out, on a Modal shared Endpoint serving the same open weights, and only then on the Meta API. Each provider has its own spend counter and cap.
 - **Interface:** an "Instrument" design system (black canvas, amber accent, hairlines, square corners, self-hosted JetBrains Mono under the OFL) so the photo and the routes carry the colour.
 - **Everything is streamed:** FastAPI sends each agent step as a server-sent event; the UI shows it live.
 

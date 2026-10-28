@@ -14,6 +14,7 @@ def settings(**kw) -> Settings:
         budget_state_path=None, baseten_api_key="bt-key", baseten_base_url="https://inference.baseten.co/v1",
         baseten_model="meta-models/muse-spark-open-1026", reasoning_provider="baseten",
         baseten_budget_cap_usd=60.0, baseten_state_path=None,
+        modal_endpoint_url="https://ws--ep-x-server.us-west.modal.direct/v1", modal_endpoint_token="wk-1.ws-2", modal_state_path=None,
     )
     return Settings(**{**base, **kw})
 
@@ -117,3 +118,45 @@ def test_transcribe_rejects_non_wav_and_overlong_audio_before_spending(tmp_path)
     with pytest.raises(ValueError, match="limit is 60 s"):
         client.transcribe(wav_bytes(61))
     assert guard.total_spent() == 0
+
+
+def test_modal_client_talks_to_the_shared_endpoint_with_the_proxy_token(tmp_path):
+    seen: list = []
+    make(tmp_path, "modal", seen).chat([{"role": "user", "content": "hi"}], max_completion_tokens=100)
+    url, auth, body = seen[0]
+    assert url == "https://ws--ep-x-server.us-west.modal.direct/v1/chat/completions" and auth == "Bearer wk-1.ws-2"
+    assert body["model"] == "meta-models/Muse-Spark-Open-816B-A42B" and body["max_tokens"] == 100 and "reasoning_effort" not in body
+
+
+def test_a_missing_modal_endpoint_is_a_clear_error(tmp_path):
+    with pytest.raises(RuntimeError, match="MODAL_ENDPOINT_URL"):
+        MetaClient(settings(modal_endpoint_url="", budget_state_path=tmp_path / "b.json"), BudgetGuard(tmp_path / "b.json", 1.0), provider="modal")
+
+
+def test_null_usage_details_from_a_provider_do_not_break_the_cost_accounting(tmp_path):
+    def handler(request: httpx.Request) -> httpx.Response:
+        usage = {"prompt_tokens": 10, "completion_tokens": 5, "prompt_tokens_details": None, "completion_tokens_details": None}
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}], "usage": usage})
+
+    client = MetaClient(settings(budget_state_path=tmp_path / "b.json"), BudgetGuard(tmp_path / "b.json", 100.0), provider="modal", transport=httpx.MockTransport(handler))
+    r = client.chat([{"role": "user", "content": "hi"}], max_completion_tokens=100)
+    assert r.text == "ok" and r.input_tokens == 10 and r.cost_usd > 0
+
+
+def test_the_failover_chain_tries_each_provider_in_order_and_survives_an_empty_answer():
+    from orbitroute.llm.client import ApiError, FailoverClient
+
+    class Fake:
+        def __init__(self, name, fail=None):
+            self.name, self.fail = name, fail
+
+        def chat_json(self, *a, **kw):
+            if self.fail:
+                raise self.fail
+            return {"from": self.name}, None
+
+    chain = FailoverClient(Fake("baseten", ApiError(402, "no credits")), Fake("modal", json.JSONDecodeError("empty", "", 0)), Fake("meta"))
+    assert chain.chat_json([], "x", {})[0] == {"from": "meta"}  # the first two failed, the last one answers
+    assert FailoverClient(Fake("baseten"), Fake("meta")).chat_json([], "x", {})[0] == {"from": "baseten"}
+    with pytest.raises(ApiError):  # when everything fails the last error is raised
+        FailoverClient(Fake("a", ApiError(500, "x")), Fake("b", ApiError(500, "y"))).chat_json([], "x", {})
