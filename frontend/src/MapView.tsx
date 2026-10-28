@@ -31,6 +31,8 @@ export default function MapView(props: {
   onClick: (xy: XY, unit: number) => void
   onCloseZone: () => void
   onClear: () => void
+  onUndo: () => void
+  onRedrawZone: () => void
   auto: boolean
   autoCount: number
   onAuto: (v: boolean) => void
@@ -165,12 +167,14 @@ export default function MapView(props: {
               <input type="number" min={1} max={100} value={props.autoCount} disabled={!props.auto} onChange={(e) => props.onAutoCount(Math.max(1, Math.min(100, Number(e.target.value) || 1)))} aria-label="Number of random orders" />
             </label>
             {state.status === 'done' && !props.stale && <button className="chip accent" onClick={props.onEditPlan}>✎ Edit this plan</button>}
+            {mode === 'zone' && custom.zone.length > 0 && <button className="chip" onClick={props.onRedrawZone}>Redraw zone</button>}
+            {(custom.depot || custom.orders.length > 0 || custom.zone.length > 0) && mode !== 'browse' && <button className="chip" onClick={props.onUndo} title="Remove the last point of the current step">↶ Undo</button>}
             {(custom.depot || custom.orders.length > 0 || custom.zone.length > 0) && <button className="chip" onClick={props.onClear}>Clear</button>}
           </div>
           <p className="edit-hint">
             {mode === 'depot' && 'Click the map to place the depot — where the trucks start and finish.'}
             {mode === 'order' && (props.auto ? 'The agent will place the orders. Click the map to place your own instead.' : `Click the map to add an order; click an order to remove it${custom.orders.length ? ` (${custom.orders.length} placed)` : ''}.`)}
-            {mode === 'zone' && (custom.zoneClosed ? 'Zone drawn. Press Clear to start over.' : 'Click corners of an area the trucks must avoid; click the first corner or “Close zone” to finish.')}
+            {mode === 'zone' && (custom.zoneClosed ? 'Zone drawn. Press “Redraw zone” to change it, or Undo to take back the last corner.' : 'Click corners of an area the trucks must avoid; click the first corner or “Close zone” to finish.')}
             {mode === 'browse' && (state.status === 'done' ? 'Press “Edit this plan” to move the depot, drag orders or add new ones.' : 'View only. Pick a step above to place points.')}
           </p>
         </div>

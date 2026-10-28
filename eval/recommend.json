@@ -1,0 +1,38 @@
+{
+ "cases": 20,
+ "providers": {
+  "Muse Spark 1.3 (Meta API)": {
+   "same_as_rules": 20,
+   "answered_by_model": 20,
+   "unsafe": 0,
+   "cost_usd": 0.0474,
+   "picks": {
+    "move_depot": 3,
+    "serve_reachable": 12,
+    "add_vehicles": 5
+   }
+  },
+  "Muse Spark Open (Baseten)": {
+   "same_as_rules": 20,
+   "answered_by_model": 18,
+   "unsafe": 0,
+   "cost_usd": 0.137,
+   "picks": {
+    "move_depot": 3,
+    "serve_reachable": 12,
+    "add_vehicles": 5
+   }
+  },
+  "Muse Spark Open (Modal)": {
+   "same_as_rules": 20,
+   "answered_by_model": 20,
+   "unsafe": 0,
+   "cost_usd": 0.0891,
+   "picks": {
+    "move_depot": 3,
+    "serve_reachable": 12,
+    "add_vehicles": 5
+   }
+  }
+ }
+}

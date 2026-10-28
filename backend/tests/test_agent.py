@@ -77,6 +77,15 @@ def test_impossible_deadline_yields_verified_relaxation_options():
     assert result.report.ok
 
 
+def test_the_trucks_option_covers_what_capacity_alone_requires():
+    pts = [(300, 100), (300, 150), (300, 200), (300, 250), (300, 300), (300, 350), (200, 350), (150, 350)]
+    sc = make_scenario_at(box(130, 130, 270, 270), pts, n_vehicles=1, vehicle_capacity=1, deadline="14:00")
+    result = run_agent(sc, time_limit_s=1.0)  # eight orders, one per truck: needs 8 trucks, far more than a few extra
+    assert result.status == "needs_relaxation"
+    options = [o for o in result.relaxations if o.kind == "add_vehicles"]
+    assert options and options[0].scenario.problem.n_vehicles >= 8 and options[0].report.ok
+
+
 LEFT = [(100, 100), (100, 150), (100, 250), (100, 300), (100, 350), (200, 100), (200, 300), (150, 100), (150, 300)]
 
 

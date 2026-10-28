@@ -29,6 +29,8 @@ function RequestPanel(props: {
   hasPlan: boolean
   trucks: number
   onTrucks: (n: number) => void
+  capacity: number // orders per truck; 0 = let the agent assume one
+  onCapacity: (n: number) => void
   offline: boolean // demo mode: no API key, only recorded answers
 }) {
   const { sample, state, custom } = props
@@ -53,6 +55,14 @@ function RequestPanel(props: {
           <button type="button" onClick={() => props.onTrucks(Math.max(1, props.trucks - 1))} disabled={running || props.trucks <= 1} aria-label="Fewer trucks">−</button>
           <input id="trucks" type="number" min={1} max={30} value={props.trucks} disabled={running} onChange={(e) => props.onTrucks(Math.max(1, Math.min(30, Number(e.target.value) || 1)))} />
           <button type="button" onClick={() => props.onTrucks(Math.min(30, props.trucks + 1))} disabled={running || props.trucks >= 30} aria-label="More trucks">+</button>
+        </div>
+      </div>
+      <div className="field-row">
+        <label htmlFor="capacity" title="How many orders one truck can carry. Auto: the agent assumes a default and lists it.">Capacity per truck</label>
+        <div className="count">
+          <button type="button" onClick={() => props.onCapacity(Math.max(0, props.capacity - 1))} disabled={running || props.capacity <= 0} aria-label="Lower capacity">−</button>
+          <input id="capacity" type="number" min={0} max={300} value={props.capacity || ''} placeholder="auto" disabled={running} onChange={(e) => props.onCapacity(Math.max(0, Math.min(300, Number(e.target.value) || 0)))} />
+          <button type="button" onClick={() => props.onCapacity(Math.min(300, props.capacity + 1))} disabled={running || props.capacity >= 300} aria-label="Higher capacity">+</button>
         </div>
       </div>
       <label>Time and what to avoid</label>
@@ -188,6 +198,7 @@ export default function App() {
   const [auto, setAuto] = useState(false)
   const [autoCount, setAutoCount] = useState(20)
   const [trucks, setTrucks] = useState(3)
+  const [capacity, setCapacity] = useState(0) // 0 = auto
   const [stale, setStale] = useState(false) // inputs changed after a plan was made: the plan on the map is out of date
   const [picking, setPicking] = useState(false)
   const [offline, setOffline] = useState(false)
@@ -239,7 +250,8 @@ export default function App() {
     setRelax(null)
     setStale(false)
     setMode('browse')
-    const body: { sample: string; request: string; trucks: number; custom?: object; auto_orders?: number } = { sample: name, request, trucks }
+    const body: { sample: string; request: string; trucks: number; capacity?: number; custom?: object; auto_orders?: number } = { sample: name, request, trucks }
+    if (capacity) body.capacity = capacity
     if (custom.depot || custom.orders.length > 0 || custom.zoneClosed) {
       body.custom = { depot: custom.depot, orders: custom.orders, zone: custom.zoneClosed ? custom.zone : [] }
     }
@@ -262,13 +274,19 @@ export default function App() {
     setRelax(null)
     setStale(false)
     setMode('browse')
-    start({ sample: name, request: req, trucks, auto_orders: 20 })
+    start({ sample: name, request: req, trucks, auto_orders: 20, ...(capacity ? { capacity } : {}) })
   }
   const onDrag = (kind: 'depot' | 'order', i: number, xy: XY) => {
     if (kind === 'depot') edit({ ...custom, depot: xy })
     else edit({ ...custom, orders: custom.orders.map((o, k) => (k === i ? xy : o)) })
   }
   const onEditPlan = () => { setStale(true); setMode('order') }
+  // Takes back the last point of the step being worked on: a corner of the zone (a closed zone opens again), an order, or the depot.
+  const onUndo = () => {
+    if (mode === 'zone' && custom.zone.length > 0) edit({ ...custom, zone: custom.zone.slice(0, -1), zoneClosed: false })
+    else if (mode === 'order' && custom.orders.length > 0) { setAuto(false); edit({ ...custom, orders: custom.orders.slice(0, -1) }) }
+    else if (mode === 'depot' && custom.depot) edit({ ...custom, depot: undefined })
+  }
   const onMapClick = (xy: XY, unit: number) => {
     const near = (p: XY, r: number) => Math.hypot(p[0] - xy[0], p[1] - xy[1]) < r * unit
     if (mode === 'depot') {
@@ -301,13 +319,19 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} offline={offline} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} capacity={capacity} onCapacity={setCapacity} offline={offline} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">
               <b>The agent could not run this.</b>
               <span>{state.error}</span>
               <span className="hint">Your points are still on the map{state.errorPoint ? ' — the one with the red ring is the problem. The found roads are switched on so you can see where to move it' : ''}. Drag it (or add another), then press Replan.</span>
+            </div>
+          )}
+          {state.sparseRoads !== undefined && state.status !== 'idle' && (
+            <div className="banner warn" role="status">
+              <b>Few streets found here.</b>
+              <span>Only {state.sparseRoads} km of road per km² (open areas give 8–12). Dense buildings or tree cover hide streets from an aerial photo, so the plan can only use the streets that were found. The Graph layer shows them.</span>
             </div>
           )}
           {stale && state.status === 'done' && (
@@ -324,6 +348,8 @@ export default function App() {
             mode={mode} custom={custom} onMode={setMode} onClick={onMapClick}
             onCloseZone={() => edit({ ...custom, zoneClosed: true })}
             onClear={() => { edit(emptyCustom); setMode('depot'); setAuto(false) }}
+            onUndo={onUndo}
+            onRedrawZone={() => edit({ ...custom, zone: [], zoneClosed: false })}
             auto={auto} autoCount={autoCount} onAuto={setAuto} onAutoCount={setAutoCount}
             stale={stale} onDrag={onDrag} onEditPlan={onEditPlan}
             onQuickStart={onQuickStart} onPickArea={() => setPicking(true)}

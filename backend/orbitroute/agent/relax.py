@@ -117,7 +117,10 @@ def find_relaxations(
                     RelaxationOption("serve_reachable", len(cut_off), f"serve the {n_left - len(cut_off)} reachable orders now and leave the {len(cut_off)} cut-off ones ({ids}) for later", scenario, plan, report)
                 )
 
-    for extra in range(1, MAX_EXTRA_VEHICLES + 1):
+    # trucks that capacity alone requires: below that no plan exists, so the search starts there (and still tries a few more)
+    needed = -(-(len(scenario.order_nodes) - len(excluded)) // max(p.capacity, 1))
+    first_extra = max(1, needed - p.n_vehicles)
+    for extra in range(first_extra, first_extra + MAX_EXTRA_VEHICLES):
         sc = replace(scenario, problem=p.model_copy(update={"n_vehicles": p.n_vehicles + extra}))
         plan, report = _try(sc, matrix, excluded, inside, time_limit_s, seed)
         if report.ok:

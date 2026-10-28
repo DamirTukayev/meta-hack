@@ -100,6 +100,15 @@ def _with_counts(problem: Problem, n_orders: int, n_vehicles: int) -> Problem:
     return problem.model_copy(update=updates)
 
 
+def with_capacity(problem: Problem, capacity: int) -> Problem:
+    """The user's own capacity per truck replaces the assumed one (and stays, whatever the counts become)."""
+    assumptions = [a for a in problem.assumptions if "a truck carries" not in a and "Total capacity" not in a]
+    assumptions.append(f"Each order is 1 unit; every truck holds {capacity} units (set in the Capacity field).")
+    if capacity * problem.n_vehicles < problem.n_orders:
+        assumptions.append(f"Total capacity ({capacity * problem.n_vehicles}) is below the number of orders ({problem.n_orders}): infeasible as stated.")
+    return problem.model_copy(update={"capacity": capacity, "assumptions": assumptions})
+
+
 def with_order_count(problem: Problem, n: int) -> Problem:
     return _with_counts(problem, n, problem.n_vehicles)
 

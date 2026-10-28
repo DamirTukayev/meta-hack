@@ -69,6 +69,7 @@ export interface RunState {
   depot?: XY
   orders: XY[]
   orderTargets: (XY | null)[] // the building behind each agent-placed order
+  sparseRoads?: number // km of road per km2 when the graph is thin (dense blocks or tree cover hide the streets)
   iterations: Iteration[]
   log: LogEntry[]
   result?: Result

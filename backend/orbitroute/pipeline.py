@@ -19,10 +19,14 @@ from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.serialize import graph_json, mask_png, plan_json, report_json, scenario_json, scene_json
+from orbitroute.understanding.constraints import with_capacity
 from orbitroute.understanding.request import parse_request, parse_request_cached
 from orbitroute.understanding.scene import Scene, analyze_scene
 
 SAMPLES_DIR = ROOT / "data" / "samples"
+# Open areas give 8-12 km of road per km2 in a 1.5 km square; dense blocks and tree cover hide most streets from an aerial photo (measured
+# against OpenStreetMap on 14 places: eval/CITIES.md). Below this the app says so instead of planning silently on a thin graph.
+SPARSE_ROADS_KM_PER_KM2 = 4.0
 
 
 @dataclass
@@ -87,6 +91,7 @@ def run_pipeline(
     custom: CustomInputs | None = None,
     auto_orders: int | None = None,
     trucks: int | None = None,
+    capacity: int | None = None,
     emit: Emit,
 ) -> AgentResult:
     run: RunBudget = guard.new_run(run_cap_usd)
@@ -96,7 +101,9 @@ def run_pipeline(
     emit(Event("stage", "Segmenting roads with SAM 3.1 (tiled)", {"stage": "perception"}))
     mask = segment_roads(client, image_bytes, run=run)
     graph = build_road_graph(mask, sample.meta["m_per_px"])
-    emit(Event("perception", f"Road graph: {graph.stats['nodes']} nodes, {graph.stats['road_km']} km of road", {"mask": mask_png(mask), "graph": graph_json(graph)}))
+    area_km2 = (mask.shape[1] * sample.meta["m_per_px"] / 1000) * (mask.shape[0] * sample.meta["m_per_px"] / 1000)
+    density = graph.stats["road_km"] / area_km2
+    emit(Event("perception", f"Road graph: {graph.stats['nodes']} nodes, {graph.stats['road_km']} km of road", {"mask": mask_png(mask), "graph": graph_json(graph), "road_km_per_km2": round(density, 1), "sparse": density < SPARSE_ROADS_KM_PER_KM2}))
 
     emit(Event("stage", "Reading land use and warehouses with Muse Spark", {"stage": "scene"}))
     scene = analyze_scene(text, image_bytes, run=run)  # the open-weight model reads images too: the zones come from it when it is configured
@@ -141,11 +148,15 @@ def run_pipeline(
     if has_custom:
         scenario, problem, scene2, custom_notes = apply_custom(graph, scene, problem, custom, seed=seed, targets=targets)
         notes += custom_notes
+        if capacity:
+            problem = with_capacity(problem, capacity)
         if scene2 is not scene:
             emit(Event("scene", f"{len(scene2.zones)} zones including the one you drew", scene_json(scene2)))
         problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
         scenario.problem = problem
     else:
+        if capacity:
+            problem = with_capacity(problem, capacity)
         problem = problem.model_copy(update={"assumptions": [*problem.assumptions, *notes]})
         scenario = make_scenario(graph, scene, problem, seed=seed, prefer_connected=True, targets=targets)
     emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {', '.join(problem.avoid_zone_kinds) or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
