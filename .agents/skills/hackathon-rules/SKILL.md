@@ -25,7 +25,8 @@ This is a standing rule for every scoping, design and coding decision.
 - **Public repository** (open source). Never commit secrets, private data or anything not meant to be public.
 - **Demo, video and README show only what was built during the hackathon**, and judges must be able to clearly identify the original contributions — otherwise immediate disqualification. No aspirational features, no pre-existing work, no invented metrics. Make the new work easy to see: commit history, a short "what we built" list in the README.
 - Code, data and assets only with rights to use them.
-- Must incorporate Meta's models (Stage One pass/fail): SAM 3.1, Muse Spark / Spark Open, Muse Glimmer, optionally Muse Voice Transcribe, via Meta Model API or open weights.
+- Must incorporate Meta's models (Stage One pass/fail): SAM 3.1, Muse Spark / Spark Open, Muse Glimmer, optionally Muse Voice Transcribe, via Meta Model API or open weights. Every model the project calls at runtime must be a Meta model (partners such as Baseten or Modal may serve it); never add a non-Meta model call.
+- The repo must be created Oct 26 or later (it was: 2026-10-26 16:25 UTC) and be public. The README labels what is pre-existing or open source. The 3-minute demo video is in English, shows the product (not slides) and opens with one line saying what was pre-existing and what was built this week. Submissions can be edited until the deadline.
 
 ## Data and assets
 

@@ -47,6 +47,13 @@ Live sessions (ET, streamed):
 
 The public event page matches these notes on dates (hackathon Oct 26 12:00 PM - Nov 4 9:00 PM ET, submissions due Nov 4 9:00 PM ET, judging Nov 4-8, closing ceremony Nov 9), the two themes, the credits (Meta $150 - claim by Nov 4 9:00 PM ET, each participant on their own, a card on the account is needed; Baseten $100 + 2M TPM; Modal $100) and the eligibility rules (no sanctioned or listed countries, no Meta or Cerebral Valley staff, no government-affiliated individuals, no family or household of those). It says the Indie track is judged on creativity, technical ambition and whether it works. It does **not** restate the new-work-only rule, the video length, the banned project types or the Most Viral mechanics: those come from the Participant Guide and the Official Rules, which "must be accepted by the selected participants". Still to read: the Official Rules, the application overview and event waiver, and the fields of the submission form.
 
+## Organizer answers seen in the Discord (Oct 26, from the Cerebral Valley assistant bot; verify against the Official Rules)
+
+- Meta's models must be a real part of what the project runs (Stage 1 checks it). Any providers are fine as long as every model the project calls at runtime is a Meta model; Meta models served through Baseten, Modal or Fireworks count, so do open-source Meta models such as Llama or SAM.
+- Submission: one representative, on the platform, by Nov 4 9:00 PM ET; a public GitHub repo **created Oct 26 or later**; a **3-minute demo video in English**; every teammate added. Submissions can be edited until the deadline.
+- A strong submission: a README that labels pre-existing and open-source work; everything needed to run the demo; a video that shows what was built (not slides) and **opens with a line saying what was pre-existing and what was built this week**; any source-available licence is fine.
+- Meta API credits need a payment method on the account; without one, use the open-weight models through the partner credits.
+
 ## Rules
 
 - [ ] Open source: repository must be **public**

@@ -115,6 +115,10 @@ data/            sample images, pre-computed answers, sources
 
 See [data/SOURCES.md](data/SOURCES.md). Imagery: USGS NAIP and NOAA Emergency Response Imagery (both public domain). The map search uses OpenStreetMap's Nominatim and OpenStreetMap data is used only to measure road accuracy: © OpenStreetMap contributors (ODbL). Fonts: JetBrains Mono (OFL).
 
+## What was built during the hackathon, and what was not
+
+The repository was created on 26 October 2026, after the kickoff, and every commit is dated from that day on. **Written here, during the event:** the whole agent (request parsing, the solver wrapper, the independent verifier and the second audit, the repair loop, the relaxation options and the recommendation), the road graph builder, the flood and building perception, the provider layer with the budget guard and failover, the API and the web interface, the evaluation suite and its measurements, and the README assets. **Not written here:** open-source libraries (PyVRP, FastAPI, React, Leaflet, shapely, scikit-image, scipy, networkx, JetBrains Mono), public data (USGS NAIP, NOAA Emergency Response Imagery; OpenStreetMap only as a yardstick), and Meta's models, used through the Meta Model API, Baseten and Modal. The code was written with AI coding assistants (Claude Code) under my direction.
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
