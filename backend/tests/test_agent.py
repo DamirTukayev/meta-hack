@@ -261,3 +261,17 @@ def test_when_the_zone_is_not_the_only_problem_the_relaxation_combines_fixes():
     assert result.status == "needs_relaxation"
     combined = [o for o in result.relaxations if o.kind.startswith("allow_zone")]
     assert combined and combined[0].report.ok
+
+
+def test_a_plan_driving_on_links_drawn_across_gaps_says_so_but_stays_valid():
+    sc = crossing_scenario(avoid_zone_kinds=[])
+    plan = solve_vrp(sc, build_matrix(sc.graph, sc.location_nodes), time_limit_s=1.0)
+    clean = verify(sc, plan)
+    assert clean.ok and clean.metrics["unconfirmed_m"] == 0 and clean.unconfirmed == []
+    g = sc.graph
+    drawn = replace(g, edges=[replace(e, bridge=True) for e in g.edges])  # every link is one the graph drew itself (60+ m long here)
+    sc2 = replace(sc, graph=drawn)
+    plan2 = solve_vrp(sc2, build_matrix(sc2.graph, sc2.location_nodes), time_limit_s=1.0)
+    report = verify(sc2, plan2)
+    assert report.ok  # a note, not a failed check
+    assert report.metrics["unconfirmed_m"] > 0 and 0 < report.metrics["unconfirmed_share"] <= 1 and report.unconfirmed

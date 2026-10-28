@@ -1,0 +1,94 @@
+[
+ {
+  "sample": "columbus",
+  "looked": 32,
+  "confirmed": 4,
+  "before": {
+   "graph_km": 19.18,
+   "long_links": 32,
+   "links_km": 2.5,
+   "links_on_a_mapped_road": 21,
+   "recall": 0.7267895109851169,
+   "precision": 0.9124170925301729,
+   "seen_edges": 488
+  },
+  "after": {
+   "graph_km": 19.19,
+   "long_links": 32,
+   "links_km": 2.48,
+   "links_on_a_mapped_road": 21,
+   "recall": 0.7267895109851169,
+   "precision": 0.9123646847630963,
+   "seen_edges": 489
+  }
+ },
+ {
+  "sample": "memphis",
+  "looked": 20,
+  "confirmed": 4,
+  "before": {
+   "graph_km": 19.41,
+   "long_links": 20,
+   "links_km": 1.34,
+   "links_on_a_mapped_road": 14,
+   "recall": 0.8559978768577494,
+   "precision": 0.8580511928699527,
+   "seen_edges": 510
+  },
+  "after": {
+   "graph_km": 19.41,
+   "long_links": 20,
+   "links_km": 1.34,
+   "links_on_a_mapped_road": 14,
+   "recall": 0.8559978768577494,
+   "precision": 0.8580820429231187,
+   "seen_edges": 510
+  }
+ },
+ {
+  "sample": "houston-harvey",
+  "looked": 12,
+  "confirmed": 1,
+  "before": {
+   "graph_km": 15.49,
+   "long_links": 12,
+   "links_km": 0.87,
+   "links_on_a_mapped_road": 4,
+   "recall": 0.7619928400954654,
+   "precision": 0.9291976620616366,
+   "seen_edges": 418
+  },
+  "after": {
+   "graph_km": 15.49,
+   "long_links": 11,
+   "links_km": 0.82,
+   "links_on_a_mapped_road": 3,
+   "recall": 0.7619928400954654,
+   "precision": 0.9292023643488079,
+   "seen_edges": 419
+  }
+ },
+ {
+  "sample": "houston-harvey-b",
+  "looked": 25,
+  "confirmed": 4,
+  "before": {
+   "graph_km": 7.17,
+   "long_links": 25,
+   "links_km": 1.9,
+   "links_on_a_mapped_road": 7,
+   "recall": 0.19173828266050408,
+   "precision": 0.7854083380925185,
+   "seen_edges": 157
+  },
+  "after": {
+   "graph_km": 6.99,
+   "long_links": 22,
+   "links_km": 1.67,
+   "links_on_a_mapped_road": 5,
+   "recall": 0.1881273922149202,
+   "precision": 0.7903904775729423,
+   "seen_edges": 156
+  }
+ }
+]

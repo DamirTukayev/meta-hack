@@ -23,8 +23,9 @@ export interface ReportGeo {
   ok: boolean
   checks: Check[]
   violations: Violation[]
-  metrics: { total_km: number; last_return: string }
+  metrics: { total_km: number; last_return: string; unconfirmed_m?: number; unconfirmed_share?: number }
   excluded: Record<string, string>
+  unconfirmed?: [XY, XY][] // driven links the graph drew across a gap: the photo does not show a road there
 }
 export interface Problem {
   n_orders: number

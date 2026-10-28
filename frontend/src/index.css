@@ -93,6 +93,7 @@ aside { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .checklist li.fail .mark { background: #2a0d0d; color: var(--bad); }
 .checklist li div { display: flex; flex-direction: column; }
 .checklist li span { color: var(--muted); font-size: 12.5px; }
+.gap-note { margin: 10px 0 0; padding: 8px 10px; border-left: 3px solid var(--accent, #fbbf24); background: #1d1708; font-size: 12.5px; }
 .violation { margin: 10px 0 0; padding: 8px 10px; border-left: 3px solid var(--bad); background: #240c0c; border-radius: 0; font-size: 12.5px; }
 
 .log ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; max-height: 520px; overflow: auto; }
@@ -204,6 +205,7 @@ aside { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .legend.symbols { margin-top: 6px; gap: 6px 16px; }
 .legend i.line { width: 18px; height: 4px; border-radius: 0; background: linear-gradient(90deg, #ff4d4d 60%, #5fd0ff 60%); vertical-align: 2px; }
 .legend i.num { width: 16px; height: 16px; border-radius: 50%; background: #ff4d4d; color: #fff; font-style: normal; font-size: 10px; font-weight: 800; display: inline-grid; place-items: center; margin-right: 5px; vertical-align: -3px; }
+.legend i.gap { width: 18px; height: 0; border-top: 3px dotted #fff; vertical-align: 3px; background: none; }
 .legend i.viol { width: 18px; height: 4px; border-radius: 0; background: #ef4444; vertical-align: 2px; }
 
 /* ---- design pass: progress, hero, timeline, result tiles, focus ---- */

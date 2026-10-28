@@ -91,4 +91,5 @@ def report_json(sc: Scenario, report: Report) -> dict:
         "violations": violations,
         "metrics": report.metrics,
         "excluded": {str(k): v for k, v in report.excluded.items()},
+        "unconfirmed": [[_xy(g.nodes[a]), _xy(g.nodes[b])] for a, b in report.unconfirmed],  # driven links the photo does not show
     }

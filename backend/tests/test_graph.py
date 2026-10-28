@@ -73,3 +73,15 @@ def test_tiles_cover_the_whole_image_with_overlap():
         covered[t:b, l:r] += 1
     assert covered.min() >= 1 and covered.max() >= 2  # no gaps, and neighbours overlap
     assert all(r - l <= 256 + 96 and b - t <= 256 + 96 for l, t, r, b in wins)
+
+
+def test_gap_windows_stay_inside_the_image_and_cover_the_link():
+    import numpy as np
+
+    from orbitroute.perception.gaps import MIN_WINDOW_PX, _window
+
+    for a, b in [((10, 10), (90, 40)), ((1500, 1500), (1450, 1520)), ((700, 100), (700, 210))]:
+        left, top, right, bottom = _window(np.array(a, float), np.array(b, float), 1536, 1536)
+        assert 0 <= left < right <= 1536 and 0 <= top < bottom <= 1536
+        assert right - left >= MIN_WINDOW_PX and bottom - top >= MIN_WINDOW_PX
+        assert all(left <= p[0] <= right and top <= p[1] <= bottom for p in (a, b))
