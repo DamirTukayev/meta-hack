@@ -73,7 +73,19 @@ cd frontend && npm install && npm run build && cd ..
 uv run uvicorn orbitroute.api:app --app-dir backend --port 8000     # http://localhost:8000
 ```
 
-For development with hot reload run `npm run dev` in `frontend/` (http://localhost:5173) next to the API. Tests: `uv run pytest` (backend) and `npm test` in `frontend/`.
+For development with hot reload run `npm run dev` in `frontend/` (http://localhost:5173) next to the API. Tests: `uv run pytest` (backend) and `npm test` in `frontend/`. With a key (`MODEL_API_KEY` in `.env`) everything is live: your own sentences, any US map area, voice, and Muse Spark making the repair choices.
+
+## Run it without any key
+
+You do not need an account anywhere to try OrbitRoute. Clone, build the interface and start the server **without a `.env`**: the app starts in demo mode and the four bundled images (Columbus, Memphis and the two flooded Houston photos) run with each of their example sentences on recorded model answers: the SAM masks, the zones, the buildings, the flood water and the understanding of every example sentence are committed in `data/prewarmed/`, so not a single model call is made. A notice in the interface says so. Your own sentences, new map areas and voice input need a key, and the app tells you that instead of failing.
+
+```bash
+uv sync
+(cd frontend && npm install && npm run build)
+uv run uvicorn orbitroute.api:app --app-dir backend --port 8000        # http://localhost:8000
+```
+
+Recorded runs, readable on GitHub without running anything: [`examples/runs/`](examples/runs/) holds the agent log, the six checks and the outcome of three runs (a repaired zone crossing, the flood, and orders cut off by the water). `uv run python scripts/record_runs.py` regenerates them; a test runs every bundled image with every example sentence without a key.
 
 ## Safeguards for a public demo
 
@@ -117,7 +129,7 @@ See [data/SOURCES.md](data/SOURCES.md). Imagery: USGS NAIP and NOAA Emergency Re
 
 ## What was built during the hackathon, and what was not
 
-The repository was created on 26 October 2026, after the kickoff, and every commit is dated from that day on. **Written here, during the event:** the whole agent (request parsing, the solver wrapper, the independent verifier and the second audit, the repair loop, the relaxation options and the recommendation), the road graph builder, the flood and building perception, the provider layer with the budget guard and failover, the API and the web interface, the evaluation suite and its measurements, and the README assets. **Not written here:** open-source libraries (PyVRP, FastAPI, React, Leaflet, shapely, scikit-image, scipy, networkx, JetBrains Mono), public data (USGS NAIP, NOAA Emergency Response Imagery; OpenStreetMap only as a yardstick), and Meta's models, used through the Meta Model API, Baseten and Modal. The code was written with AI coding assistants (Claude Code) under my direction.
+The repository was created on 26 October 2026 at 12:25 ET, just after the kickoff, and every commit is dated from that day on; no code existed before it. The idea itself (a satellite photo and a request turned into a verified delivery plan) was part of my application, before the event. **Written here, during the event:** the whole agent (request parsing, the solver wrapper, the independent verifier and the second audit, the repair loop, the relaxation options and the recommendation), the road graph builder, the flood and building perception, the provider layer with the budget guard and failover, the API and the web interface, the evaluation suite and its measurements, and the README assets. **Not written here:** open-source libraries (PyVRP, FastAPI, React, Leaflet, shapely, scikit-image, scipy, networkx, JetBrains Mono), public data (USGS NAIP, NOAA Emergency Response Imagery; OpenStreetMap only as a yardstick), and Meta's models, used through the Meta Model API, Baseten and Modal. The code was written with AI coding assistants (Claude Code) under my direction.
 
 ## License
 

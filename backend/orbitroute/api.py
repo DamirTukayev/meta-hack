@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import queue
 import threading
 from pathlib import Path
@@ -22,7 +23,7 @@ from orbitroute.config import ROOT, Settings
 from orbitroute.custom import CustomInputs, PlacementError
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard
 from orbitroute.limits import RateLimiter
-from orbitroute.llm.client import ApiError, FailoverClient, MetaClient, guard_for
+from orbitroute.llm.client import ApiError, FailoverClient, MetaClient, OfflineClient, OfflineDemo, guard_for
 from orbitroute.naip import NoImagery
 from orbitroute.pipeline import get_sample, list_samples, run_pipeline
 
@@ -58,6 +59,9 @@ MAX_AUDIO_BYTES = 2_000_000  # about 60 s of 16 kHz mono 16-bit PCM
 _active = {"n": 0}
 _active_lock = threading.Lock()
 
+# Without a Meta API key (or with OFFLINE_DEMO=1) the app runs on recorded model answers: nothing needs an account anywhere.
+offline_demo = bool(os.environ.get("OFFLINE_DEMO")) or not settings.api_key
+
 guard = BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, settings.paid_calls_enabled)
 _client: MetaClient | None = None
 
@@ -80,6 +84,8 @@ def client_ip(request: Request) -> str:
 
 def get_client() -> MetaClient:
     global _client
+    if offline_demo:
+        return OfflineClient()  # type: ignore[return-value]
     if _client is None:
         _client = MetaClient(settings, guard)
     return _client
@@ -100,7 +106,7 @@ def text_provider_order() -> list[str]:
 def get_text_client():
     """Client for the text-reasoning steps: open-weight Muse Spark Open (Baseten, then Modal) when REASONING_PROVIDER asks for it, with the Meta API as the safety net."""
     global _text_client
-    if settings.reasoning_provider == "meta":
+    if offline_demo or settings.reasoning_provider == "meta":
         return get_client()
     if _text_client is None:
         chain = [MetaClient(settings, guard_for(settings, p), provider=p) for p in text_provider_order()]
@@ -113,7 +119,7 @@ app = FastAPI(title="OrbitRoute")
 
 @app.get("/api/health")
 def health() -> dict:
-    return {"ok": True, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4), "reasoning_provider": settings.reasoning_provider}
+    return {"ok": True, "offline_demo": offline_demo, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4), "reasoning_provider": settings.reasoning_provider}
 
 
 def sample_dict(s) -> dict:
@@ -134,6 +140,8 @@ def sample_dict(s) -> dict:
 @app.post("/api/transcribe")
 async def transcribe(request: Request) -> dict:
     """Speech to text for the request box: the browser records a short WAV, Muse Voice Transcribe turns it into text."""
+    if offline_demo:
+        raise HTTPException(503, "Demo mode: voice input needs a Meta API key (see the README).")
     if not guard.paid_calls_enabled:
         raise HTTPException(503, "The demo is paused right now. Please try again later.")
     wait = max(asr_limit_ip.check(client_ip(request)), asr_limit_all.check("all"))
@@ -188,6 +196,8 @@ class AreaRequest(BaseModel):
 @app.post("/api/areas")
 def choose_area(body: AreaRequest, request: Request) -> dict:
     """Fetch (once) the aerial image around a point picked on the map and register it as a sample."""
+    if offline_demo:
+        raise HTTPException(503, "Demo mode: new map areas need a Meta API key to read the photo (see the README).")
     name = area_id(body.lat, body.lon)
     if not (AREAS_DIR / f"{name}.jpg").exists():  # only new downloads count against the limits
         wait = max(area_limit_ip.check(client_ip(request)), area_limit_all.check("all"))
@@ -253,8 +263,10 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
         try:
             run_pipeline(
                 smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
-                seed=seed, use_model_decider=decider == "model", custom=custom, auto_orders=auto_orders, trucks=trucks, emit=emit,
+                seed=seed, use_model_decider=decider == "model" and not offline_demo, custom=custom, auto_orders=auto_orders, trucks=trucks, emit=emit,
             )
+        except OfflineDemo as exc:
+            q.put(("failure", {"message": str(exc)}))
         except RunCancelled:
             log.info("run cancelled: the client disconnected")
         except BudgetExceeded as exc:

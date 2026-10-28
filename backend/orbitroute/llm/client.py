@@ -29,6 +29,25 @@ class ApiError(RuntimeError):
         self.status = status
 
 
+class OfflineDemo(RuntimeError):
+    """The demo runs without a Meta API key: only what was recorded can be shown."""
+
+
+class OfflineClient:
+    """Stands in for the model clients when no key is set. Recorded answers (SAM masks, scenes, parsed example sentences)
+    are read from disk before any client is asked, so only genuinely new work reaches this and is refused with a clear message."""
+
+    MESSAGE = (
+        "Demo mode: this needs a Meta API key. The bundled samples with their example sentences run without one; "
+        "to type your own sentence, pick a new map area or use your voice, put MODEL_API_KEY in .env (see the README)."
+    )
+
+    def _refuse(self, *a: Any, **kw: Any) -> Any:
+        raise OfflineDemo(self.MESSAGE)
+
+    chat = chat_json = segment_raw = transcribe = _refuse
+
+
 @dataclass
 class ChatResult:
     text: str
