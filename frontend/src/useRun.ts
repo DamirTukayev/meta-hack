@@ -19,7 +19,7 @@ function reduce(s: RunState, a: Action): RunState {
     case 'stage':
       return { ...s, stage: e.message, log: add(e.message) }
     case 'perception':
-      return { ...s, mask: d.mask, graph: d.graph, log: add(e.message) }
+      return { ...s, mask: d.mask, graph: d.graph, sparseRoads: d.sparse ? (d.road_km_per_km2 as number) : undefined, log: add(e.message) }
     case 'scene':
       return { ...s, zones: d.zones as Zone[], warehouses: d.warehouses as XY[], log: add(e.message) }
     case 'problem':
@@ -119,7 +119,7 @@ export function useRun(paceMs = 420) {
   }, [stop])
 
   const start = useCallback(
-    (body: { sample: string; request: string; decider?: 'model' | 'policy'; custom?: object; trucks?: number; auto_orders?: number }) => {
+    (body: { sample: string; request: string; decider?: 'model' | 'policy'; custom?: object; trucks?: number; capacity?: number; auto_orders?: number }) => {
       stop()
       finished.current = false
       t0.current = 0

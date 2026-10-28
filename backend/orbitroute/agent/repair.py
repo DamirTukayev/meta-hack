@@ -139,7 +139,7 @@ class ModelDecider:
         messages = [{"role": "system", "content": prompts.load("repair")[1]}, {"role": "user", "content": json.dumps(facts)}]
         try:
             raw, _ = self._client.chat_json(
-                messages, "RepairDecision", schema, max_completion_tokens=1500, reasoning_effort="low", run=self._run, label="repair_decision"
+                messages, "RepairDecision", schema, max_completion_tokens=3000, reasoning_effort="low", run=self._run, label="repair_decision"
             )
             if raw.get("action") in allowed and str(raw.get("reason", "")).strip():
                 return Decision(raw["action"], raw["reason"].strip(), "model")
@@ -178,7 +178,7 @@ class ModelDecider:
         }
         messages = [{"role": "system", "content": prompts.load("recommend")[1]}, {"role": "user", "content": json.dumps(facts)}]
         try:
-            raw, _ = self._client.chat_json(messages, "Recommendation", schema, max_completion_tokens=1500, reasoning_effort="low", run=self._run, label="recommendation")
+            raw, _ = self._client.chat_json(messages, "Recommendation", schema, max_completion_tokens=3000, reasoning_effort="low", run=self._run, label="recommendation")
             index = raw.get("index")
             reason = str(raw.get("reason", "")).strip()
             safe_exists = any(not breaks_a_rule(o) for o in options)

@@ -58,13 +58,21 @@ Everything below is produced by scripts in `scripts/` and written to `eval/`; no
 - The audit is a second implementation of the checks, written separately from the verifier the agent runs (exact shapely geometry on the route polylines, `verifier/independent.py`). The two gave the same verdict on **all 124 plans checked** (the first and the returned plan of every scenario), and on every corrupted plan in the differential tests.
 - The agent returned **zero invalid plans**. Of the 33 scenarios whose first plan was invalid, **13 ended verified automatically** (4 by re-routing around the zone; 9 by leaving 1-5 cut-off orders out, each listed with its reason, never silently dropped) and **20 were flagged as impossible as stated, each with a verified way out**: the 4 provably infeasible requests, the freely placed flood scenarios where the water cuts off most orders, and other cut-off cases. In those it offers to move the depot, serve the reachable orders, add trucks, extend the deadline or, last, drive through the zone.
 - Muse Spark parsed **20/20** free-form requests exactly (author-written phrasings; about 2.3 s each), and 24/24 once four flood phrasings were added. The open-weight Muse Spark Open does the same, after the prompt was tightened (11/20 with the first prompt).
+- A larger CPU-only suite (`eval/BIG_SUITE.md`, `scripts/eval_big_suite.py`): 400 random scenarios on the four photos (random zone, 8-60 orders, 1-6 trucks, deadlines, sometimes a stated capacity). Of 312 first plans the solver called feasible, **175 (56%) broke a rule**; **none of the 243 returned verified plans failed the audit**, the other 157 scenarios ended with verified alternatives, and the verifier and the audit never disagreed over 800 plans. The suite also exposed a gap that is now fixed: when capacity alone needed more trucks than the search tried, no alternative was offered.
+- Harder phrasings (capitals, "half past", "quarter to", 17h, other units, stray detail, no time at all) were parsed **20/20** exactly by Muse Spark, Muse Spark Open on Baseten and on Modal (`eval/PARSING_HARD.md`; phrasings written by the author).
+- When several verified alternatives exist, the model recommends one under a safety rule: on the 20 evaluation scenarios that end with alternatives it chose the same option as the rules in **20/20** on all three providers and **never** recommended driving through a forbidden zone when a safe option existed (`eval/RECOMMEND.md`).
+- A soak test of 150 random runs through the real API (bundled photos, 20 sentences some odd on purpose, 1-8 trucks, random clicked points and zones, and deliberately broken input; `scripts/soak.py`) ended in no unexpected error and no crash: every run either returned a result or refused with a clear message.
 - As the repair planner, Muse Spark chose the same actions as the deterministic policy in 6/6 runs (about $0.004 per run): in this suite it adds readable explanations, not different decisions.
+
+**How good are the roads in other places?** The two bundled tiles are open suburban land, which is the easy case. The same measurement on twelve 1.5 km squares across the United States (`eval/CITIES.md`, `scripts/eval_cities.py`) found on average **47% of the named streets at 95% precision** with the default tiling. It ranges from 90% (Mesa, a suburban grid) and 86% (an industrial area) to 4% in downtown Chicago and 18-20% in Portland and Brooklyn: dense blocks, shadows and tree cover hide streets from an aerial photo, and extra tilings do not bring them back. Uniting a third tiling raises the mean to about 61% for roughly $0.50-$0.70 instead of $0.45 per new area; the default stays at two tilings. When the graph is thin (under 4 km of road per km²) the interface says so before planning.
+
+**Does flood detection work beyond Harvey?** The same two SAM prompts were run on 12 squares from five other disasters (Florence, Ian, the 2025 Texas flood, Helene) and on places where the water is permanent (`eval/FLOOD_EVENTS.md`, contact sheet `docs/flood-events.jpg`). Flooded woods, ponds, flooded lots, river corridors and scoured channels are outlined where the photo shows water; canals and harbours are found too, and over wide open water the outline is blocky with gaps. There are no ground-truth labels: this is a by-eye check of the sheet, not an accuracy figure.
 
 ## Try it
 
 ![The finished run: plan 1 had one violation, plan 2 is verified; the six checks and the agent log are on the right](docs/result.png)
 
-Pick a bundled sample (Columbus, Memphis, or the two flooded Houston photos) or any 1.5 km square in the United States on the map, then either press **Try it with 20 random orders** or place the depot, the orders and a zone to avoid by clicking. Set the number of trucks, type or speak what to avoid, and plan. Afterwards you can replay the drive truck by truck, drag any point and replan, and open any plan the agent tried to see what failed and why.
+Pick a bundled sample (Columbus, Memphis, or the two flooded Houston photos) or any 1.5 km square in the United States on the map, then either press **Try it with 20 random orders** or place the depot, the orders and a zone to avoid by clicking. Set the number of trucks and, if you know it, the capacity per truck, type or speak what to avoid, and plan. Undo takes back the last point of the step you are on; a drawn zone can be redrawn. Afterwards you can replay the drive truck by truck, drag any point and replan, and open any plan the agent tried to see what failed and why.
 
 ```bash
 uv sync
@@ -93,10 +101,10 @@ Model calls cost money, so every one goes through a budget guard: required token
 
 ## Honest limits
 
-- The road graph is trustworthy but incomplete (see above): it finds the street network, not every alley, and dense, tree-covered blocks lose streets. "Real roads" in the verifier means roads in this graph.
+- The road graph is trustworthy but incomplete (see above): it finds the street network, not every alley. In dense downtowns and tree-covered blocks it can miss most streets (4-30% of the named streets in five of twelve places tested), and the interface warns when the graph is thin. "Real roads" in the verifier means roads in this graph.
 - Zone outlines come from Muse Spark and have no human-labelled ground truth; `eval/GROUNDING.md` measures how stable they are across repeated answers, not whether they are right.
 - The audit in the evaluation is a second implementation that agrees with the verifier on every plan, but both were written by the same author, so a shared misunderstanding of a rule would pass both. Orders are building centres found by SAM, with neighbouring roofs sometimes merged, and the road graph is still incomplete.
-- Truck capacity is not asked for: a default is assumed and listed with every other assumption. Every order is one unit and each truck makes one trip.
+- Truck capacity is an optional field ("Capacity per truck", or stated in the sentence); left empty, a default is assumed and listed with every other assumption. Every order is one unit and each truck makes one trip.
 - US imagery only (USGS NAIP, and NOAA storm photos for the two disaster samples). The evaluation covers two tiles and author-written requests; it measures robustness, not performance in the wild.
 - The microphone path is verified against the server with a real recording, not yet across browsers.
 
@@ -119,7 +127,7 @@ backend/orbitroute/
   eval/          scenario and parsing evaluation
 frontend/        React + TypeScript + Leaflet interface
 scripts/         evaluation, data and README-asset scripts
-eval/            generated results (RESULTS.md, ROADS.md, GROUNDING.md)
+eval/            generated results (RESULTS.md, ROADS.md, CITIES.md, FLOOD.md, RECOMMEND.md, PARSING_HARD.md, GROUNDING.md)
 data/            sample images, pre-computed answers, sources
 ```
 

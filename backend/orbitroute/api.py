@@ -232,6 +232,7 @@ class RunRequest(BaseModel):
     custom: CustomInputs | None = None
     auto_orders: int | None = Field(default=None, ge=1, le=100)  # "place the orders for me": how many
     trucks: int | None = Field(default=None, ge=1, le=30)  # the Trucks field; overrides the text
+    capacity: int | None = Field(default=None, ge=1, le=300)  # the Capacity field (orders per truck); without it a default is assumed
 
 
 @app.post("/api/run")
@@ -249,7 +250,7 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
         if _active["n"] >= settings.max_concurrent_runs:
             raise HTTPException(429, "The agent is busy with other runs. Try again in a few seconds.", headers={"Retry-After": "10"})
         _active["n"] += 1
-    request, seed, decider, custom, auto_orders, trucks = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks
+    request, seed, decider, custom, auto_orders, trucks, capacity = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks, body.capacity
     q: queue.Queue = queue.Queue()
     done = object()
     stopped = threading.Event()  # set when the browser goes away: the run stops at its next step instead of spending money for nobody
@@ -263,7 +264,7 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
         try:
             run_pipeline(
                 smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
-                seed=seed, use_model_decider=decider == "model" and not offline_demo, custom=custom, auto_orders=auto_orders, trucks=trucks, emit=emit,
+                seed=seed, use_model_decider=decider == "model" and not offline_demo, custom=custom, auto_orders=auto_orders, trucks=trucks, capacity=capacity, emit=emit,
             )
         except OfflineDemo as exc:
             q.put(("failure", {"message": str(exc)}))

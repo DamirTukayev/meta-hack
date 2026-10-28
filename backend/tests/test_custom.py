@@ -98,3 +98,16 @@ def test_changing_the_truck_count_recomputes_an_assumed_capacity_only():
     stated = base_problem(n_orders=30, n_vehicles=3, vehicle_capacity=12)
     p3 = with_vehicle_count(stated, 5)
     assert p3.n_vehicles == 5 and p3.capacity == 12
+
+
+def test_the_capacity_field_replaces_the_assumed_capacity_and_survives_count_changes():
+    from orbitroute.understanding.constraints import with_capacity, with_order_count
+
+    assumed = base_problem(n_orders=30, n_vehicles=3)
+    p = with_capacity(assumed, 8)
+    assert p.capacity == 8
+    assert not any("a truck carries" in a for a in p.assumptions) and any("Capacity field" in a for a in p.assumptions)
+    assert any("infeasible as stated" in a for a in p.assumptions)  # 3 x 8 < 30
+    p2 = with_order_count(p, 20)
+    assert p2.capacity == 8  # not recomputed: the user stated it
+    assert not any("infeasible" in a for a in with_capacity(assumed, 10).assumptions)

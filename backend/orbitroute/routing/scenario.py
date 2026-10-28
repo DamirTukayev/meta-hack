@@ -113,7 +113,7 @@ def make_scenario(
         candidates.append(i)
         weights.append(max(KIND_WEIGHT.get(k, 1.0) for k in kinds))
     if len(candidates) < problem.n_orders:
-        raise ValueError(f"only {len(candidates)} usable road nodes for {problem.n_orders} orders")
+        raise ValueError(f"There is room for only about {len(candidates)} orders on the roads the trucks may use here ({problem.n_orders} were asked for). Ask for fewer orders or relax what to avoid.")
 
     chosen: list[int] = []
     chosen_targets: dict[int, tuple[float, float]] = {}

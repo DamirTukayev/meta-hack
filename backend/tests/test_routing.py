@@ -112,3 +112,12 @@ def test_without_a_warehouse_the_depot_goes_to_the_largest_dry_piece_of_road(mon
     monkeypatch.setattr(sc, "_legal_component_sizes", lambda g, s, p: sizes)
     depot = sc.pick_depot(graph, scene, prob, prefer_connected=True)
     assert depot in big
+
+
+def test_asking_for_more_orders_than_the_roads_can_hold_gives_a_message_a_user_can_act_on():
+    import pytest
+
+    graph, scene = grid_graph(), grid_scene()
+    with pytest.raises(ValueError, match="room for only about .* orders") as err:
+        make_scenario(graph, scene, problem(n_orders=250), seed=0)
+    assert "Ask for fewer orders" in str(err.value)
