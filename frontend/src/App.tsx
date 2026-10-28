@@ -29,6 +29,7 @@ function RequestPanel(props: {
   hasPlan: boolean
   trucks: number
   onTrucks: (n: number) => void
+  offline: boolean // demo mode: no API key, only recorded answers
 }) {
   const { sample, state, custom } = props
   const running = state.status === 'running'
@@ -36,11 +37,16 @@ function RequestPanel(props: {
   return (
     <section className="panel request">
       <h2>Request</h2>
+      {props.offline && (
+        <p className="demo-note" role="note">
+          <b>Demo mode</b> (no API key): the bundled images and their example sentences run on recorded model answers. Your own sentences, new map areas and voice need a key, see the README.
+        </p>
+      )}
       <label>Satellite image</label>
       <select value={sample?.name} onChange={(e) => props.onSample(e.target.value)} disabled={running}>
         {props.samples.map((s) => <option key={s.name} value={s.name}>{s.label}</option>)}
       </select>
-      <button className="link" onClick={props.onPickArea} disabled={running}>＋ Choose another area on the map</button>
+      <button className="link" onClick={props.onPickArea} disabled={running || props.offline} title={props.offline ? 'Demo mode: a new map area needs a Meta API key' : undefined}>＋ Choose another area on the map</button>
       <div className="field-row">
         <label htmlFor="trucks">Trucks</label>
         <div className="count">
@@ -52,7 +58,7 @@ function RequestPanel(props: {
       <label>Time and what to avoid</label>
       <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="by 18:00, avoid the industrial zone" />
       <div className="voice">
-        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || voice.phase === 'sending' || !voice.supported} aria-pressed={voice.phase === 'recording'}>
+        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || props.offline || voice.phase === 'sending' || !voice.supported} title={props.offline ? 'Demo mode: voice needs a Meta API key' : undefined} aria-pressed={voice.phase === 'recording'}>
           {voice.phase === 'recording' ? '■ Stop' : voice.phase === 'sending' ? 'Listening to it…' : '🎙 Speak'}
         </button>
         <span className="voice-note">
@@ -184,12 +190,14 @@ export default function App() {
   const [trucks, setTrucks] = useState(3)
   const [stale, setStale] = useState(false) // inputs changed after a plan was made: the plan on the map is out of date
   const [picking, setPicking] = useState(false)
+  const [offline, setOffline] = useState(false)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
   const customRef = useRef(custom)
   customRef.current = custom
   const [agentPlaced, setAgentPlaced] = useState(false) // the orders on the map came from the agent, not from clicks
 
   useEffect(() => {
+    fetch('/api/health').then((r) => r.json()).then((h) => setOffline(!!h.offline_demo)).catch(() => {})
     fetch('/api/samples').then((r) => r.json()).then((s: Sample[]) => {
       setSamples(s)
       const first = s.find((x) => x.name === 'columbus') ?? s[0]
@@ -293,7 +301,7 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} />
+        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} offline={offline} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">

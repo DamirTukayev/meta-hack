@@ -1,0 +1,1 @@
+{"sentence": "by 16:00, avoid the flooded areas and the residential streets", "parsed": {"n_orders": 20, "n_vehicles": 3, "vehicle_capacity": null, "shift_start": null, "deadline": "16:00", "service_minutes": null, "avoid_zone_kinds": ["flooded", "residential"], "objective": "min_time", "notes": []}, "head": {"n_orders": 20, "n_vehicles": 3}}

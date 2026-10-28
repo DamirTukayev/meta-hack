@@ -134,6 +134,7 @@ def test_new_areas_are_rate_limited_per_ip(web):
 
 def test_outside_the_us_and_bad_coordinates_are_rejected(web, monkeypatch):
     monkeypatch.undo()  # use the real fetch_tile, which refuses non-US points before any request
+    monkeypatch.setattr(api, "offline_demo", False)  # undo() also removed the live-mode default of conftest.py
     c = TestClient(api.app)
     assert c.post("/api/areas", json={"lat": 48.85, "lon": 2.35}).status_code == 422
     assert c.post("/api/areas", json={"lat": 120, "lon": 0}).status_code == 422

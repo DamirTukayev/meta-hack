@@ -19,7 +19,7 @@ from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.serialize import graph_json, mask_png, plan_json, report_json, scenario_json, scene_json
-from orbitroute.understanding.request import parse_request
+from orbitroute.understanding.request import parse_request, parse_request_cached
 from orbitroute.understanding.scene import Scene, analyze_scene
 
 SAMPLES_DIR = ROOT / "data" / "samples"
@@ -104,7 +104,12 @@ def run_pipeline(
 
     emit(Event("stage", "Turning the request into routing constraints", {"stage": "request"}))
     has_custom = custom is not None and not custom.empty
-    problem = parse_request(text, request_text(request, custom, auto_orders, trucks), run=run)
+    full_text = request_text(request, custom, auto_orders, trucks)
+    n_head = len(custom.orders) if custom is not None and custom.orders else auto_orders
+    if n_head or trucks:  # the counts come from the interface, so the answer for this sentence can be remembered and reused
+        problem = parse_request_cached(text, request, full_text, n_orders=n_head, n_vehicles=trucks, run=run)
+    else:
+        problem = parse_request(text, full_text, run=run)
     flood_note = None
     if "flooded" in problem.avoid_zone_kinds and not any(z.kind == "flooded" for z in scene.zones):
         emit(Event("stage", "Finding flooded areas with SAM 3.1", {"stage": "scene"}))
