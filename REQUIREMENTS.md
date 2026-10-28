@@ -115,7 +115,7 @@ Indie track: 1st $150K · 2nd $100K · 3rd $75K · 4th $50K · 5th $25K.
 
 | Service | Status |
 |---|---|
-| Meta API | $150 — received ✅ (a card on file is required to make API calls; pre-authorization is released in a few days) |
+| Meta API | $150 — received ✅ (a card on file is required to make API calls). **Valid only for the 10-day development window** (per the Discord bot citing the Official Rules; Meta gives nothing beyond the $150), so after Nov 4 calls would be billed to the card: switch any hosted copy to demo mode (no key) or set `DEMO_PAID_CALLS_ENABLED=false` |
 | Baseten | $100 + 2M TPM — application submitted; **use `meta-models/muse-spark-open-1026`** (the docs say `muse-spark-open` — wrong for this event) |
 | Modal | $100 — application submitted (workspace `tukaevdamirg`) |
 | Fireworks | the event page (re-checked Oct 28) says $100 in credits for select participants, plus a workshop by Sinan Ozdemir; earlier notes said $25 for shortlisted teams — optional, not applied for |
