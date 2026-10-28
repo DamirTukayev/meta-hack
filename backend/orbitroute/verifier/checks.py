@@ -13,6 +13,10 @@ from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan
 from orbitroute.routing.zones import ZONE_TOLERANCE_M, edge_key, inside_lengths
 
+# A link the road graph drew itself across a gap between two pieces of found road. Short ones are tree shadows and crossings;
+# longer ones are a guess that the photo does not show, so a plan that drives on them says so (it is a note, not a failed check).
+UNCONFIRMED_MIN_M = 30.0
+
 CHECK_NAMES = {
     "coverage": "Every order is served exactly once",
     "fleet": "Fleet size is respected",
@@ -45,6 +49,7 @@ class Report:
     violations: list[Violation]
     metrics: dict
     excluded: dict[int, str] = field(default_factory=dict)
+    unconfirmed: list[tuple[int, int]] = field(default_factory=list)  # driven graph edges the photo does not show directly
 
     @property
     def ok(self) -> bool:
@@ -103,6 +108,8 @@ def verify(
         violations.append(Violation("fleet", f"{len(used)} trucks used, only {p.n_vehicles} available", data={"used": len(used)}))
 
     total_m = 0.0
+    unconfirmed_m = 0.0
+    unconfirmed: set[tuple[int, int]] = set()
     latest_end = 0.0
     route_metrics = []
     for r in plan.routes:
@@ -132,6 +139,9 @@ def verify(
             for u, v in zip(path, path[1:]):
                 t += g[u][v]["time_s"]
                 route_m += g[u][v]["length_m"]
+                if g[u][v].get("bridge") and g[u][v]["length_m"] > UNCONFIRMED_MIN_M:
+                    unconfirmed_m += g[u][v]["length_m"]
+                    unconfirmed.add(edge_key(u, v))
                 m_in = inside.get(edge_key(u, v), 0.0)
                 if m_in > ZONE_TOLERANCE_M:
                     zone_hits.append({"edge": edge_key(u, v), "inside_m": m_in, "leg": leg_idx})
@@ -176,5 +186,8 @@ def verify(
         "zones": "no avoided zone entered" if "zones" not in by_kind else f"{sum(v.data['inside_m'] for v in by_kind['zones']):.0f} m inside avoided zones",
     }
     checks = [Check(k, title, k not in by_kind, details[k]) for k, title in CHECK_NAMES.items()]
-    metrics = {"total_km": round(total_m / 1000, 2), "last_return": _fmt_clock(latest_end), "routes": route_metrics}
-    return Report(checks=checks, violations=violations, metrics=metrics, excluded=dict(excluded))
+    metrics = {
+        "total_km": round(total_m / 1000, 2), "last_return": _fmt_clock(latest_end), "routes": route_metrics,
+        "unconfirmed_m": round(unconfirmed_m), "unconfirmed_share": round(unconfirmed_m / total_m, 3) if total_m else 0.0,
+    }
+    return Report(checks=checks, violations=violations, metrics=metrics, excluded=dict(excluded), unconfirmed=sorted(unconfirmed))

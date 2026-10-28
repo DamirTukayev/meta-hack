@@ -148,6 +148,11 @@ function Checklist({ report, title }: { report?: ReportGeo; title: string }) {
         ))}
       </ul>
       {report?.violations.map((v, i) => <p key={i} className="violation">{v.message}</p>)}
+      {!!report?.metrics.unconfirmed_m && (
+        <p className="gap-note" role="note">
+          <b>Not confirmed by the photo:</b> {report.metrics.unconfirmed_m} m ({Math.round((report.metrics.unconfirmed_share ?? 0) * 100)}% of the driving) runs on links drawn across gaps in the roads found. The verifier counts them as roads; the photo does not show one there.
+        </p>
+      )}
     </section>
   )
 }

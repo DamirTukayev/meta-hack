@@ -229,6 +229,9 @@ export default function MapView(props: {
                 </g>
               )
             })}
+          {layers.routes && report?.unconfirmed?.map(([a, b], i) => (
+            <line key={'u' + i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#fff" strokeWidth={3 * u} strokeDasharray={`${3 * u} ${6 * u}`} strokeLinecap="round" opacity={0.95} />
+          ))}
           {report?.violations
             .filter((v) => v.segments)
             .flatMap((v) => v.segments!)
@@ -379,6 +382,7 @@ export default function MapView(props: {
         <span><i className="sq" />Depot: where every truck starts and ends</span>
         <span><i className="line" />A colour is one truck; arrows show the direction, the dashed part is the way back</span>
         <span><i className="num">2</i>Order number in the circle = the order the truck visits it in; <b>#7</b> = the order's own number</span>
+        {(report?.unconfirmed?.length ?? 0) > 0 && <span><i className="gap" />White dots on a route = a link drawn across a gap in the roads found; the photo does not show a road there</span>}
         <span><i className="viol" />Red pulsing road = a plan broke the “avoid” rule there</span>
         {state.orderTargets.some(Boolean) && <span><i className="bld" />Amber square = the building an order belongs to; the dashed line is the road it is served from</span>}
         {Object.keys(report?.excluded ?? {}).length > 0 && <span><i className="cut">×</i>Dashed red × = an order left out because the zone cuts it off</span>}
