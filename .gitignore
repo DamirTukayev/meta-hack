@@ -57,3 +57,10 @@ budget_state_*.json
 
 # Local-only submission answers
 SUBMISSION.md
+
+# Local agent instructions and skills (kept on disk for the coding assistant, not published)
+AGENTS.md
+CLAUDE.md
+.agents/
+.claude/skills
+
