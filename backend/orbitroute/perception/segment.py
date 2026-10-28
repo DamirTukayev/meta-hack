@@ -15,12 +15,11 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from orbitroute.config import ROOT, resolve_cached
+from orbitroute.config import CACHE_DIR, resolve_cached
 from orbitroute.llm.budget import RunBudget
 from orbitroute.llm.client import MetaClient
 from orbitroute.perception.sam import parse_instances, response_text
 
-CACHE_DIR = ROOT / "data" / "cache"
 # Narrow residential streets are only found when each tile is small, and different tilings find different streets,
 # so the masks of several tilings are united. Measured against OpenStreetMap on two tiles (eval/ROADS.md): one 6x6
 # tiling finds 66% of the named streets, 6x6 + 12x12 finds 77% at the same precision (about $0.45 per new image).

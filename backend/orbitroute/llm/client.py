@@ -67,33 +67,42 @@ def guard_for(settings: Settings, provider: str = "meta") -> BudgetGuard:
     """Each provider has its own credits, so each gets its own persistent spend counter and cap."""
     if provider == "baseten":
         return BudgetGuard(settings.baseten_state_path, settings.baseten_budget_cap_usd, settings.paid_calls_enabled)
+    if provider == "modal":
+        return BudgetGuard(settings.modal_state_path, settings.modal_budget_cap_usd, settings.paid_calls_enabled)
     return BudgetGuard(settings.budget_state_path, settings.budget_hard_cap_usd, settings.paid_calls_enabled)
 
 
 class FailoverClient:
-    """Text calls go to `primary`; if it fails (rate limit, no credits left, outage) or its budget is used up, `secondary` answers."""
+    """Text calls go to the first client; if it fails (rate limit, no credits left, outage) or its budget is used up, the next one answers."""
 
-    def __init__(self, primary: "MetaClient", secondary: "MetaClient"):
-        self.primary, self.secondary = primary, secondary
+    def __init__(self, *clients: "MetaClient"):
+        if not clients:
+            raise ValueError("FailoverClient needs at least one client")
+        self.clients = clients
+        self.primary, self.secondary = clients[0], clients[-1]  # kept for callers that name the ends of the chain
+
+    def _call(self, method: str, *args: Any, **kw: Any) -> Any:
+        last: Exception | None = None
+        for client in self.clients:
+            try:
+                return getattr(client, method)(*args, **kw)
+            except (ApiError, httpx.HTTPError, BudgetExceeded, json.JSONDecodeError) as exc:
+                last = exc
+        assert last is not None
+        raise last
 
     def chat_json(self, *args: Any, **kw: Any) -> tuple[Any, ChatResult]:
-        try:
-            return self.primary.chat_json(*args, **kw)
-        except (ApiError, httpx.HTTPError, BudgetExceeded):
-            return self.secondary.chat_json(*args, **kw)
+        return self._call("chat_json", *args, **kw)
 
     def chat(self, *args: Any, **kw: Any) -> ChatResult:
-        try:
-            return self.primary.chat(*args, **kw)
-        except (ApiError, httpx.HTTPError, BudgetExceeded):
-            return self.secondary.chat(*args, **kw)
+        return self._call("chat", *args, **kw)
 
 
 class MetaClient:
     """Chat / segmentation client for an OpenAI-compatible endpoint.
 
-    `provider="meta"` is the Meta Model API. `provider="baseten"` serves the open-weight Muse Spark Open
-    through Baseten (text steps only; it has no SAM).
+    `provider="meta"` is the Meta Model API. `provider="baseten"` and `provider="modal"` serve the open-weight Muse Spark Open
+    through Baseten and through a Modal shared Endpoint (text steps only; neither has SAM).
     """
 
     def __init__(
@@ -110,6 +119,10 @@ class MetaClient:
             key, base_url, self.default_model = settings.baseten_api_key, settings.baseten_base_url, settings.baseten_model
             if not key:
                 raise RuntimeError("BASETEN_API_KEY is not set (see .env.example)")
+        elif provider == "modal":
+            key, base_url, self.default_model = settings.modal_endpoint_token, settings.modal_endpoint_url, settings.modal_model
+            if not (key and base_url):
+                raise RuntimeError("MODAL_ENDPOINT_URL and MODAL_ENDPOINT_TOKEN are not set (see .env.example)")
         else:
             key, base_url, self.default_model = settings.api_key, settings.base_url, DEFAULT_MODEL
             if not key:
@@ -135,7 +148,7 @@ class MetaClient:
         self._guard.check(est_cost, run)
 
         body: dict[str, Any] = {"model": model, "messages": messages}
-        if self.provider == "baseten":  # plain OpenAI-style parameters
+        if self.provider in ("baseten", "modal"):  # plain OpenAI-style parameters
             body["max_tokens"] = max_completion_tokens
         else:
             body["max_completion_tokens"] = max_completion_tokens
@@ -144,11 +157,11 @@ class MetaClient:
             body["response_format"] = response_format
 
         data = self._post("/chat/completions", body)
-        usage = data.get("usage", {})
-        in_tok = usage.get("prompt_tokens", 0)
-        out_tok = usage.get("completion_tokens", 0)
-        cached = usage.get("prompt_tokens_details", {}).get("cached_tokens", 0)
-        reasoning = usage.get("completion_tokens_details", {}).get("reasoning_tokens", 0)
+        usage = data.get("usage") or {}
+        in_tok = usage.get("prompt_tokens") or 0
+        out_tok = usage.get("completion_tokens") or 0
+        cached = (usage.get("prompt_tokens_details") or {}).get("cached_tokens") or 0  # some providers send null instead of omitting the field
+        reasoning = (usage.get("completion_tokens_details") or {}).get("reasoning_tokens") or 0
         cost = token_cost(model, in_tok, out_tok, cached)
         self._guard.record(cost, label, run)
 

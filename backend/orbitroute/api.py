@@ -85,13 +85,26 @@ def get_client() -> MetaClient:
     return _client
 
 
-def get_text_client() -> MetaClient:
-    """Client for the text-reasoning steps: Muse Spark Open on Baseten when configured, else the Meta API."""
+def text_provider_order() -> list[str]:
+    """Open-weight providers that are set up, the chosen one first; the Meta API always answers last."""
+    configured = []
+    if settings.baseten_api_key:
+        configured.append("baseten")
+    if settings.modal_endpoint_url and settings.modal_endpoint_token:
+        configured.append("modal")
+    if settings.reasoning_provider in configured:
+        configured.sort(key=lambda p: p != settings.reasoning_provider)
+    return configured
+
+
+def get_text_client():
+    """Client for the text-reasoning steps: open-weight Muse Spark Open (Baseten, then Modal) when REASONING_PROVIDER asks for it, with the Meta API as the safety net."""
     global _text_client
-    if settings.reasoning_provider != "baseten":
+    if settings.reasoning_provider == "meta":
         return get_client()
-    if _text_client is None:  # open-weight first, the Meta API as a safety net
-        _text_client = FailoverClient(MetaClient(settings, guard_for(settings, "baseten"), provider="baseten"), get_client())
+    if _text_client is None:
+        chain = [MetaClient(settings, guard_for(settings, p), provider=p) for p in text_provider_order()]
+        _text_client = FailoverClient(*chain, get_client())
     return _text_client
 
 
@@ -153,7 +166,13 @@ async def transcribe(request: Request) -> dict:
 @app.get("/api/usage")
 def usage() -> dict:
     """Estimated spend per provider from our own counters. The providers' dashboards remain the source of truth."""
-    return {"meta": guard.summary(), "baseten": guard_for(settings, "baseten").summary(), "reasoning_provider": settings.reasoning_provider}
+    return {
+        "meta": guard.summary(),
+        "baseten": guard_for(settings, "baseten").summary(),
+        "modal": guard_for(settings, "modal").summary(),
+        "reasoning_provider": settings.reasoning_provider,
+        "text_chain": [*text_provider_order(), "meta"] if settings.reasoning_provider != "meta" else ["meta"],
+    }
 
 
 @app.get("/api/samples")

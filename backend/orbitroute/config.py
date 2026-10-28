@@ -9,6 +9,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[2]
+# Where the app writes what it learns (model answers, downloaded map areas). Locally that is data/; on a host with a
+# read-only image it points to a persistent volume (ORBITROUTE_STATE_DIR).
+STATE_DIR = Path(os.environ.get("ORBITROUTE_STATE_DIR", ROOT / "data"))
+CACHE_DIR = STATE_DIR / "cache"
+AREAS_DIR = STATE_DIR / "areas"
 PREWARMED_DIR = ROOT / "data" / "prewarmed"  # committed model answers for the bundled samples, so a fresh deployment pays nothing
 
 
@@ -32,9 +37,14 @@ class Settings:
     baseten_api_key: str
     baseten_base_url: str
     baseten_model: str
-    reasoning_provider: str  # "meta" or "baseten": which endpoint serves the text-reasoning steps
+    reasoning_provider: str  # "meta", "baseten" or "modal": which endpoint serves the text-reasoning steps first
     baseten_budget_cap_usd: float
     baseten_state_path: Path
+    modal_endpoint_url: str = ""  # a Modal shared Endpoint serving Muse Spark Open (OpenAI-compatible)
+    modal_endpoint_token: str = ""  # proxy token "wk-...ws-..."
+    modal_model: str = "meta-models/Muse-Spark-Open-816B-A42B"
+    modal_budget_cap_usd: float = 60.0
+    modal_state_path: Path = Path("budget_state_modal.json")
     run_limit_per_ip_hour: int = 20
     run_limit_per_day: int = 300
     max_concurrent_runs: int = 3
@@ -58,6 +68,11 @@ class Settings:
             # Baseten credits ($100) are a separate pot from the Meta credits; our estimate of their price is conservative
             baseten_budget_cap_usd=float(os.environ.get("BASETEN_BUDGET_CAP_USD", "60")),
             baseten_state_path=Path(os.environ.get("BASETEN_BUDGET_STATE_PATH", ROOT / "budget_state_baseten.json")),
+            modal_endpoint_url=os.environ.get("MODAL_ENDPOINT_URL", "").rstrip("/"),
+            modal_endpoint_token=os.environ.get("MODAL_ENDPOINT_TOKEN", ""),
+            modal_model=os.environ.get("MODAL_MODEL", "meta-models/Muse-Spark-Open-816B-A42B"),
+            modal_budget_cap_usd=float(os.environ.get("MODAL_BUDGET_CAP_USD", "60")),
+            modal_state_path=Path(os.environ.get("MODAL_BUDGET_STATE_PATH", ROOT / "budget_state_modal.json")),
             run_limit_per_ip_hour=int(os.environ.get("RUN_LIMIT_PER_IP_HOUR", "20")),
             run_limit_per_day=int(os.environ.get("RUN_LIMIT_PER_DAY", "300")),
             max_concurrent_runs=int(os.environ.get("MAX_CONCURRENT_RUNS", "3")),

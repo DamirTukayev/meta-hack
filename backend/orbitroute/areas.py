@@ -6,10 +6,9 @@ import hashlib
 import json
 from dataclasses import dataclass
 
-from orbitroute.config import ROOT
+from orbitroute.config import AREAS_DIR
 from orbitroute.naip import DEFAULT_PX, DEFAULT_SPAN_M, fetch_tile, mercator_bbox
 
-AREAS_DIR = ROOT / "data" / "areas"
 PREFIX = "area-"
 MAX_AREAS = 300  # picked areas kept on disk; the oldest are deleted beyond this, so downloads cannot fill the disk
 

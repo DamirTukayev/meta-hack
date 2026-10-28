@@ -15,12 +15,11 @@ from PIL import Image
 from shapely.geometry import Point, Polygon
 from shapely.prepared import prep
 
-from orbitroute.config import ROOT, resolve_cached
+from orbitroute.config import CACHE_DIR, resolve_cached
 from orbitroute.llm.budget import RunBudget
 from orbitroute import prompts
 from orbitroute.llm.client import MetaClient, image_part
 
-CACHE_DIR = ROOT / "data" / "cache"
 ZONE_KINDS = ["industrial", "commercial", "residential", "park_forest", "other"]
 
 SCENE_SCHEMA = {
