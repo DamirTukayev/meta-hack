@@ -2,6 +2,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useRef, useState } from 'react'
 import type { Sample } from './types'
+import { accessHeaders } from './access'
 
 const SPAN_M = 1500 // must match the server: the picked square is 1.5 km on a side
 const MIN_ZOOM = 14
@@ -88,7 +89,7 @@ export default function AreaPicker(props: { onClose: () => void; onChosen: (s: S
     setError('')
     setBusy('Fetching the aerial image…')
     try {
-      const r = await fetch('/api/areas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lat, lon: lng }) })
+      const r = await fetch('/api/areas', { method: 'POST', headers: { 'Content-Type': 'application/json', ...accessHeaders() }, body: JSON.stringify({ lat, lon: lng }) })
       const j = await r.json()
       if (!r.ok) throw new Error(typeof j.detail === 'string' ? j.detail : 'This place could not be used.')
       props.onChosen(j as Sample)

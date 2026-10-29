@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { downsample, encodeWav } from './wav'
+import { accessHeaders } from './access'
 
 const TARGET_RATE = 16000
 const MAX_SECONDS = 20
@@ -50,7 +51,7 @@ export function useVoice(onText: (text: string) => void) {
     setPhase('sending')
     try {
       const wav = encodeWav(downsample(all, rate, TARGET_RATE), Math.min(rate, TARGET_RATE))
-      const res = await fetch('/api/transcribe', { method: 'POST', headers: { 'Content-Type': 'audio/wav' }, body: wav })
+      const res = await fetch('/api/transcribe', { method: 'POST', headers: { 'Content-Type': 'audio/wav', ...accessHeaders() }, body: wav })
       const j = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(typeof j.detail === 'string' ? j.detail : 'Speech recognition failed.')
       if (!j.text) throw new Error('I could not hear any words. Try again, a bit closer to the microphone.')

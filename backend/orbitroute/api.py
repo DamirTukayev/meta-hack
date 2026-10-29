@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import hmac
 import json
 import logging
 import os
 import queue
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 
 from typing import Literal
@@ -53,6 +55,8 @@ area_limit_all = RateLimiter(max_events=12, window_s=3600)
 # Every run costs model calls (about $0.006-0.02 on a bundled sample, about $0.5 on a new area), so runs are limited too.
 run_limit_ip = RateLimiter(max_events=settings.run_limit_per_ip_hour, window_s=3600)
 run_limit_day = RateLimiter(max_events=settings.run_limit_per_day, window_s=86400)
+# Wrong access codes per caller: guessing the code is slow, and a correct one is never held up by this.
+access_limit_ip = RateLimiter(max_events=8, window_s=3600)
 asr_limit_ip = RateLimiter(max_events=30, window_s=3600)
 asr_limit_all = RateLimiter(max_events=400, window_s=86400)
 MAX_AUDIO_BYTES = 2_000_000  # about 60 s of 16 kHz mono 16-bit PCM
@@ -80,6 +84,42 @@ def client_ip(request: Request) -> str:
         if len(parts) >= settings.trusted_proxy_hops:
             return parts[-settings.trusted_proxy_hops]
     return request.client.host if request.client else "unknown"
+
+
+def paid_window_open() -> bool:
+    """False once PAID_CALLS_UNTIL has passed: the credits behind the keys are only good until then."""
+    until = settings.paid_calls_until
+    return until is None or datetime.now(timezone.utc) < until
+
+
+def live_for(request: Request) -> bool:
+    """May this caller spend model calls? Not in the offline demo, not after PAID_CALLS_UNTIL, and, when ACCESS_CODE is set,
+    only with that code in the X-Access-Code header. Everyone else gets the recorded demo, which costs nothing."""
+    if offline_demo or not paid_window_open():
+        return False
+    if not settings.access_code:
+        return True
+    given = request.headers.get("x-access-code", "")
+    if not given:
+        return False
+    if hmac.compare_digest(given.encode(), settings.access_code.encode()):
+        return True
+    wait = access_limit_ip.check(client_ip(request))
+    if wait:
+        raise HTTPException(429, f"Too many wrong access codes. Try again in {int(wait // 60) + 1} min.", headers={"Retry-After": str(int(wait) + 1)})
+    return False
+
+
+def closed_message() -> str:
+    """Why a caller got the recorded demo although the server has keys."""
+    if offline_demo:
+        return OfflineClient.MESSAGE
+    if not paid_window_open():
+        return "Live mode is closed: the model credits behind this demo are used up. The bundled images and their example sentences still run on recorded answers."
+    return (
+        "Live mode needs the access code. Without it the bundled images and their example sentences run on recorded answers; "
+        "to type your own sentence, pick a new map area or use your voice, enter the code you were given."
+    )
 
 
 def get_client() -> MetaClient:
@@ -119,7 +159,17 @@ app = FastAPI(title="OrbitRoute")
 
 @app.get("/api/health")
 def health() -> dict:
-    return {"ok": True, "offline_demo": offline_demo, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4), "reasoning_provider": settings.reasoning_provider}
+    return {
+        "ok": True, "offline_demo": offline_demo, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4),
+        "reasoning_provider": settings.reasoning_provider, "access_code_required": bool(settings.access_code), "paid_window_open": paid_window_open(),
+    }
+
+
+@app.get("/api/access")
+def access(request: Request) -> dict:
+    """Does the access code the browser holds unlock live mode? (The page asks before it offers voice and new areas.)"""
+    live = live_for(request)
+    return {"required": bool(settings.access_code), "live": live, "window_open": paid_window_open(), "message": "" if live else closed_message()}
 
 
 def sample_dict(s) -> dict:
@@ -140,8 +190,8 @@ def sample_dict(s) -> dict:
 @app.post("/api/transcribe")
 async def transcribe(request: Request) -> dict:
     """Speech to text for the request box: the browser records a short WAV, Muse Voice Transcribe turns it into text."""
-    if offline_demo:
-        raise HTTPException(503, "Demo mode: voice input needs a Meta API key (see the README).")
+    if not live_for(request):
+        raise HTTPException(503 if offline_demo else 403, "Demo mode: voice input needs a Meta API key (see the README)." if offline_demo else closed_message())
     if not guard.paid_calls_enabled:
         raise HTTPException(503, "The demo is paused right now. Please try again later.")
     wait = max(asr_limit_ip.check(client_ip(request)), asr_limit_all.check("all"))
@@ -200,6 +250,8 @@ def choose_area(body: AreaRequest, request: Request) -> dict:
         raise HTTPException(503, "Demo mode: new map areas need a Meta API key to read the photo (see the README).")
     name = area_id(body.lat, body.lon)
     if not (AREAS_DIR / f"{name}.jpg").exists():  # only new downloads count against the limits
+        if not live_for(request):  # reading a new photo costs SAM calls, so it is for those with the code
+            raise HTTPException(403, closed_message())
         wait = max(area_limit_ip.check(client_ip(request)), area_limit_all.check("all"))
         if wait:
             raise HTTPException(429, f"Too many new areas right now. Try again in {int(wait // 60) + 1} min, or pick one of the ready-made areas.")
@@ -243,6 +295,7 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
         raise HTTPException(404, "unknown sample")
     if not guard.paid_calls_enabled:
         raise HTTPException(503, "The demo is paused right now. Please try again later.")
+    live = live_for(request)
     wait = max(run_limit_ip.check(client_ip(request)), run_limit_day.check("all"))
     if wait:
         raise HTTPException(429, f"Too many runs right now. Try again in {int(wait // 60) + 1} min.", headers={"Retry-After": str(int(wait) + 1)})
@@ -262,9 +315,12 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
 
     def work() -> None:
         try:
+            # Callers without live access get a client that refuses every model call (recorded answers are read before any client is asked)
+            client = get_client() if live else OfflineClient(closed_message())
+            text_client = get_text_client() if live else client
             run_pipeline(
-                smp, request, client=get_client(), text_client=get_text_client(), guard=guard, run_cap_usd=settings.run_cap_usd,
-                seed=seed, use_model_decider=decider == "model" and not offline_demo, custom=custom, auto_orders=auto_orders, trucks=trucks, capacity=capacity, emit=emit,
+                smp, request, client=client, text_client=text_client, guard=guard, run_cap_usd=settings.run_cap_usd,
+                seed=seed, use_model_decider=decider == "model" and live, custom=custom, auto_orders=auto_orders, trucks=trucks, capacity=capacity, emit=emit,
             )
         except OfflineDemo as exc:
             q.put(("failure", {"message": str(exc)}))

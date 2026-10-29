@@ -318,4 +318,9 @@ header .stepper { flex: 1; min-width: 420px; border: 0; background: none; paddin
 .note.rec { color: var(--amber, #ffb000); margin-top: 8px; }
 .note.rec small { color: var(--muted); }
 .demo-note { margin: 0 0 12px; padding: 8px 10px; border: 1px solid var(--amber, #ffb000); color: var(--text, #e6e6e6); font-size: 12px; line-height: 1.45; }
+.access-form { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+.access-form input { flex: 1 1 120px; min-width: 0; padding: 6px 8px; background: var(--bg, #0b0b0b); color: var(--text, #e6e6e6); border: 1px solid var(--line, #444); font: inherit; }
+.access-form button { padding: 6px 10px; border: 1px solid var(--amber, #ffb000); background: transparent; color: var(--amber, #ffb000); font: inherit; cursor: pointer; }
+.access-form button:disabled { opacity: .5; cursor: default; }
+.access-form .err { flex-basis: 100%; color: var(--bad, #ff6b5a); font-size: 12px; }
 .demo-note b { color: var(--amber, #ffb000); text-transform: uppercase; letter-spacing: .06em; }

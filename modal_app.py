@@ -3,7 +3,7 @@
 Setup, once:
     uv export --no-hashes --no-dev --no-emit-project --frozen | grep -v '^#' > deploy/requirements-modal.txt
     (cd frontend && npm run build)
-    modal secret create orbitroute-keys --from-dotenv .env      # MODEL_API_KEY, BASETEN_API_KEY, MODAL_ENDPOINT_*, caps ...
+    scripts/make_deploy_secret.sh                               # the provider keys from .env + an access code + low caps of their own (prints the code)
 Check the image and the volume without publishing anything (needs no secret):
     ORBITROUTE_SELFTEST=1 modal run modal_app.py
 Publish (gives a public URL; spends credits only while it serves requests):
