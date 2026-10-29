@@ -60,6 +60,11 @@ export interface Iteration {
   source?: string
 }
 export interface LogEntry { id: number; type: string; text: string; t: number; source?: string }
+export interface Shelter { xy: XY; area_m2: number; capacity: number; minutes: number; kind: string | null; name: string | null; guess?: string }
+export interface Exposure {
+  buildings: number; in_water: number; surrounded: number; dry: number; people_low: number; people_high: number; assumption: string
+  shelters: Shelter[]; shelter_candidates: number; not_shelters: Record<string, number>; cut_off_by_water: number
+}
 export interface RunState {
   status: 'idle' | 'running' | 'done' | 'error'
   stage: string
@@ -68,6 +73,7 @@ export interface RunState {
   roadSource?: 'osm' | 'sam' // the graph comes from the map (the photo is evidence) or was read from the photo
   edgeRisk?: string[] // per graph edge: seen, unseen, clear, blocked or water
   evidenceKm?: Record<string, number>
+  exposure?: Exposure // buildings in or beside standing water, and large dry buildings reachable by dry roads
   inspections?: { verdict: string; condition: string; confidence: number; length_m: number; segments: [XY, XY][] }[] // what the model found when it looked at stretches the photo does not confirm
   zones: Zone[]
   warehouses: XY[]

@@ -21,6 +21,8 @@ function reduce(s: RunState, a: Action): RunState {
       return { ...s, stage: e.message, log: add(e.message) }
     case 'perception':
       return { ...s, mask: d.mask, graph: d.graph, roadSource: d.road_source, sparseRoads: d.sparse ? (d.road_km_per_km2 as number) : undefined, log: add(e.message) }
+    case 'exposure':
+      return { ...s, exposure: d as RunState['exposure'], log: add(e.message) }
     case 'inspect':
       return { ...s, inspections: d.findings as RunState['inspections'], log: add(e.message) }
     case 'evidence':

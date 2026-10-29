@@ -7,6 +7,7 @@ import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
 import AccessNote from './AccessNote'
+import ExposureCard from './ExposureCard'
 import { adoptCodeFromLink, fetchAccess, setCode } from './access'
 import type { Access } from './access'
 
@@ -381,6 +382,7 @@ export default function App() {
         </div>
         <aside>
           <Checklist report={report} title={title} />
+          {state.exposure && <ExposureCard x={state.exposure} running={state.status === 'running'} onUseDepot={(xy) => { edit({ ...custom, depot: xy }); setMode('browse') }} />}
           <AgentLog log={state.log} running={state.status === 'running'} />
         </aside>
       </main>

@@ -71,15 +71,8 @@ def cache_name(name: str) -> str:
     return f"osm_{name}.json"
 
 
-def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | None = None, deadline_s: float = 40.0) -> dict:
-    """Every way tagged `highway` inside the box, with geometry. Read from the cache (or the committed copy) when there is one; otherwise
-    the public Overpass servers are asked in turn, within `deadline_s` in all, so that a busy server never holds a run for minutes:
-    the caller falls back to the roads read from the photo."""
-    path = resolve_cached(CACHE_DIR, cache_name(name))
-    if path.exists():
-        return json.loads(path.read_text())
-    w, s, e, n = bbox_lonlat
-    query = f'[out:json][timeout:25];way["highway"]({s},{w},{n},{e});out geom;'
+def _race(query: str, path, trim_fn, what: str, *, client: httpx.Client | None, deadline_s: float) -> dict:
+    """Ask every Overpass server at once and keep (and cache at `path`) the first good answer; at most `deadline_s` in all."""
     http = client or httpx.Client(headers={"User-Agent": USER_AGENT})
     started = time.monotonic()
 
@@ -101,10 +94,10 @@ def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | N
                 except (httpx.HTTPError, ValueError, RuntimeError) as exc:
                     last = exc
                     continue
-                data = trim(got["data"])
-                CACHE_DIR.mkdir(parents=True, exist_ok=True)
+                data = trim_fn(got["data"])
+                path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(json.dumps(data))
-                log.info("OSM roads for %s read from %s in %.1f s (%d ways)", name, got["url"], time.monotonic() - started, len(data["elements"]))
+                log.info("OSM %s read from %s in %.1f s (%d elements)", what, got["url"], time.monotonic() - started, len(data["elements"]))
                 return data
         except FuturesTimeout:
             last = TimeoutError(f"no server answered within {deadline_s:.0f} s")
@@ -112,8 +105,56 @@ def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | N
         pool.shutdown(wait=False, cancel_futures=True)  # a slow server is not waited for
         if client is None:
             http.close()
-    log.warning("OSM roads for %s not read after %.1f s: %s", name, time.monotonic() - started, last)
+    log.warning("OSM %s not read after %.1f s: %s", what, time.monotonic() - started, last)
     raise OsmUnavailable(f"OpenStreetMap did not answer ({last})")
+
+
+def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | None = None, deadline_s: float = 40.0) -> dict:
+    """Every way tagged `highway` inside the box, with geometry. Read from the cache (or the committed copy) when there is one; otherwise
+    the public Overpass servers are asked, within `deadline_s` in all, so that a busy server never holds a run for minutes:
+    the caller falls back to the roads read from the photo."""
+    path = resolve_cached(CACHE_DIR, cache_name(name))
+    if path.exists():
+        return json.loads(path.read_text())
+    w, s, e, n = bbox_lonlat
+    query = f'[out:json][timeout:25];way["highway"]({s},{w},{n},{e});out geom;'
+    return _race(query, CACHE_DIR / cache_name(name), trim, f"roads for {name}", client=client, deadline_s=deadline_s)
+
+
+PLACES = "school|college|university|hospital|clinic|community_centre|place_of_worship|townhall|fire_station|library"
+SHOPS = "mall|supermarket|department_store"
+
+
+def places_cache_name(name: str) -> str:
+    return f"osm_places_{name}.json"
+
+
+def trim_places(osm: dict) -> dict:
+    """Places a crowd could go to: kind, name and the centre of each (a point is enough to match a building)."""
+    out = []
+    for el in osm.get("elements", []):
+        tags = el.get("tags", {})
+        kind = tags.get("amenity") or tags.get("shop")
+        if not kind:
+            continue
+        c = el.get("center") or ({"lat": el["lat"], "lon": el["lon"]} if "lat" in el else None)
+        if c:
+            out.append({"kind": kind, "name": tags.get("name", ""), "lat": c["lat"], "lon": c["lon"]})
+    return {"osm3s": {"timestamp_osm_base": osm.get("osm3s", {}).get("timestamp_osm_base"), "copyright": "© OpenStreetMap contributors, ODbL"}, "elements": out}
+
+
+def fetch_places(name: str, bbox_lonlat: list[float], *, client: httpx.Client | None = None, deadline_s: float = 20.0) -> list[dict]:
+    """Schools, hospitals, shops of a kind that holds a crowd, inside the box; [] when the map does not answer (they only label buildings)."""
+    path = resolve_cached(CACHE_DIR, places_cache_name(name))
+    if path.exists():
+        return json.loads(path.read_text())["elements"]
+    w, s, e, n = bbox_lonlat
+    box = f"({s},{w},{n},{e})"
+    query = f'[out:json][timeout:20];(nwr["amenity"~"^({PLACES})$"]{box};nwr["shop"~"^({SHOPS})$"]{box};);out center;'
+    try:
+        return _race(query, CACHE_DIR / places_cache_name(name), trim_places, f"places for {name}", client=client, deadline_s=deadline_s)["elements"]
+    except OsmUnavailable:
+        return []
 
 
 def to_pixels(meta: dict):

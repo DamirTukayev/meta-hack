@@ -232,6 +232,12 @@ export default function MapView(props: {
                 </g>
               )
             })}
+          {layers.zones && state.exposure?.shelters.map((s, i) => (
+            <g key={'sh' + i}>
+              <rect x={s.xy[0] - 16 * u} y={s.xy[1] - 16 * u} width={32 * u} height={32 * u} fill="#22c55e" stroke="#052e16" strokeWidth={2 * u} />
+              <text x={s.xy[0]} y={s.xy[1] + 6 * u} textAnchor="middle" fontSize={18 * u} fontWeight={700} fill="#052e16">S</text>
+            </g>
+          ))}
           {layers.routes && state.inspections?.filter((f) => f.verdict === 'blocked').flatMap((f) => f.segments).map(([a, b], i) => (
             <line key={'ib' + i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={RISK_COLORS.blocked} strokeWidth={2 * u} strokeDasharray={`${2 * u} ${4 * u}`} strokeLinecap="round" opacity={0.9} />
           ))}
@@ -395,6 +401,7 @@ export default function MapView(props: {
         <span><i className="line" />A colour is one truck; arrows show the direction, the dashed part is the way back</span>
         <span><i className="num">2</i>Order number in the circle = the order the truck visits it in; <b>#7</b> = the order's own number</span>
         {(report?.flagged?.length ?? 0) > 0 && <span><i className="gap" />Coloured dashes on a route = a map road the photo does not confirm: amber, not found in the road mask (trees, shadow or a real problem); blue, under water; red, looked at and blocked</span>}
+        {(state.exposure?.shelters.length ?? 0) > 0 && <span><i className="bld" />Green S = a large dry building a crowd could be put up in, reachable by roads that are not under water (a rough guess from the photo)</span>}
         {(state.inspections?.some((f) => f.verdict === 'blocked') ?? false) && <span><i className="gap" />Red dots = Muse Spark looked at a stretch the photo does not confirm and found standing water or debris; the agent planned around it where it could</span>}
         {(report?.unconfirmed?.length ?? 0) > 0 && <span><i className="gap" />White dots on a route = a link drawn across a gap in the roads found; the photo does not show a road there</span>}
         <span><i className="viol" />Red pulsing road = a plan broke the “avoid” rule there</span>
