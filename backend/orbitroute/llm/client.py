@@ -42,8 +42,11 @@ class OfflineClient:
         "to type your own sentence, pick a new map area or use your voice, put MODEL_API_KEY in .env (see the README)."
     )
 
+    def __init__(self, message: str | None = None):
+        self.message = message or self.MESSAGE
+
     def _refuse(self, *a: Any, **kw: Any) -> Any:
-        raise OfflineDemo(self.MESSAGE)
+        raise OfflineDemo(self.message)
 
     chat = chat_json = segment_raw = transcribe = _refuse
 

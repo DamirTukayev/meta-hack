@@ -6,6 +6,9 @@ import MapView, { IterationTabs } from './MapView'
 import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
+import AccessNote from './AccessNote'
+import { fetchAccess, setCode } from './access'
+import type { Access } from './access'
 
 const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', recommendation: '★', final: '■' }
 
@@ -32,10 +35,13 @@ function RequestPanel(props: {
   capacity: number // orders per truck; 0 = let the agent assume one
   onCapacity: (n: number) => void
   offline: boolean // demo mode: no API key, only recorded answers
+  access: Access | null // shared deployment: is live mode unlocked for this browser?
+  onUnlock: (code: string) => Promise<void>
 }) {
   const { sample, state, custom } = props
   const running = state.status === 'running'
   const voice = useVoice(props.onRequest)
+  const limited = props.offline || (props.access !== null && !props.access.live) // no live model calls for this visitor
   return (
     <section className="panel request">
       <h2>Request</h2>
@@ -44,11 +50,12 @@ function RequestPanel(props: {
           <b>Demo mode</b> (no API key): the bundled images and their example sentences run on recorded model answers. Your own sentences, new map areas and voice need a key, see the README.
         </p>
       )}
+      {!props.offline && props.access && !props.access.live && <AccessNote access={props.access} onUnlock={props.onUnlock} />}
       <label>Satellite image</label>
       <select value={sample?.name} onChange={(e) => props.onSample(e.target.value)} disabled={running}>
         {props.samples.map((s) => <option key={s.name} value={s.name}>{s.label}</option>)}
       </select>
-      <button className="link" onClick={props.onPickArea} disabled={running || props.offline} title={props.offline ? 'Demo mode: a new map area needs a Meta API key' : undefined}>＋ Choose another area on the map</button>
+      <button className="link" onClick={props.onPickArea} disabled={running || limited} title={limited ? 'Live mode only: a new map area needs a Meta API key or the access code' : undefined}>＋ Choose another area on the map</button>
       <div className="field-row">
         <label htmlFor="trucks">Trucks</label>
         <div className="count">
@@ -68,7 +75,7 @@ function RequestPanel(props: {
       <label>Time and what to avoid</label>
       <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="by 18:00, avoid the industrial zone" />
       <div className="voice">
-        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || props.offline || voice.phase === 'sending' || !voice.supported} title={props.offline ? 'Demo mode: voice needs a Meta API key' : undefined} aria-pressed={voice.phase === 'recording'}>
+        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || limited || voice.phase === 'sending' || !voice.supported} title={limited ? 'Live mode only: voice needs a Meta API key or the access code' : undefined} aria-pressed={voice.phase === 'recording'}>
           {voice.phase === 'recording' ? '■ Stop' : voice.phase === 'sending' ? 'Listening to it…' : '🎙 Speak'}
         </button>
         <span className="voice-note">
@@ -207,6 +214,7 @@ export default function App() {
   const [stale, setStale] = useState(false) // inputs changed after a plan was made: the plan on the map is out of date
   const [picking, setPicking] = useState(false)
   const [offline, setOffline] = useState(false)
+  const [access, setAccess] = useState<Access | null>(null)
   const [custom, setCustom] = useState<Custom>(emptyCustom)
   const customRef = useRef(custom)
   customRef.current = custom
@@ -214,6 +222,7 @@ export default function App() {
 
   useEffect(() => {
     fetch('/api/health').then((r) => r.json()).then((h) => setOffline(!!h.offline_demo)).catch(() => {})
+    fetchAccess().then(setAccess)
     fetch('/api/samples').then((r) => r.json()).then((s: Sample[]) => {
       setSamples(s)
       const first = s.find((x) => x.name === 'columbus') ?? s[0]
@@ -324,7 +333,7 @@ export default function App() {
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
       </header>
       <main>
-        <RequestPanel samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} capacity={capacity} onCapacity={setCapacity} offline={offline} />
+        <RequestPanel access={access} onUnlock={async (code) => { setCode(code); setAccess(await fetchAccess()) }} samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} capacity={capacity} onCapacity={setCapacity} offline={offline} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">

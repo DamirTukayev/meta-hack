@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
 import type { Problem, RunState, StreamEvent, Zone, XY } from './types'
+import { accessHeaders } from './access'
 
 export const initialState: RunState = { status: 'idle', stage: '', zones: [], warehouses: [], orders: [], orderTargets: [], iterations: [], log: [] }
 
@@ -50,7 +51,7 @@ function reduce(s: RunState, a: Action): RunState {
 }
 
 async function streamRun(body: object, onEvent: (name: string, data: any) => void, signal: AbortSignal) {
-  const res = await fetch('/api/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal })
+  const res = await fetch('/api/run', { method: 'POST', headers: { 'Content-Type': 'application/json', ...accessHeaders() }, body: JSON.stringify(body), signal })
   if (!res.ok || !res.body) {
     let detail = `The server answered ${res.status}.`
     try {

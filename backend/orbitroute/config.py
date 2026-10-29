@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -24,6 +25,14 @@ def resolve_cached(cache_dir: Path, name: str) -> Path:
         return live
     shipped = PREWARMED_DIR / name
     return shipped if shipped.exists() else live
+
+
+def _utc(text: str) -> datetime | None:
+    """An ISO date-time such as 2026-11-04T12:00:00Z (no zone = UTC); empty means no limit. A typo stops the app at start-up."""
+    if not text:
+        return None
+    moment = datetime.fromisoformat(text)
+    return moment if moment.tzinfo else moment.replace(tzinfo=timezone.utc)
 
 
 @dataclass(frozen=True)
@@ -50,6 +59,8 @@ class Settings:
     max_concurrent_runs: int = 3
     trust_proxy: bool = False
     trusted_proxy_hops: int = 1  # proxies in front of the app; the client is that many entries from the right of X-Forwarded-For
+    access_code: str = ""  # when set, only callers sending it (X-Access-Code) get live model calls; everyone else gets the recorded demo
+    paid_calls_until: datetime | None = None  # after this moment (UTC) nobody gets live model calls: the recorded demo only
 
     @classmethod
     def load(cls) -> "Settings":
@@ -78,4 +89,6 @@ class Settings:
             max_concurrent_runs=int(os.environ.get("MAX_CONCURRENT_RUNS", "3")),
             trust_proxy=os.environ.get("TRUST_PROXY", "").lower() in ("1", "true"),
             trusted_proxy_hops=max(int(os.environ.get("TRUSTED_PROXY_HOPS", "1")), 1),
+            access_code=os.environ.get("ACCESS_CODE", "").strip(),
+            paid_calls_until=_utc(os.environ.get("PAID_CALLS_UNTIL", "").strip()),
         )
