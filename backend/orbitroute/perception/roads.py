@@ -6,6 +6,7 @@ With OpenStreetMap roads the graph is the map's, and the SAM road mask is kept a
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -28,15 +29,18 @@ class Roads:
 
 
 def build_roads(client: MetaClient, sample, *, run: RunBudget | None = None, prefer: str = "osm") -> Roads:
-    mask = segment_roads(client, sample.image_bytes, run=run)
     mpp = sample.meta["m_per_px"]
     notes: list[str] = []
+    with ThreadPoolExecutor(max_workers=1) as pool:  # the map is read while SAM reads the photo, so a slow Overpass costs no extra time
+        pending = pool.submit(osm_graph, sample.name, sample.meta) if prefer == "osm" else None
+        mask = segment_roads(client, sample.image_bytes, run=run)
+        graph = None
+        if pending is not None:
+            try:
+                graph = pending.result()
+            except OsmUnavailable:
+                notes.append("OpenStreetMap did not answer, so the roads were read from the photo.")
     if prefer == "osm":
-        try:
-            graph = osm_graph(sample.name, sample.meta)
-        except OsmUnavailable:
-            graph = None
-            notes.append("OpenStreetMap did not answer, so the roads were read from the photo.")
         if graph is not None:
             area_km2 = (mask.shape[1] * mpp / 1000) * (mask.shape[0] * mpp / 1000)
             if graph.stats["road_km"] / area_km2 >= MIN_OSM_KM_PER_KM2 and graph.stats["edges"]:

@@ -11,6 +11,7 @@ mapped as private or closed to motor vehicles. Positions are image pixels, like 
 from __future__ import annotations
 
 import json
+import logging
 import math
 import re
 import time
@@ -24,6 +25,7 @@ from orbitroute.naip import to_mercator
 from orbitroute.perception.graph import Edge, RoadGraph, _resample
 
 OVERPASS = ("https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter")
+log = logging.getLogger("orbitroute")
 USER_AGENT = "OrbitRoute/0.1 (hackathon project; roads for delivery planning)"
 
 # km/h used for planning on a class of road, and a typical width in metres (the verifier only needs the speed).
@@ -67,33 +69,40 @@ def cache_name(name: str) -> str:
     return f"osm_{name}.json"
 
 
-def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | None = None, tries: int = 3) -> dict:
-    """Every way tagged `highway` inside the box, with geometry. Read from the cache (or the committed copy) when there is one."""
+def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | None = None, deadline_s: float = 40.0) -> dict:
+    """Every way tagged `highway` inside the box, with geometry. Read from the cache (or the committed copy) when there is one; otherwise
+    the public Overpass servers are asked in turn, within `deadline_s` in all, so that a busy server never holds a run for minutes:
+    the caller falls back to the roads read from the photo."""
     path = resolve_cached(CACHE_DIR, cache_name(name))
     if path.exists():
         return json.loads(path.read_text())
     w, s, e, n = bbox_lonlat
-    query = f'[out:json][timeout:50];way["highway"]({s},{w},{n},{e});out geom;'
-    http = client or httpx.Client(timeout=70, headers={"User-Agent": USER_AGENT})
+    query = f'[out:json][timeout:25];way["highway"]({s},{w},{n},{e});out geom;'
+    http = client or httpx.Client(headers={"User-Agent": USER_AGENT})
+    started = time.monotonic()
+    stop = started + deadline_s
     last: Exception | None = None
     try:
-        for attempt in range(tries):
-            for url in OVERPASS:
-                try:
-                    resp = http.post(url, data={"data": query})
-                    data = resp.json() if resp.status_code == 200 else None
-                    if isinstance(data, dict) and "elements" in data and not data.get("remark"):
-                        CACHE_DIR.mkdir(parents=True, exist_ok=True)
-                        data = trim(data)
-                        path.write_text(json.dumps(data))
-                        return data
-                    last = RuntimeError(f"{url} answered {resp.status_code}")
-                except (httpx.HTTPError, ValueError) as exc:
-                    last = exc
-            time.sleep(4 * (attempt + 1))
+        for url in OVERPASS:
+            left = stop - time.monotonic()
+            if left < 3:
+                break
+            try:
+                resp = http.post(url, data={"data": query}, timeout=min(left, 30.0))
+                data = resp.json() if resp.status_code == 200 else None
+                if isinstance(data, dict) and "elements" in data and not data.get("remark"):
+                    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+                    data = trim(data)
+                    path.write_text(json.dumps(data))
+                    log.info("OSM roads for %s read from %s in %.1f s (%d ways)", name, url, time.monotonic() - started, len(data["elements"]))
+                    return data
+                last = RuntimeError(f"{url} answered {resp.status_code}")
+            except (httpx.HTTPError, ValueError) as exc:
+                last = exc
     finally:
         if client is None:
             http.close()
+    log.warning("OSM roads for %s not read after %.1f s: %s", name, time.monotonic() - started, last)
     raise OsmUnavailable(f"OpenStreetMap did not answer ({last})")
 
 
