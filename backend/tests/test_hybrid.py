@@ -229,3 +229,64 @@ def test_a_repeated_question_is_answered_from_disk(photo):
     again = Looker([])  # would fail if asked
     inspect_plan(again, photo, scenario_on(two_way_graph(), [3]), plan_over([0, 1, 3], 3))
     assert again.calls == 0
+
+
+# --- reading the map must never hold a run ---------------------------------------------------------------------------------------
+
+
+def test_a_busy_overpass_is_given_up_on_within_the_deadline(monkeypatch, tmp_path):
+    import time
+
+    import httpx
+
+    monkeypatch.setattr(osm, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(osm, "resolve_cached", lambda d, n: d / n)
+    calls = []
+
+    def busy(request):
+        calls.append(str(request.url))
+        return httpx.Response(502, text="This Overpass API server is currently at capacity")
+
+    t0 = time.monotonic()
+    with pytest.raises(osm.OsmUnavailable):
+        osm.fetch_roads("somewhere", [0, 0, 1, 1], client=httpx.Client(transport=httpx.MockTransport(busy)), deadline_s=20)
+    assert time.monotonic() - t0 < 2 and len(calls) == len(osm.OVERPASS)  # each server asked once, no rounds of retries
+
+
+def test_a_good_answer_is_trimmed_and_remembered(monkeypatch, tmp_path):
+    import httpx
+
+    monkeypatch.setattr(osm, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(osm, "resolve_cached", lambda d, n: d / n)
+    answer = {"elements": [dict(STREETS["elements"][0], tags={"highway": "residential", "tiger:county": "x"})]}
+    asked = []
+
+    def ok(request):
+        asked.append(1)
+        return httpx.Response(200, json=answer)
+
+    http = httpx.Client(transport=httpx.MockTransport(ok))
+    first = osm.fetch_roads("somewhere", [0, 0, 1, 1], client=http)
+    again = osm.fetch_roads("somewhere", [0, 0, 1, 1], client=http)
+    assert first == again and len(asked) == 1 and first["elements"][0]["tags"] == {"highway": "residential"}
+
+
+def test_roads_fall_back_to_the_photo_when_the_map_does_not_answer(monkeypatch):
+    import orbitroute.perception.roads as roads
+
+    mask = np.zeros((300, 300), bool)
+    mask[140:160, 20:280] = True
+    mask[20:280, 140:160] = True
+
+    def no_map(name, meta):
+        raise osm.OsmUnavailable("down")
+
+    monkeypatch.setattr(roads, "osm_graph", no_map)
+    monkeypatch.setattr(roads, "segment_roads", lambda *a, **k: mask)
+
+    class Sample:
+        name, image_bytes = "x", b""
+        meta = {"m_per_px": 1.0}
+
+    got = roads.build_roads(None, Sample())
+    assert got.source == "sam" and any("did not answer" in n for n in got.notes) and got.graph.stats["road_km"] > 0.3
