@@ -155,6 +155,14 @@ function Checklist({ report, title }: { report?: ReportGeo; title: string }) {
         ))}
       </ul>
       {report?.violations.map((v, i) => <p key={i} className="violation">{v.message}</p>)}
+      {!!report?.metrics.flagged_m && (
+        <p className="gap-note" role="note">
+          <b>Not confirmed by the photo:</b> {report.metrics.flagged_m} m ({Math.round((report.metrics.flagged_share ?? 0) * 100)}% of the driving) runs on map roads the photo does not confirm
+          {report.metrics.risk_m?.unseen ? <>: {report.metrics.risk_m.unseen} m not found in the road mask (trees, shadow or a real problem; the photo cannot tell)</> : null}
+          {report.metrics.risk_m?.water ? <>, {report.metrics.risk_m.water} m under water</> : null}
+          {report.metrics.risk_m?.blocked ? <>, {report.metrics.risk_m.blocked} m where Muse Spark saw standing water or debris and no way round was found</> : null}. The plan stays valid by the map.
+        </p>
+      )}
       {!!report?.metrics.unconfirmed_m && (
         <p className="gap-note" role="note">
           <b>Not confirmed by the photo:</b> {report.metrics.unconfirmed_m} m ({Math.round((report.metrics.unconfirmed_share ?? 0) * 100)}% of the driving) runs on links drawn across gaps in the roads found. The verifier counts them as roads; the photo does not show one there.

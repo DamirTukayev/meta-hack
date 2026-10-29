@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from orbitroute.perception.graph import FLAGGED
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan
 from orbitroute.routing.zones import ZONE_TOLERANCE_M, edge_key, inside_lengths
@@ -50,6 +51,7 @@ class Report:
     metrics: dict
     excluded: dict[int, str] = field(default_factory=dict)
     unconfirmed: list[tuple[int, int]] = field(default_factory=list)  # driven graph edges the photo does not show directly
+    flagged: list[tuple[int, int, str]] = field(default_factory=list)  # driven map roads the photo does not confirm, with the reason
 
     @property
     def ok(self) -> bool:
@@ -110,6 +112,8 @@ def verify(
     total_m = 0.0
     unconfirmed_m = 0.0
     unconfirmed: set[tuple[int, int]] = set()
+    risk_m: dict[str, float] = {}
+    flagged: dict[tuple[int, int], str] = {}
     latest_end = 0.0
     route_metrics = []
     for r in plan.routes:
@@ -142,6 +146,10 @@ def verify(
                 if g[u][v].get("bridge") and g[u][v]["length_m"] > UNCONFIRMED_MIN_M:
                     unconfirmed_m += g[u][v]["length_m"]
                     unconfirmed.add(edge_key(u, v))
+                risk = g[u][v].get("risk", "seen")
+                if risk in FLAGGED:
+                    risk_m[risk] = risk_m.get(risk, 0.0) + g[u][v]["length_m"]
+                    flagged[edge_key(u, v)] = risk
                 m_in = inside.get(edge_key(u, v), 0.0)
                 if m_in > ZONE_TOLERANCE_M:
                     zone_hits.append({"edge": edge_key(u, v), "inside_m": m_in, "leg": leg_idx})
@@ -189,5 +197,10 @@ def verify(
     metrics = {
         "total_km": round(total_m / 1000, 2), "last_return": _fmt_clock(latest_end), "routes": route_metrics,
         "unconfirmed_m": round(unconfirmed_m), "unconfirmed_share": round(unconfirmed_m / total_m, 3) if total_m else 0.0,
+        "risk_m": {k: round(v) for k, v in sorted(risk_m.items())}, "flagged_m": round(sum(risk_m.values())),
+        "flagged_share": round(sum(risk_m.values()) / total_m, 3) if total_m else 0.0,
     }
-    return Report(checks=checks, violations=violations, metrics=metrics, excluded=dict(excluded), unconfirmed=sorted(unconfirmed))
+    return Report(
+        checks=checks, violations=violations, metrics=metrics, excluded=dict(excluded), unconfirmed=sorted(unconfirmed),
+        flagged=sorted((a, b, r) for (a, b), r in flagged.items()),
+    )

@@ -50,6 +50,8 @@ def run_agent(
     max_iterations: int = MAX_ITERATIONS,
     time_limit_s: float = 3.0,
     verify_plan: bool = True,
+    iteration_offset: int = 0,
+    initial_banned: set[tuple[int, int]] | None = None,
 ) -> AgentResult:
     """verify_plan=False is the 'no verifier' ablation: one solve, returned as is."""
     decider = decider or PolicyDecider()
@@ -58,13 +60,13 @@ def run_agent(
     avoid = scenario.scene.zones_of(p.avoid_zone_kinds)
     inside = inside_lengths(scenario.graph, avoid)
     zone_edges = banned_edges(inside)
-    banned: set[tuple[int, int]] = set()
+    banned: set[tuple[int, int]] = set(initial_banned or ())  # a second pass starts from what the first one learned
     excluded: dict[int, str] = {}
     history: list[str] = []
     iterations: list[Iteration] = []
     time_limit, seed = time_limit_s, 0
 
-    emit(Event("start", f"Agent loop: solve, verify, repair (up to {max_iterations} repairs)", {"problem": p.model_dump()}))
+    emit(Event("start", f"Agent loop: solve, verify, repair (up to {max_iterations} repairs)" if not iteration_offset else "Re-planning with what the photo showed", {"problem": p.model_dump()}))
 
     plan, report = None, None
     for it in range(max_iterations + 1):
@@ -72,12 +74,12 @@ def run_agent(
         unreachable = sorted({j for i, j in matrix.unreachable if i == 0 and j not in excluded})  # orders the depot cannot reach
         emit(Event("matrix", f"travel times over the road graph ({len(banned)} segments forbidden)", {"banned": len(banned), "unreachable_orders": unreachable}))
         plan = solve_vrp(scenario, matrix, time_limit_s=time_limit, seed=seed, excluded=frozenset(excluded))
-        emit(Event("solve", f"solve #{it + 1}: {plan.served} orders on {len(plan.routes)} trucks in {plan.solve_seconds:.1f}s", {"iteration": it + 1, "served": plan.served, "routes": len(plan.routes)}, obj=(plan, matrix)))
+        emit(Event("solve", f"solve #{it + 1 + iteration_offset}: {plan.served} orders on {len(plan.routes)} trucks in {plan.solve_seconds:.1f}s", {"iteration": it + 1 + iteration_offset, "served": plan.served, "routes": len(plan.routes)}, obj=(plan, matrix)))
         if not verify_plan:
             return AgentResult("unverified", scenario, plan, verify(scenario, plan, excluded=excluded, inside=inside), matrix, iterations, excluded, seconds=time.perf_counter() - t0)
 
         report = verify(scenario, plan, excluded=excluded, inside=inside)
-        iterations.append(Iteration(it + 1, plan, report))
+        iterations.append(Iteration(it + 1 + iteration_offset, plan, report))
         emit(Event("verify", f"verification: {sum(c.passed for c in report.checks)}/{len(report.checks)} checks passed", {"ok": report.ok, "checks": [c.__dict__ for c in report.checks], "violations": [v.message for v in report.violations]}, obj=report))
         if report.ok:
             status = "verified_partial" if excluded else "verified"

@@ -37,7 +37,9 @@ def build_matrix(graph: RoadGraph, nodes: list[int], banned: set[tuple[int, int]
     paths: dict[tuple[int, int], list[int]] = {}
     unreachable: list[tuple[int, int]] = []
     for i, src in enumerate(nodes):
-        lengths, routes = nx.single_source_dijkstra(g, src, weight="time_s")
+        # The path minimises the cost (driving time, a little more on roads the photo does not confirm); the time and the
+        # length stored for it are the real ones, which the verifier recomputes from the same edges.
+        _, routes = nx.single_source_dijkstra(g, src, weight="cost_s")
         for j, dst in enumerate(nodes):
             if i == j:
                 continue
@@ -48,6 +50,6 @@ def build_matrix(graph: RoadGraph, nodes: list[int], banned: set[tuple[int, int]
                 continue
             path = routes[dst]
             paths[(i, j)] = path
-            time_s[i, j] = int(round(lengths[dst]))
+            time_s[i, j] = int(round(sum(g[a][b]["time_s"] for a, b in zip(path, path[1:]))))
             dist_m[i, j] = int(round(sum(g[a][b]["length_m"] for a, b in zip(path, path[1:]))))
     return CostMatrix(nodes=nodes, time_s=time_s, dist_m=dist_m, paths=paths, unreachable=unreachable)
