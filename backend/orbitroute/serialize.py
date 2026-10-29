@@ -32,7 +32,7 @@ def mask_png(mask: np.ndarray) -> str:
 def graph_json(graph: RoadGraph) -> dict:
     return {
         "nodes": [_xy(p) for p in graph.nodes],
-        "edges": [[e.u, e.v, e.speed_kmh, int(e.bridge)] for e in graph.edges],
+        "edges": [[e.u, e.v, e.speed_kmh, int(e.bridge), e.risk] for e in graph.edges],
         "stats": graph.stats,
     }
 
@@ -92,4 +92,5 @@ def report_json(sc: Scenario, report: Report) -> dict:
         "metrics": report.metrics,
         "excluded": {str(k): v for k, v in report.excluded.items()},
         "unconfirmed": [[_xy(g.nodes[a]), _xy(g.nodes[b])] for a, b in report.unconfirmed],  # driven links the photo does not show
+        "flagged": [[_xy(g.nodes[a]), _xy(g.nodes[b]), r] for a, b, r in report.flagged],  # driven map roads the photo does not confirm
     }

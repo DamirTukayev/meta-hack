@@ -20,7 +20,11 @@ function reduce(s: RunState, a: Action): RunState {
     case 'stage':
       return { ...s, stage: e.message, log: add(e.message) }
     case 'perception':
-      return { ...s, mask: d.mask, graph: d.graph, sparseRoads: d.sparse ? (d.road_km_per_km2 as number) : undefined, log: add(e.message) }
+      return { ...s, mask: d.mask, graph: d.graph, roadSource: d.road_source, sparseRoads: d.sparse ? (d.road_km_per_km2 as number) : undefined, log: add(e.message) }
+    case 'inspect':
+      return { ...s, inspections: d.findings as RunState['inspections'], log: add(e.message) }
+    case 'evidence':
+      return { ...s, edgeRisk: d.risk as string[], evidenceKm: d.km as Record<string, number>, log: add(e.message) }
     case 'scene':
       return { ...s, zones: d.zones as Zone[], warehouses: d.warehouses as XY[], log: add(e.message) }
     case 'problem':

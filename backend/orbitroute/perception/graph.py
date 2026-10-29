@@ -27,6 +27,14 @@ from skimage.morphology import (
 N8 = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
 
 
+# How the photo sees a stretch of road that the map has: confirmed by the road mask ("seen"); not found in it ("unseen": trees, shadow
+# or a real problem, the photo cannot tell); looked at by the model and found drivable ("clear") or not ("blocked"); under standing
+# water ("water"). Routing prefers seen roads and treats the last two as costly, never as forbidden (a request that says "avoid
+# flooded areas" forbids water through zones); the time a plan takes is always the real driving time.
+RISK_COST = {"seen": 1.0, "unseen": 1.15, "clear": 1.0, "blocked": 8.0, "water": 8.0}
+FLAGGED = ("unseen", "blocked", "water")  # what a plan's report lists as not confirmed by the photo
+
+
 @dataclass
 class Edge:
     u: int
@@ -35,6 +43,9 @@ class Edge:
     width_m: float
     speed_kmh: float
     bridge: bool = False
+    highway: str = ""  # OSM class when the graph comes from the map
+    oneway: bool = False  # mapped one-way (not enforced: the graph is undirected)
+    risk: str = "seen"
 
     @property
     def time_s(self) -> float:
@@ -64,7 +75,7 @@ class RoadGraph:
             # parallel edges: keep the faster one
             if g.has_edge(e.u, e.v) and g[e.u][e.v]["time_s"] <= e.time_s:
                 continue
-            g.add_edge(e.u, e.v, length_m=e.length_m, time_s=e.time_s, width_m=e.width_m, bridge=e.bridge)
+            g.add_edge(e.u, e.v, length_m=e.length_m, time_s=e.time_s, width_m=e.width_m, bridge=e.bridge, risk=e.risk, cost_s=e.time_s * RISK_COST[e.risk])
         return g
 
 

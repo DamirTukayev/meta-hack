@@ -23,9 +23,10 @@ export interface ReportGeo {
   ok: boolean
   checks: Check[]
   violations: Violation[]
-  metrics: { total_km: number; last_return: string; unconfirmed_m?: number; unconfirmed_share?: number }
+  metrics: { total_km: number; last_return: string; unconfirmed_m?: number; unconfirmed_share?: number; risk_m?: Record<string, number>; flagged_m?: number; flagged_share?: number }
   excluded: Record<string, string>
   unconfirmed?: [XY, XY][] // driven links the graph drew across a gap: the photo does not show a road there
+  flagged?: [XY, XY, string][] // driven map roads the photo does not confirm (unseen, blocked) or that lie under water
 }
 export interface Problem {
   n_orders: number
@@ -63,7 +64,11 @@ export interface RunState {
   status: 'idle' | 'running' | 'done' | 'error'
   stage: string
   mask?: string
-  graph?: { nodes: XY[]; edges: [number, number, number, number][]; stats: Record<string, number> }
+  graph?: { nodes: XY[]; edges: [number, number, number, number, string?][]; stats: Record<string, number> }
+  roadSource?: 'osm' | 'sam' // the graph comes from the map (the photo is evidence) or was read from the photo
+  edgeRisk?: string[] // per graph edge: seen, unseen, clear, blocked or water
+  evidenceKm?: Record<string, number>
+  inspections?: { verdict: string; condition: string; confidence: number; length_m: number; segments: [XY, XY][] }[] // what the model found when it looked at stretches the photo does not confirm
   zones: Zone[]
   warehouses: XY[]
   problem?: Problem

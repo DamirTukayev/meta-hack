@@ -7,17 +7,21 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from orbitroute.agent.events import Emit, Event
+from orbitroute.agent.inspection import describe, inspect_plan
 from orbitroute.agent.loop import AgentResult, run_agent
 from orbitroute.agent.repair import Decider, ModelDecider, PolicyDecider
 from orbitroute.config import ROOT
 from orbitroute.custom import CustomInputs, apply_custom
 from orbitroute.llm.budget import BudgetGuard, RunBudget
-from orbitroute.llm.client import ApiError, MetaClient
+from orbitroute.llm.budget import BudgetExceeded
+from orbitroute.llm.client import ApiError, MetaClient, OfflineDemo
 from orbitroute.perception.buildings import building_points, segment_buildings
 from orbitroute.perception.flood import flood_zones, segment_floods
-from orbitroute.perception.graph import build_road_graph
-from orbitroute.perception.segment import segment_roads
+from orbitroute.perception.evidence import annotate
+from orbitroute.perception.roads import build_roads
 from orbitroute.routing.scenario import make_scenario
+from orbitroute.routing.zones import banned_edges, inside_lengths
+from orbitroute.verifier.checks import verify
 from orbitroute.serialize import graph_json, mask_png, plan_json, report_json, scenario_json, scene_json
 from orbitroute.understanding.constraints import with_capacity
 from orbitroute.understanding.request import parse_request, parse_request_cached
@@ -78,6 +82,37 @@ def request_text(request: str, custom: CustomInputs | None, auto_orders: int | N
     return " ".join([*head, request])
 
 
+def look_at_unconfirmed(result: AgentResult, decider: Decider, client, image_bytes: bytes, run: RunBudget, emit: Emit, agent_emit: Emit) -> AgentResult:
+    """Muse Spark looks at the longest stretches the plan drives on that the photo does not confirm. A stretch it finds blocked makes
+    the agent plan again around it; one it finds drivable stops being a doubt. Without a model to ask (demo mode, no budget) nothing changes."""
+    scenario = result.scenario
+    emit(Event("stage", "Looking at the stretches the photo does not confirm", {"stage": "inspect"}))
+    try:
+        findings = inspect_plan(client, image_bytes, scenario, result.plan, run=run)
+    except (OfflineDemo, BudgetExceeded, ApiError, ValueError):
+        emit(Event("inspect", "no model available to look at the unconfirmed stretches; the plan stands as verified by the map", {"findings": []}))
+        return result
+    if not findings:
+        return result
+    g = scenario.graph
+    emit(Event("inspect", describe(findings), {"findings": [
+        {"verdict": f.verdict, "condition": f.condition, "confidence": round(f.confidence, 2), "length_m": round(f.length_m), "segments": [[_xy2(g.nodes[u]), _xy2(g.nodes[v])] for u, v in f.edges]}
+        for f in findings
+    ]}))
+    if any(f.verdict == "blocked" for f in findings):
+        zone_edges = banned_edges(inside_lengths(g, scenario.scene.zones_of(scenario.problem.avoid_zone_kinds)))  # already known: no need to rediscover them
+        again = run_agent(scenario, decider=decider, emit=agent_emit, iteration_offset=len(result.iterations), initial_banned=zone_edges)
+        again.iterations = [*result.iterations, *again.iterations]
+        result = again
+    inside = inside_lengths(g, result.scenario.scene.zones_of(result.scenario.problem.avoid_zone_kinds))
+    result.report = verify(result.scenario, result.plan, excluded=result.excluded, inside=inside)  # the doubts the model settled are gone from the report
+    return result
+
+
+def _xy2(p) -> list[float]:
+    return [round(float(p[0]), 1), round(float(p[1]), 1)]
+
+
 def run_pipeline(
     sample: Sample,
     request: str,
@@ -98,12 +133,13 @@ def run_pipeline(
     text = text_client or client  # text-only reasoning can run on the open-weight model
     image_bytes = sample.image_bytes
 
-    emit(Event("stage", "Segmenting roads with SAM 3.1 (tiled)", {"stage": "perception"}))
-    mask = segment_roads(client, image_bytes, run=run)
-    graph = build_road_graph(mask, sample.meta["m_per_px"])
+    emit(Event("stage", "Reading the roads: OpenStreetMap and SAM 3.1 (tiled)", {"stage": "perception"}))
+    roads = build_roads(client, sample, run=run)
+    graph, mask = roads.graph, roads.mask
     area_km2 = (mask.shape[1] * sample.meta["m_per_px"] / 1000) * (mask.shape[0] * sample.meta["m_per_px"] / 1000)
     density = graph.stats["road_km"] / area_km2
-    emit(Event("perception", f"Road graph: {graph.stats['nodes']} nodes, {graph.stats['road_km']} km of road", {"mask": mask_png(mask), "graph": graph_json(graph), "road_km_per_km2": round(density, 1), "sparse": density < SPARSE_ROADS_KM_PER_KM2}))
+    source_note = "roads from OpenStreetMap (© OpenStreetMap contributors); the photo says which of them it confirms" if roads.source == "osm" else "roads read from the photo by SAM 3.1"
+    emit(Event("perception", f"Road graph: {graph.stats['nodes']} nodes, {graph.stats['road_km']} km of road, {source_note}", {"mask": mask_png(mask), "graph": graph_json(graph), "road_km_per_km2": round(density, 1), "sparse": density < SPARSE_ROADS_KM_PER_KM2 and roads.source == "sam", "road_source": roads.source}))
 
     emit(Event("stage", "Reading land use and warehouses with Muse Spark", {"stage": "scene"}))
     scene = analyze_scene(text, image_bytes, run=run)  # the open-weight model reads images too: the zones come from it when it is configured
@@ -118,15 +154,20 @@ def run_pipeline(
     else:
         problem = parse_request(text, full_text, run=run)
     flood_note = None
-    if "flooded" in problem.avoid_zone_kinds and not any(z.kind == "flooded" for z in scene.zones):
+    wants_flood = "flooded" in problem.avoid_zone_kinds
+    if (wants_flood or sample.meta.get("event")) and not any(z.kind == "flooded" for z in scene.zones):  # a photo of a disaster is always checked for water
         emit(Event("stage", "Finding flooded areas with SAM 3.1", {"stage": "scene"}))
         found = flood_zones(segment_floods(client, image_bytes, run=run), sample.meta["m_per_px"])
         scene = Scene(scene.width, scene.height, [*scene.zones, *found], scene.warehouses)
         covered = sum(z.polygon.area for z in found) / (scene.width * scene.height)
         emit(Event("scene", f"{len(found)} flooded areas ({covered:.0%} of the photo)" if found else "no flooded areas found", scene_json(scene)))
-        if not found:
+        if not found and wants_flood:
             flood_note = "No flooded areas were found in this photo, so nothing is avoided on that account."
-    notes: list[str] = [flood_note] if flood_note else []
+    notes: list[str] = [*roads.notes, *([flood_note] if flood_note else [])]
+    if roads.source == "osm":  # which stretches of the map the photo confirms, and which lie under water
+        totals = annotate(graph, mask, scene.zones)
+        total_m = sum(totals.values()) or 1.0
+        emit(Event("evidence", "Photo evidence for the map roads: " + ", ".join(f"{k} {v / 1000:.1f} km" for k, v in sorted(totals.items(), key=lambda kv: -kv[1])), {"risk": [e.risk for e in graph.edges], "km": {k: round(v / 1000, 2) for k, v in totals.items()}, "unseen_share": round(totals.get("unseen", 0.0) / total_m, 3)}))
     if trucks and problem.n_vehicles != trucks:
         notes.append(f"Using {trucks} truck{'s' if trucks != 1 else ''} from the Trucks field instead of the {problem.n_vehicles} in the text.")
     if trucks:
@@ -175,6 +216,8 @@ def run_pipeline(
 
     decider: Decider = ModelDecider(text, run) if use_model_decider else PolicyDecider()
     result = run_agent(scenario, decider=decider, emit=agent_emit)
+    if roads.source == "osm" and result.status in ("verified", "verified_partial"):
+        result = look_at_unconfirmed(result, decider, text, image_bytes, run, emit, agent_emit)
 
     emit(
         Event(

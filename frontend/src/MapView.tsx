@@ -14,6 +14,9 @@ const ZONE_COLORS: Record<string, string> = {
   custom: '#e879f9',
 }
 
+// Map roads the photo does not confirm: amber dashes = not found in the road mask (trees, shadow or a real problem), red = looked at and blocked, blue = under water
+const RISK_COLORS: Record<string, string> = { unseen: '#f59e0b', blocked: '#ef4444', water: '#38bdf8' }
+
 interface Layers { roads: boolean; graph: boolean; zones: boolean; orders: boolean; routes: boolean }
 
 const clock = (sec: number) => `${String(Math.floor(sec / 3600)).padStart(2, '0')}:${String(Math.floor((sec % 3600) / 60)).padStart(2, '0')}`
@@ -102,8 +105,8 @@ export default function MapView(props: {
   const edges = useMemo(() => {
     if (!state.graph) return []
     const n = state.graph.nodes
-    return state.graph.edges.map(([a, b, speed, bridge]) => ({ a: n[a], b: n[b], speed, bridge }))
-  }, [state.graph])
+    return state.graph.edges.map(([a, b, speed, bridge], i) => ({ a: n[a], b: n[b], speed, bridge, risk: state.edgeRisk?.[i] ?? 'seen' }))
+  }, [state.graph, state.edgeRisk])
 
   const toImage = (e: React.MouseEvent<SVGSVGElement>): XY | null => {
     if (!svgRef.current) return null
@@ -191,7 +194,7 @@ export default function MapView(props: {
             })}
           {layers.graph &&
             edges.map((e, i) => (
-              <line key={i} x1={e.a[0]} y1={e.a[1]} x2={e.b[0]} y2={e.b[1]} stroke={e.bridge ? '#e879f9' : e.speed >= 50 ? '#fb7185' : e.speed >= 40 ? '#fbbf24' : '#67e8f9'} strokeWidth={3 * u} strokeLinecap="round" />
+              <line key={i} x1={e.a[0]} y1={e.a[1]} x2={e.b[0]} y2={e.b[1]} stroke={e.risk === 'water' ? RISK_COLORS.water : e.risk === 'blocked' ? RISK_COLORS.blocked : e.risk === 'unseen' ? RISK_COLORS.unseen : e.bridge ? '#e879f9' : e.speed >= 50 ? '#fb7185' : e.speed >= 40 ? '#fbbf24' : '#67e8f9'} strokeWidth={3 * u} strokeLinecap="round" strokeDasharray={e.risk === 'unseen' ? `${5 * u} ${5 * u}` : undefined} />
             ))}
           {layers.routes &&
             plan?.routes.map((r, ri) => {
@@ -229,6 +232,15 @@ export default function MapView(props: {
                 </g>
               )
             })}
+          {layers.routes && state.inspections?.filter((f) => f.verdict === 'blocked').flatMap((f) => f.segments).map(([a, b], i) => (
+            <line key={'ib' + i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={RISK_COLORS.blocked} strokeWidth={2 * u} strokeDasharray={`${2 * u} ${4 * u}`} strokeLinecap="round" opacity={0.9} />
+          ))}
+          {layers.routes && report?.flagged?.map(([a, b], i) => (
+            <line key={'f' + i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#fff" strokeWidth={5 * u} strokeLinecap="round" opacity={0.85} />
+          ))}
+          {layers.routes && report?.flagged?.map(([a, b, risk], i) => (
+            <line key={'fc' + i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={RISK_COLORS[risk] ?? '#f59e0b'} strokeWidth={3 * u} strokeDasharray={`${4 * u} ${5 * u}`} strokeLinecap="round" />
+          ))}
           {layers.routes && report?.unconfirmed?.map(([a, b], i) => (
             <line key={'u' + i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke="#fff" strokeWidth={3 * u} strokeDasharray={`${3 * u} ${6 * u}`} strokeLinecap="round" opacity={0.95} />
           ))}
@@ -382,11 +394,13 @@ export default function MapView(props: {
         <span><i className="sq" />Depot: where every truck starts and ends</span>
         <span><i className="line" />A colour is one truck; arrows show the direction, the dashed part is the way back</span>
         <span><i className="num">2</i>Order number in the circle = the order the truck visits it in; <b>#7</b> = the order's own number</span>
+        {(report?.flagged?.length ?? 0) > 0 && <span><i className="gap" />Coloured dashes on a route = a map road the photo does not confirm: amber, not found in the road mask (trees, shadow or a real problem); blue, under water; red, looked at and blocked</span>}
+        {(state.inspections?.some((f) => f.verdict === 'blocked') ?? false) && <span><i className="gap" />Red dots = Muse Spark looked at a stretch the photo does not confirm and found standing water or debris; the agent planned around it where it could</span>}
         {(report?.unconfirmed?.length ?? 0) > 0 && <span><i className="gap" />White dots on a route = a link drawn across a gap in the roads found; the photo does not show a road there</span>}
         <span><i className="viol" />Red pulsing road = a plan broke the “avoid” rule there</span>
         {state.orderTargets.some(Boolean) && <span><i className="bld" />Amber square = the building an order belongs to; the dashed line is the road it is served from</span>}
         {Object.keys(report?.excluded ?? {}).length > 0 && <span><i className="cut">×</i>Dashed red × = an order left out because the zone cuts it off</span>}
-        <span className="credit">{sample.credit}</span>
+        <span className="credit">{sample.credit}{state.roadSource === 'osm' ? ' · Roads: © OpenStreetMap contributors (ODbL)' : ''}</span>
       </div>
     </div>
   )
