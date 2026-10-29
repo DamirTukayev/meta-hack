@@ -24,7 +24,7 @@ RUN_LIMIT_PER_DAY=${RUN_LIMIT_PER_DAY:-80}
 MAX_CONCURRENT_RUNS=${MAX_CONCURRENT_RUNS:-2}
 EOF
 
-uvx --from modal modal secret create orbitroute-keys --from-dotenv "$TMP" --force
+uvx --from modal --with python-dotenv modal secret create orbitroute-keys --from-dotenv "$TMP" --force
 echo
 echo "Secret orbitroute-keys created. Access code for your friends: $CODE"
 echo "Live calls stop on ${PAID_CALLS_UNTIL:-2026-11-03T18:00:00Z}; caps for this copy: Meta \$${BUDGET_HARD_CAP_USD:-15}, Baseten \$${BASETEN_BUDGET_CAP_USD:-5}, Modal \$${MODAL_BUDGET_CAP_USD:-5}."
