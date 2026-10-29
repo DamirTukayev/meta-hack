@@ -7,7 +7,7 @@ import { emptyCustom } from './types'
 import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
 import AccessNote from './AccessNote'
-import { fetchAccess, setCode } from './access'
+import { adoptCodeFromLink, fetchAccess, setCode } from './access'
 import type { Access } from './access'
 
 const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', recommendation: '★', final: '■' }
@@ -222,6 +222,7 @@ export default function App() {
 
   useEffect(() => {
     fetch('/api/health').then((r) => r.json()).then((h) => setOffline(!!h.offline_demo)).catch(() => {})
+    adoptCodeFromLink() // a link like https://host/#code=... unlocks live mode without typing
     fetchAccess().then(setAccess)
     fetch('/api/samples').then((r) => r.json()).then((s: Sample[]) => {
       setSamples(s)

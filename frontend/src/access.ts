@@ -9,6 +9,20 @@ export function setCode(code: string) {
   try { if (code) localStorage.setItem(KEY, code); else localStorage.removeItem(KEY) } catch { /* private window: the code is just not remembered */ }
 }
 
+/** The code in a link like https://host/#code=abc. The part after # never reaches the server, its logs or a Referer header. */
+export function codeFromHash(hash: string): string {
+  const value = new URLSearchParams(hash.replace(/^#/, '')).get('code')
+  return value ? value.trim() : ''
+}
+
+/** Remember the code carried by the link and take it out of the address bar, so it is not copied on by accident. */
+export function adoptCodeFromLink(): void {
+  const code = codeFromHash(window.location.hash)
+  if (!code) return
+  setCode(code)
+  window.history.replaceState(null, '', window.location.pathname + window.location.search)
+}
+
 export function accessHeaders(): Record<string, string> {
   const code = getCode()
   return code ? { 'X-Access-Code': code } : {}
