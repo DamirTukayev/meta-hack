@@ -1,0 +1,116 @@
+[
+ {
+  "place": "Medicine Bow NF, WY",
+  "area": "area-0b35c5e0c3",
+  "map_km": 4.58,
+  "track_km": 4.58,
+  "sam_km": 0.15,
+  "track_reached_by_sam_graph": 0.03496503496503497,
+  "track_followed_by_mask": 0.08391608391608392,
+  "covers_sam": 0.01875,
+  "covers_map": 0.30925,
+  "runs": {
+   "sam": {
+    "refused": 8
+   },
+   "map": {
+    "needs_relaxation": 4,
+    "unresolved": 2,
+    "verified": 2
+   }
+  },
+  "looks": [
+   {
+    "condition": "hidden_by_trees_or_shadow",
+    "confidence": 0.94,
+    "verdict": "unseen"
+   },
+   {
+    "condition": "hidden_by_trees_or_shadow",
+    "confidence": 0.82,
+    "verdict": "unseen"
+   },
+   {
+    "condition": "hidden_by_trees_or_shadow",
+    "confidence": 0.96,
+    "verdict": "unseen"
+   },
+   {
+    "condition": "hidden_by_trees_or_shadow",
+    "confidence": 0.95,
+    "verdict": "unseen"
+   }
+  ]
+ },
+ {
+  "place": "Apalachicola NF, FL",
+  "area": "area-49957068b0",
+  "map_km": 4.32,
+  "track_km": 4.32,
+  "sam_km": 3.11,
+  "track_reached_by_sam_graph": 0.6934306569343066,
+  "track_followed_by_mask": 0.7420924574209246,
+  "covers_sam": 0.211,
+  "covers_map": 0.282,
+  "runs": {
+   "sam": {
+    "verified": 4,
+    "needs_relaxation": 4
+   },
+   "map": {
+    "verified": 5,
+    "needs_relaxation": 3
+   }
+  },
+  "looks": [
+   {
+    "condition": "hidden_by_trees_or_shadow",
+    "confidence": 0.89,
+    "verdict": "unseen"
+   },
+   {
+    "condition": "clear_road",
+    "confidence": 0.93,
+    "verdict": "clear"
+   },
+   {
+    "condition": "no_road_visible",
+    "confidence": 0.92,
+    "verdict": "unseen"
+   },
+   {
+    "condition": "clear_road",
+    "confidence": 0.97,
+    "verdict": "clear"
+   }
+  ]
+ },
+ {
+  "place": "Sam Houston NF, TX",
+  "area": "area-ab236c7a48",
+  "map_km": 4.84,
+  "track_km": 3.92,
+  "sam_km": 0.0,
+  "track_reached_by_sam_graph": 0.0,
+  "track_followed_by_mask": 0.0,
+  "covers_sam": 0.0,
+  "covers_map": 0.315,
+  "runs": {
+   "sam": {
+    "refused": 8
+   },
+   "map": {
+    "needs_relaxation": 4,
+    "verified": 3,
+    "verified_partial": 1
+   }
+  },
+  "looks": [
+   {
+    "condition": "hidden_by_trees_or_shadow",
+    "confidence": 0.91,
+    "verdict": "unseen"
+   }
+  ]
+ }
+]

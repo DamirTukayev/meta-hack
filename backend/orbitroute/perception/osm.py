@@ -15,6 +15,7 @@ import logging
 import math
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeout, as_completed
 
 import httpx
 import networkx as nx
@@ -24,7 +25,8 @@ from orbitroute.config import CACHE_DIR, resolve_cached
 from orbitroute.naip import to_mercator
 from orbitroute.perception.graph import Edge, RoadGraph, _resample
 
-OVERPASS = ("https://overpass-api.de/api/interpreter", "https://overpass.private.coffee/api/interpreter")
+# Public servers differ a lot in speed from day to day (0.8 s to 30 s on the same query), so all are asked at once and the first good answer wins.
+OVERPASS = ("https://overpass.openstreetmap.fr/api/interpreter", "https://overpass-api.de/api/interpreter", "https://maps.mail.ru/osm/tools/overpass/api/interpreter")
 log = logging.getLogger("orbitroute")
 USER_AGENT = "OrbitRoute/0.1 (hackathon project; roads for delivery planning)"
 
@@ -80,26 +82,34 @@ def fetch_roads(name: str, bbox_lonlat: list[float], *, client: httpx.Client | N
     query = f'[out:json][timeout:25];way["highway"]({s},{w},{n},{e});out geom;'
     http = client or httpx.Client(headers={"User-Agent": USER_AGENT})
     started = time.monotonic()
-    stop = started + deadline_s
+
+    def ask(url: str) -> dict:
+        resp = http.post(url, data={"data": query}, timeout=min(deadline_s, 30.0))
+        data = resp.json() if resp.status_code == 200 else None
+        if isinstance(data, dict) and "elements" in data and not data.get("remark"):
+            return {"url": url, "data": data}
+        raise RuntimeError(f"{url} answered {resp.status_code}")
+
     last: Exception | None = None
+    pool = ThreadPoolExecutor(max_workers=len(OVERPASS))
     try:
-        for url in OVERPASS:
-            left = stop - time.monotonic()
-            if left < 3:
-                break
-            try:
-                resp = http.post(url, data={"data": query}, timeout=min(left, 30.0))
-                data = resp.json() if resp.status_code == 200 else None
-                if isinstance(data, dict) and "elements" in data and not data.get("remark"):
-                    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-                    data = trim(data)
-                    path.write_text(json.dumps(data))
-                    log.info("OSM roads for %s read from %s in %.1f s (%d ways)", name, url, time.monotonic() - started, len(data["elements"]))
-                    return data
-                last = RuntimeError(f"{url} answered {resp.status_code}")
-            except (httpx.HTTPError, ValueError) as exc:
-                last = exc
+        futures = [pool.submit(ask, url) for url in OVERPASS]
+        try:
+            for done in as_completed(futures, timeout=deadline_s):
+                try:
+                    got = done.result()
+                except (httpx.HTTPError, ValueError, RuntimeError) as exc:
+                    last = exc
+                    continue
+                data = trim(got["data"])
+                CACHE_DIR.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps(data))
+                log.info("OSM roads for %s read from %s in %.1f s (%d ways)", name, got["url"], time.monotonic() - started, len(data["elements"]))
+                return data
+        except FuturesTimeout:
+            last = TimeoutError(f"no server answered within {deadline_s:.0f} s")
     finally:
+        pool.shutdown(wait=False, cancel_futures=True)  # a slow server is not waited for
         if client is None:
             http.close()
     log.warning("OSM roads for %s not read after %.1f s: %s", name, time.monotonic() - started, last)

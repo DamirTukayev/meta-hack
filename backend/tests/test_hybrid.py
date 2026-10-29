@@ -250,7 +250,32 @@ def test_a_busy_overpass_is_given_up_on_within_the_deadline(monkeypatch, tmp_pat
     t0 = time.monotonic()
     with pytest.raises(osm.OsmUnavailable):
         osm.fetch_roads("somewhere", [0, 0, 1, 1], client=httpx.Client(transport=httpx.MockTransport(busy)), deadline_s=20)
-    assert time.monotonic() - t0 < 2 and len(calls) == len(osm.OVERPASS)  # each server asked once, no rounds of retries
+    assert time.monotonic() - t0 < 2 and len(calls) == len(osm.OVERPASS)  # each server asked once, all at the same time, no rounds of retries
+
+
+def test_the_first_good_answer_wins_over_slow_and_broken_servers(monkeypatch, tmp_path):
+    import threading
+    import time
+
+    import httpx
+
+    monkeypatch.setattr(osm, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(osm, "resolve_cached", lambda d, n: d / n)
+    release = threading.Event()
+
+    def mixed(request):
+        host = request.url.host
+        if "openstreetmap.fr" in host:
+            return httpx.Response(200, json={"elements": [STREETS["elements"][0]]})
+        if "mail.ru" in host:
+            return httpx.Response(502, text="down")
+        release.wait(5)  # the main server is slow
+        return httpx.Response(200, json={"elements": []})
+
+    t0 = time.monotonic()
+    got = osm.fetch_roads("somewhere", [0, 0, 1, 1], client=httpx.Client(transport=httpx.MockTransport(mixed)), deadline_s=20)
+    release.set()
+    assert len(got["elements"]) == 1 and time.monotonic() - t0 < 2
 
 
 def test_a_good_answer_is_trimmed_and_remembered(monkeypatch, tmp_path):
@@ -267,8 +292,9 @@ def test_a_good_answer_is_trimmed_and_remembered(monkeypatch, tmp_path):
 
     http = httpx.Client(transport=httpx.MockTransport(ok))
     first = osm.fetch_roads("somewhere", [0, 0, 1, 1], client=http)
+    after_first = len(asked)
     again = osm.fetch_roads("somewhere", [0, 0, 1, 1], client=http)
-    assert first == again and len(asked) == 1 and first["elements"][0]["tags"] == {"highway": "residential"}
+    assert first == again and len(asked) == after_first and first["elements"][0]["tags"] == {"highway": "residential"}  # the second read is from disk
 
 
 def test_roads_fall_back_to_the_photo_when_the_map_does_not_answer(monkeypatch):
