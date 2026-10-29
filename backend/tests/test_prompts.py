@@ -18,7 +18,7 @@ def test_every_prompt_has_an_active_version_that_exists():
 
 
 def test_prompt_versions_can_be_listed_and_loaded_by_name():
-    assert prompts.versions("scene") == ["v1", "v2"]
+    assert prompts.versions("scene") == ["v1", "v2", "v3"]
     assert prompts.load("scene", "v2")[1] != prompts.load("scene", "v1")[1]
     with pytest.raises(KeyError, match="no prompt"):
         prompts.load("scene", "v99")
