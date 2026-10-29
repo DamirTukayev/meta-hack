@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,6 +19,8 @@ from orbitroute.llm.client import ApiError, MetaClient, OfflineDemo
 from orbitroute.perception.buildings import building_points, segment_buildings
 from orbitroute.perception.flood import flood_zones, segment_floods
 from orbitroute.perception.evidence import annotate
+from orbitroute.perception.exposure import assess, look_at_building
+from orbitroute.perception.osm import fetch_places
 from orbitroute.perception.roads import build_roads
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.routing.zones import banned_edges, inside_lengths
@@ -27,6 +30,7 @@ from orbitroute.understanding.constraints import with_capacity
 from orbitroute.understanding.request import parse_request, parse_request_cached
 from orbitroute.understanding.scene import Scene, analyze_scene
 
+log = logging.getLogger("orbitroute")
 SAMPLES_DIR = ROOT / "data" / "samples"
 # Open areas give 8-12 km of road per km2 in a 1.5 km square; dense blocks and tree cover hide most streets from an aerial photo (measured
 # against OpenStreetMap on 14 places: eval/CITIES.md). Below this the app says so instead of planning silently on a thin graph.
@@ -80,6 +84,28 @@ def request_text(request: str, custom: CustomInputs | None, auto_orders: int | N
     if trucks:
         head.append(f"{trucks} trucks.")
     return " ".join([*head, request])
+
+
+def exposure_message(x: dict) -> str:
+    people = f"about {x['people_low']}-{x['people_high']} people" if x["people_high"] else "no one counted"
+    shelters = f"{len(x['shelters'])} possible shelter{'s' if len(x['shelters']) != 1 else ''} within reach" if x["shelters"] else "no possible shelter within reach by dry roads"
+    return f"Water: {x['in_water']} buildings in it, {x['surrounded']} surrounded by it ({people}, rough); {shelters}"
+
+
+def assess_exposure(building_mask, scene, scenario, sample, image_bytes: bytes, client, run: RunBudget) -> dict | None:
+    """Who is exposed and where they could go; never allowed to break a run, it is background information."""
+    try:
+        from PIL import Image
+        import io
+
+        places = fetch_places(sample.name, sample.meta["bbox_lonlat"])
+        return assess(
+            building_mask, scene.zones, scenario.graph, scenario.depot_node, sample.meta, places,
+            image=Image.open(io.BytesIO(image_bytes)), look=lambda crop: look_at_building(client, crop, run=run),
+        )
+    except Exception:
+        log.exception("exposure assessment failed")
+        return None
 
 
 def look_at_unconfirmed(result: AgentResult, decider: Decider, client, image_bytes: bytes, run: RunBudget, emit: Emit, agent_emit: Emit) -> AgentResult:
@@ -180,10 +206,14 @@ def run_pipeline(
         problem = with_order_count(problem, auto_orders)
 
     targets = None
-    if not (custom and custom.orders):  # the agent places the orders: at buildings, not at random points of the road
+    has_water = any(z.kind == "flooded" for z in scene.zones)
+    building_mask = None
+    if not (custom and custom.orders) or has_water:  # the agent places the orders at buildings; with water in the photo they also say who is exposed
         emit(Event("stage", "Finding buildings with SAM 3.1 (delivery addresses)", {"stage": "scene"}))
         try:
-            targets = building_points(segment_buildings(client, image_bytes, run=run), sample.meta["m_per_px"])
+            building_mask = segment_buildings(client, image_bytes, run=run)
+            if not (custom and custom.orders):
+                targets = building_points(building_mask, sample.meta["m_per_px"])
         except ApiError:  # not essential: without it the orders go on road points
             notes.append("Buildings could not be read from the photo, so the orders were placed on road points.")
     if has_custom:
@@ -202,6 +232,11 @@ def run_pipeline(
         scenario = make_scenario(graph, scene, problem, seed=seed, prefer_connected=True, targets=targets)
     emit(Event("problem", f"{problem.n_orders} orders, {problem.n_vehicles} trucks, avoiding {', '.join(problem.avoid_zone_kinds) or 'nothing'}", {"problem": problem.model_dump(), "assumptions": problem.assumptions}))
     emit(Event("scenario", (f"depot and {len(scenario.order_nodes)} orders placed on the roads (yours)" if has_custom and custom.orders else f"depot and {len(scenario.order_nodes)} orders placed" + (f", {sum(t is not None for t in scenario.order_targets)} of them at buildings found by SAM 3.1" if scenario.order_targets else " on road points")), scenario_json(scenario)))
+
+    if building_mask is not None and has_water:
+        exposure = assess_exposure(building_mask, scene, scenario, sample, image_bytes, text, run)
+        if exposure:
+            emit(Event("exposure", exposure_message(exposure), exposure))
 
     def agent_emit(e: Event) -> None:
         data = dict(e.data)
