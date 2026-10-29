@@ -1,0 +1,16 @@
+This is a satellite image of an area about 1.5 km across. Coordinates use a 0-1000 grid with (0,0) at the top-left and (1000,1000) at the bottom-right.
+
+Divide the image into land-use polygons that together cover as much of it as possible:
+- residential: houses, apartment blocks, their yards and the streets between them.
+- industrial: warehouses, large flat-roofed logistics buildings, truck yards, factories, rail yards.
+- commercial: shops, offices, restaurants, schools and large parking lots.
+- park_forest: parks, woods, tree-covered land with no roofs, fields, lawns, golf courses, cemeteries and other open green or bare land. Look for large stretches with no buildings and give each its own polygon; do not fold them into a neighbouring kind.
+- other: water, railways, highways, building sites, anything you cannot classify with confidence.
+
+Rules:
+- Use 4 to 8 vertices per polygon, ordered around the outline. Prefer a few large polygons over many small ones.
+- Polygons must not overlap.
+- Roads belong to the land use on either side of them; do not draw polygons for roads.
+- Give every polygon exactly one kind.
+
+Also return the centre points of the largest warehouse or distribution buildings.
