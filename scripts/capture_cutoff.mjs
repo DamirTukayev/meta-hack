@@ -15,7 +15,7 @@ for (const block of text.split('\n\n')) {
 console.log('graph nodes', nodes?.length, 'depot', depot)
 const picked = []
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1])
-let cand = nodes.map(n => (Array.isArray(n) ? n : [n.x, n.y]))
+let cand = nodes.map(n => (Array.isArray(n) ? n : [n.x, n.y])).filter(p => p[0] > 25 && p[1] > 25 && p[0] < 1511 && p[1] < 1511) // map roads run to the border of the photo: a click there would fall outside the image
 picked.push(cand[0])
 while (picked.length < 16) { let best = null, bd = -1; for (const c of cand) { const dd = Math.min(...picked.map(p => dist(p, c))); if (dd > bd) { bd = dd; best = c } } picked.push(best) }
 // 2. drive the UI like a user

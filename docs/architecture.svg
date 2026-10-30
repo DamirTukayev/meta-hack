@@ -39,11 +39,11 @@
 
   <!-- understand -->
   <rect class="model" x="310" y="40" width="390" height="112"/>
-  <text x="326" y="64" class="h">SAM 3.1  ·  SEE THE ROADS</text>
-  <text x="326" y="86" class="t">two tilings of the photo, masks united</text>
-  <text x="326" y="103" class="t">mask → skeleton → road graph with</text>
-  <text x="326" y="120" class="t">gap bridging and speed classes</text>
-  <text x="326" y="141" class="l">also finds buildings (the addresses) and flood water</text>
+  <text x="326" y="64" class="h">OPENSTREETMAP + SAM 3.1  ·  THE ROADS</text>
+  <text x="326" y="86" class="t">road graph from the map (dirt tracks too);</text>
+  <text x="326" y="103" class="t">SAM's road mask says which roads the photo</text>
+  <text x="326" y="120" class="t">confirms; no map? roads read from the mask</text>
+  <text x="326" y="141" class="l">SAM also finds buildings (addresses) and flood water</text>
 
   <rect class="model" x="310" y="164" width="390" height="76"/>
   <text x="326" y="186" class="h">MUSE SPARK (VISION)  ·  READ THE LAND</text>
@@ -63,7 +63,7 @@
   <!-- scenario -->
   <rect class="box" x="760" y="100" width="230" height="140"/>
   <text x="776" y="124" class="hw">SCENARIO</text>
-  <text x="776" y="146" class="t">road graph</text>
+  <text x="776" y="146" class="t">road graph + evidence</text>
   <text x="776" y="163" class="t">zones + warehouses</text>
   <text x="776" y="180" class="t">constraints + assumptions</text>
   <text x="776" y="197" class="t">depot and orders on roads</text>
@@ -125,9 +125,26 @@
   <text x="936" y="633" class="t">were each solved and verified</text>
   <path class="lr" d="M840 615 L920 615" marker-end="url(#r)"/>
 
+  <!-- second look -->
+  <rect class="model" x="905" y="262" width="265" height="116"/>
+  <text x="921" y="286" class="h">MUSE SPARK · SECOND LOOK</text>
+  <text x="921" y="306" class="t">at the stretches of a verified</text>
+  <text x="921" y="323" class="t">plan the photo does not confirm:</text>
+  <text x="921" y="340" class="t">clear · water · debris · unsure</text>
+  <text x="921" y="362" class="l">water or debris: plan around it</text>
+  <path class="ln" d="M1045 415 L1045 378" marker-end="url(#a)"/>
+
+  <!-- water -->
+  <rect class="model" x="30" y="380" width="230" height="120"/>
+  <text x="46" y="404" class="h">WATER · WHO IS EXPOSED</text>
+  <text x="46" y="424" class="t">buildings in or by the water,</text>
+  <text x="46" y="441" class="t">a rough range of people,</text>
+  <text x="46" y="458" class="t">dry shelters by dry roads</text>
+  <text x="46" y="475" class="t">(Muse Spark names them)</text>
+
   <!-- legend -->
-  <rect x="1020" y="270" width="14" height="14" class="model"/>
-  <text x="1042" y="282" class="l">Meta model</text>
-  <rect x="1020" y="294" width="14" height="14" class="box"/>
-  <text x="1042" y="306" class="l">plain code</text>
+  <rect x="30" y="590" width="14" height="14" class="model"/>
+  <text x="52" y="602" class="l">Meta model</text>
+  <rect x="30" y="614" width="14" height="14" class="box"/>
+  <text x="52" y="626" class="l">plain code</text>
 </svg>
