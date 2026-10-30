@@ -359,5 +359,21 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
 
 
 DIST = ROOT / "frontend" / "dist"
+
+
+@app.middleware("http")
+async def keep_the_page_fresh(request: Request, call_next):
+    """The page (index.html) is always asked for again, so that a new build reaches a browser at once; the files under /assets carry
+    a hash of their content in their name and may be kept for a long time."""
+    response = await call_next(request)
+    path = request.url.path
+    if response.status_code == 200 and not path.startswith("/api/"):
+        if path.startswith("/assets/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif path == "/" or path.endswith(".html"):
+            response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
 if DIST.exists():
     app.mount("/", StaticFiles(directory=DIST, html=True), name="web")
