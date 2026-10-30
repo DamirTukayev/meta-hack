@@ -8,7 +8,6 @@ Usage: uv run python scripts/eval_recommend.py     ->  eval/RECOMMEND.md
 from __future__ import annotations
 
 import json
-import sys
 from collections import Counter
 
 import orbitroute.api as api
@@ -42,7 +41,7 @@ def main() -> None:
         decider = ModelDecider(client, run)
         same = unsafe = from_model = 0
         picks = Counter()
-        for sid, problem, options, policy_rec in cases:
+        for _sid, problem, options, policy_rec in cases:
             rec = decider.recommend(options, problem)
             same += rec.index == policy_rec.index
             from_model += rec.source == "model"

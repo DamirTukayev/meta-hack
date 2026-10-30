@@ -75,7 +75,6 @@ def main() -> None:
     client = MetaClient(s, guard)
     run = guard.new_run(1.0)
     names = BUNDLED + [ensure_area(lat, lon).name for lat, lon in CITIES]
-    rng = random.Random(11)
     rows, t0 = [], time.perf_counter()
     for name in names:
         sm = get_sample(name)

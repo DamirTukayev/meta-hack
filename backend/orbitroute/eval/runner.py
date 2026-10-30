@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from statistics import mean
 
 from orbitroute.agent.loop import run_agent
@@ -19,7 +19,7 @@ from orbitroute.perception.graph import build_road_graph
 from orbitroute.perception.segment import segment_roads
 from orbitroute.pipeline import get_sample
 from orbitroute.routing.scenario import make_scenario
-from orbitroute.understanding.constraints import ParsedRequest, hhmm_to_seconds, resolve
+from orbitroute.understanding.constraints import ParsedRequest, resolve
 from orbitroute.understanding.request import parse_request
 from orbitroute.understanding.scene import Scene, analyze_scene
 from orbitroute.verifier.independent import audit_plan, disagreements
@@ -103,7 +103,7 @@ def summarize_scenarios(rows: list[dict]) -> dict:
     invalid = [r for r in claims_ok if not r["baseline_audit_ok"]]
     kinds: dict[str, int] = {}
     for r in rows:
-        for k, c in r["baseline_violations"].items():
+        for k in r["baseline_violations"]:
             kinds[k] = kinds.get(k, 0) + 1
     with_violation = [r for r in rows if not r["baseline_audit_ok"]]
     repaired = [r for r in with_violation if r["agent_status"] in ("verified", "verified_partial")]

@@ -77,7 +77,6 @@ def test_solver_reports_infeasible_when_deadline_is_impossible():
 def test_orders_are_placed_only_where_a_truck_can_legally_go():
     from shapely.geometry import box
 
-    from orbitroute.routing.zones import banned_edges, inside_lengths
     from orbitroute.understanding.scene import Scene, Zone
 
     graph = grid_graph()

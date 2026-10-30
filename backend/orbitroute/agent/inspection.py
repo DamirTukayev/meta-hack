@@ -16,13 +16,14 @@ from dataclasses import dataclass
 
 from PIL import Image, ImageDraw
 
-from orbitroute.config import CACHE_DIR, resolve_cached
+from orbitroute.config import CACHE_DIR, resolve_cached, write_atomic
 from orbitroute.llm.budget import RunBudget
 from orbitroute.llm.client import image_part
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan
 from orbitroute.routing.zones import edge_key
 
+PROMPT_VERSION = 1  # part of the name of a remembered answer from version 2 on, so that a new question never gets an old answer
 MAX_LOOKS = 6  # runs looked at per plan: about $0.01 each
 MIN_RUN_M = 40.0  # shorter runs are one gap in the mask, not worth a look
 MIN_CONFIDENCE = 0.6
@@ -101,7 +102,8 @@ def _crop(image: Image.Image, scenario: Scenario, run: list[tuple[int, int]]) ->
 
 def look(client, crop: bytes, *, run: RunBudget | None = None) -> dict:
     """The model's answer for one crop; remembered on disk, so a repeated plan costs nothing."""
-    path = resolve_cached(CACHE_DIR, f"inspect_{hashlib.sha256(crop).hexdigest()[:16]}.json")
+    stem = hashlib.sha256(crop).hexdigest()[:16]
+    path = resolve_cached(CACHE_DIR, f"inspect_{stem}.json" if PROMPT_VERSION == 1 else f"inspect_v{PROMPT_VERSION}_{stem}.json")
     if path.exists():
         return json.loads(path.read_text())
     messages = [{"role": "user", "content": [{"type": "text", "text": PROMPT}, image_part(crop)]}]
@@ -112,8 +114,7 @@ def look(client, crop: bytes, *, run: RunBudget | None = None) -> dict:
         except ValueError:
             if attempt == 2:
                 raise
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(answer))
+    write_atomic(CACHE_DIR / path.name, json.dumps(answer))
     return answer
 
 

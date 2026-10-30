@@ -14,7 +14,7 @@ import httpx
 
 from orbitroute.config import Settings
 from orbitroute.llm.budget import BudgetExceeded, BudgetGuard, RunBudget
-from orbitroute.llm.pricing import ASR_PER_HOUR_USD, SAM_PER_IMAGE_USD, token_cost, token_price
+from orbitroute.llm.pricing import ASR_PER_HOUR_USD, SAM_PER_IMAGE_USD, token_cost
 
 DEFAULT_MODEL = "muse-spark-1.3"
 SAM_MODEL = "sam-3.1"

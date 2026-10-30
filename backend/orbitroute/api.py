@@ -10,7 +10,6 @@ import os
 import queue
 import threading
 from datetime import datetime, timezone
-from pathlib import Path
 
 from typing import Literal
 
@@ -18,6 +17,7 @@ from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.background import BackgroundTask
 
 from orbitroute.agent.events import Event
 from orbitroute.areas import AREAS_DIR, area_id, ensure_area
@@ -92,6 +92,14 @@ def paid_window_open() -> bool:
     return until is None or datetime.now(timezone.utc) < until
 
 
+def has_code(request: Request) -> bool:
+    """Does the request carry the right access code? (Always true when no code is set.)"""
+    if not settings.access_code:
+        return True
+    given = request.headers.get("x-access-code", "")
+    return bool(given) and hmac.compare_digest(given.encode(), settings.access_code.encode())
+
+
 def live_for(request: Request) -> bool:
     """May this caller spend model calls? Not in the offline demo, not after PAID_CALLS_UNTIL, and, when ACCESS_CODE is set,
     only with that code in the X-Access-Code header. Everyone else gets the recorded demo, which costs nothing."""
@@ -158,9 +166,10 @@ app = FastAPI(title="OrbitRoute")
 
 
 @app.get("/api/health")
-def health() -> dict:
+def health(request: Request) -> dict:
     return {
-        "ok": True, "offline_demo": offline_demo, "paid_calls_enabled": guard.paid_calls_enabled, "spent_usd": round(guard.total_spent(), 4),
+        "ok": True, "offline_demo": offline_demo, "paid_calls_enabled": guard.paid_calls_enabled,
+        "spent_usd": round(guard.total_spent(), 4) if has_code(request) else None,  # the spend is for whoever holds the code
         "reasoning_provider": settings.reasoning_provider, "access_code_required": bool(settings.access_code), "paid_window_open": paid_window_open(),
     }
 
@@ -222,8 +231,10 @@ async def transcribe(request: Request) -> dict:
 
 
 @app.get("/api/usage")
-def usage() -> dict:
+def usage(request: Request) -> dict:
     """Estimated spend per provider from our own counters. The providers' dashboards remain the source of truth."""
+    if not has_code(request):
+        raise HTTPException(403, "The usage numbers need the access code.")
     return {
         "meta": guard.summary(),
         "baseten": guard_for(settings, "baseten").summary(),
@@ -296,11 +307,15 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
     if not guard.paid_calls_enabled:
         raise HTTPException(503, "The demo is paused right now. Please try again later.")
     live = live_for(request)
+    with _active_lock:  # a busy agent turns the caller away before it costs the caller a place in the hourly limit
+        busy = _active["n"] >= settings.max_concurrent_runs
+    if busy:
+        raise HTTPException(429, "The agent is busy with other runs. Try again in a few seconds.", headers={"Retry-After": "10"})
     wait = max(run_limit_ip.check(client_ip(request)), run_limit_day.check("all"))
     if wait:
         raise HTTPException(429, f"Too many runs right now. Try again in {int(wait // 60) + 1} min.", headers={"Retry-After": str(int(wait) + 1)})
     with _active_lock:
-        if _active["n"] >= settings.max_concurrent_runs:
+        if _active["n"] >= settings.max_concurrent_runs:  # another run took the last place in the meantime
             raise HTTPException(429, "The agent is busy with other runs. Try again in a few seconds.", headers={"Retry-After": "10"})
         _active["n"] += 1
     request, seed, decider, custom, auto_orders, trucks, capacity = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks, body.capacity
@@ -330,7 +345,10 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
             q.put(("failure", {"message": f"Budget guard: {exc}"}))
         except PlacementError as exc:
             q.put(("failure", {"message": str(exc), "point": {"kind": exc.kind, "index": exc.index}}))
-        except (ApiError, ValueError, RuntimeError) as exc:
+        except ApiError as exc:  # the provider's own words stay in the log, not on the page
+            log.warning("model service error: %s", exc)
+            q.put(("failure", {"message": f"The model service answered with an error (status {exc.status}). Please try again in a moment."}))
+        except (ValueError, RuntimeError) as exc:
             q.put(("failure", {"message": str(exc)}))
         except Exception as exc:  # never leave the page waiting on a silent crash
             log.exception("run failed")
@@ -355,7 +373,8 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
         finally:
             stopped.set()  # also reached when the client disconnects mid-run
 
-    return StreamingResponse(stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+    # The background task runs when the response ends or the browser has gone, even if the stream never started: the run is stopped then too.
+    return StreamingResponse(stream(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}, background=BackgroundTask(stopped.set))
 
 
 DIST = ROOT / "frontend" / "dist"

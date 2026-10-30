@@ -1,6 +1,7 @@
-"""Budget guard: every paid call is reserved before it is sent and recorded after.
+"""Budget guard: every paid call is checked against the caps before it is sent and recorded after.
 
-The provider's own spend limit only sends an email, so the cap is enforced here.
+The provider's own spend limit only sends an email, so the cap is enforced here. The check does not hold the price back, so calls that are
+in flight at the same moment can together go over a cap by their own price (a few cents with the run limits in use).
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ class BudgetGuard:
     hard_cap_usd: float
     paid_calls_enabled: bool = True
     _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
+    _last: dict = field(default_factory=dict, repr=False)  # the last state read or written: what counts if the file cannot be read
 
     def summary(self) -> dict:
         """Our own running tally (an estimate from token counts, not the provider's invoice)."""
@@ -70,14 +72,19 @@ class BudgetGuard:
 
     def _read(self) -> dict:
         try:
-            return json.loads(self.state_path.read_text())
-        except (FileNotFoundError, json.JSONDecodeError):
-            return {}
+            state = json.loads(self.state_path.read_text())
+        except FileNotFoundError:
+            return dict(self._last)  # no file yet (or it was removed): what this process knows
+        except json.JSONDecodeError:
+            return dict(self._last)  # an unreadable file must not reset the spend to zero
+        self._last = state
+        return state
 
     def _write(self, state: dict) -> None:
         tmp = self.state_path.with_suffix(".tmp")
         tmp.write_text(json.dumps(state, indent=2))
         os.replace(tmp, self.state_path)
+        self._last = state
 
 
 @dataclass

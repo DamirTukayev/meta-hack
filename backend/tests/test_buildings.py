@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from shapely.geometry import box
 
 from orbitroute.perception.buildings import building_cache_name, building_points

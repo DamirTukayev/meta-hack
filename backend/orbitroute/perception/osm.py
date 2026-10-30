@@ -21,7 +21,7 @@ import httpx
 import networkx as nx
 import numpy as np
 
-from orbitroute.config import CACHE_DIR, resolve_cached
+from orbitroute.config import CACHE_DIR, resolve_cached, write_atomic
 from orbitroute.naip import to_mercator
 from orbitroute.perception.graph import Edge, RoadGraph, _resample
 
@@ -95,8 +95,7 @@ def _race(query: str, path, trim_fn, what: str, *, client: httpx.Client | None, 
                     last = exc
                     continue
                 data = trim_fn(got["data"])
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(json.dumps(data))
+                write_atomic(path, json.dumps(data))
                 log.info("OSM %s read from %s in %.1f s (%d elements)", what, got["url"], time.monotonic() - started, len(data["elements"]))
                 return data
         except FuturesTimeout:

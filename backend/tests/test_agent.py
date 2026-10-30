@@ -4,7 +4,7 @@ from shapely.geometry import box
 
 from orbitroute.agent.events import Event
 from orbitroute.agent.loop import run_agent
-from orbitroute.agent.repair import Decision, DecisionContext, ModelDecider, PolicyDecider, allowed_actions
+from orbitroute.agent.repair import DecisionContext, ModelDecider, PolicyDecider, allowed_actions
 from orbitroute.routing.matrix import build_matrix
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan, Route, Stop, solve_vrp
@@ -234,7 +234,7 @@ def test_model_decider_falls_back_on_an_action_that_is_not_allowed_or_a_failure(
 def test_verifier_flags_capacity_coverage_and_broken_paths():
     sc = make_scenario_at(box(130, 130, 270, 270), [(300, 200), (300, 300), (100, 100), (100, 300)], vehicle_capacity=2)
     matrix = build_matrix(sc.graph, sc.location_nodes)
-    plan = solve_vrp(sc, matrix, time_limit_s=1.0)
+    solve_vrp(sc, matrix, time_limit_s=1.0)
     # a plan that puts all four orders on one truck (capacity 2), skips order 4's duplicate and breaks a leg
     stops = [Stop(i, sc.order_nodes[i - 1], 0, 0) for i in (1, 2, 3, 3)]
     r = Route(0, stops, sc.problem.shift_start_s, sc.problem.shift_start_s + 60, 0, 0, legs=[[sc.depot_node, 999999]] + [matrix.paths[(0, 1)]] * 4)

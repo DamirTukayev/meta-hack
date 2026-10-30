@@ -27,22 +27,22 @@ from PIL import Image, ImageDraw
 from scipy.ndimage import distance_transform_edt
 
 sys.path.insert(0, str(Path(__file__).parent))
-from eval_hybrid import coverage, scenarios  # noqa: E402
+from eval_hybrid import coverage, scenarios
 
-from orbitroute.agent import inspection  # noqa: E402
-from orbitroute.agent.loop import run_agent  # noqa: E402
-from orbitroute.agent.repair import PolicyDecider  # noqa: E402
-from orbitroute.areas import ensure_area  # noqa: E402
-from orbitroute.config import ROOT, Settings  # noqa: E402
-from orbitroute.eval.runner import World, build_scenario  # noqa: E402
-from orbitroute.llm.budget import BudgetGuard  # noqa: E402
-from orbitroute.llm.client import MetaClient, guard_for  # noqa: E402
-from orbitroute.perception.evidence import annotate  # noqa: E402
-from orbitroute.perception.graph import build_road_graph  # noqa: E402
-from orbitroute.perception.osm import osm_graph  # noqa: E402
-from orbitroute.perception.segment import segment_roads  # noqa: E402
-from orbitroute.pipeline import get_sample  # noqa: E402
-from orbitroute.understanding.scene import Scene  # noqa: E402
+from orbitroute.agent import inspection
+from orbitroute.agent.loop import run_agent
+from orbitroute.agent.repair import PolicyDecider
+from orbitroute.areas import ensure_area
+from orbitroute.config import ROOT, Settings
+from orbitroute.eval.runner import World, build_scenario
+from orbitroute.llm.budget import BudgetGuard
+from orbitroute.llm.client import MetaClient, guard_for
+from orbitroute.perception.evidence import annotate
+from orbitroute.perception.graph import build_road_graph
+from orbitroute.perception.osm import osm_graph
+from orbitroute.perception.segment import segment_roads
+from orbitroute.pipeline import get_sample
+from orbitroute.understanding.scene import Scene
 
 PLACES = [("Medicine Bow NF, WY", 41.30, -106.30), ("Apalachicola NF, FL", 30.30, -84.90), ("Sam Houston NF, TX", 30.60, -95.30)]
 TOL_GRAPH_M, TOL_MASK_M = 15.0, 8.0
@@ -106,7 +106,7 @@ def main() -> None:
         size, mpp = sm.meta["width_px"], sm.meta["m_per_px"]
         mask = segment_roads(client, sm.image_bytes, run=run)
         sam, omap = build_road_graph(mask, mpp), osm_graph(area.name, sm.meta)
-        evidence = annotate(omap, mask, [])
+        annotate(omap, mask, [])  # marks which edges of the map the photo confirms
         pts = track_points(omap)
         mask_dist = distance_transform_edt(~mask)
         row = {

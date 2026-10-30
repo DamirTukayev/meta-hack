@@ -31,7 +31,8 @@ class Roads:
 def build_roads(client: MetaClient, sample, *, run: RunBudget | None = None, prefer: str = "osm") -> Roads:
     mpp = sample.meta["m_per_px"]
     notes: list[str] = []
-    with ThreadPoolExecutor(max_workers=1) as pool:  # the map is read while SAM reads the photo, so a slow Overpass costs no extra time
+    pool = ThreadPoolExecutor(max_workers=1)  # the map is read while SAM reads the photo, so a slow Overpass costs no extra time
+    try:
         pending = pool.submit(osm_graph, sample.name, sample.meta) if prefer == "osm" else None
         mask = segment_roads(client, sample.image_bytes, run=run)
         graph = None
@@ -40,10 +41,15 @@ def build_roads(client: MetaClient, sample, *, run: RunBudget | None = None, pre
                 graph = pending.result()
             except OsmUnavailable:
                 notes.append("OpenStreetMap did not answer, so the roads were read from the photo.")
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)  # an error in SAM is reported at once, not after a slow map server
     if prefer == "osm":
         if graph is not None:
             area_km2 = (mask.shape[1] * mpp / 1000) * (mask.shape[0] * mpp / 1000)
             if graph.stats["road_km"] / area_km2 >= MIN_OSM_KM_PER_KM2 and graph.stats["edges"]:
                 return Roads(graph, mask, "osm", notes)
             notes.append("OpenStreetMap has few roads here, so the roads were read from the photo.")
-    return Roads(build_road_graph(mask, mpp), mask, "sam", notes)
+    photo_graph = build_road_graph(mask, mpp)
+    if not photo_graph.edges:
+        raise ValueError("No roads were found in this photo, neither on the map nor in the image (open land, water or dense cover). Pick an area with streets or tracks.")
+    return Roads(photo_graph, mask, "sam", notes)

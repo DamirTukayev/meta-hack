@@ -18,6 +18,14 @@ AREAS_DIR = STATE_DIR / "areas"
 PREWARMED_DIR = ROOT / "data" / "prewarmed"  # committed model answers for the bundled samples, so a fresh deployment pays nothing
 
 
+def write_atomic(path: Path, text: str) -> None:
+    """Write a cache file so that a reader never sees half of it."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
+    tmp.write_text(text)
+    os.replace(tmp, path)
+
+
 def resolve_cached(cache_dir: Path, name: str) -> Path:
     """The cache file to read or write: the live cache first, then the committed pre-warmed copy."""
     live = cache_dir / name

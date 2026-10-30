@@ -1,5 +1,4 @@
 import pytest
-from shapely.geometry import box
 
 from orbitroute.agent.loop import run_agent
 from orbitroute.custom import CustomInputs, apply_custom
