@@ -331,3 +331,12 @@ header .stepper { flex: 1; min-width: 420px; border: 0; background: none; paddin
 .exposure .shelters li { display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-top: 1px solid var(--line, #2a2a2a); font-size: 12px; line-height: 1.45; }
 .exposure .shelters button { flex: none; padding: 4px 8px; border: 1px solid var(--amber, #ffb000); background: transparent; color: var(--amber, #ffb000); font: inherit; font-size: 11px; cursor: pointer; }
 .exposure .shelters button:disabled { opacity: .45; cursor: default; }
+
+/* language selector, chosen order, evidence */
+header .lang { margin-left: 12px; background: #000; color: var(--text, #e6e6e6); border: 1px solid var(--line, #444); font: inherit; font-size: 12px; padding: 4px 6px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--amber, #ffb000); font: inherit; text-decoration: underline; cursor: pointer; }
+.pick-info { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin: 8px 0; padding: 8px 10px; border: 1px solid var(--amber, #ffb000); font-size: 13px; }
+.truck-card .sequence li .row-pick { display: flex; gap: 6px; align-items: center; width: 100%; background: none; border: 0; padding: 2px 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.truck-card .sequence li .row-pick time { margin-left: auto; }
+.truck-card .sequence li.chosen, .truck-card .sequence li:hover { background: rgba(255, 176, 0, .12); }
+.map svg .stop { cursor: pointer; }

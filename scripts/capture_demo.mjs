@@ -18,7 +18,7 @@ const frame = async (tag = '') => b.shot(`${dir}/f${String(n++).padStart(3, '0')
 await b.goto('http://localhost:8000/')
 await b.sleep(1200)
 await frame('_hold')                     // the welcome card
-if (sample) { await b.eval(`(() => { const s = document.querySelector('select'); s.value = '${sample}'; s.dispatchEvent(new Event('change', { bubbles: true })) })()`); await b.sleep(900) }
+if (sample) { await b.eval(`(() => { const s = document.querySelector('.request select'); s.value = '${sample}'; s.dispatchEvent(new Event('change', { bubbles: true })) })()`); await b.sleep(900) }
 if (example) await b.eval(`[...document.querySelectorAll('.example')].find(x => x.innerText.trim() === ${JSON.stringify(example)}).click()`)
 await b.eval(`[...document.querySelectorAll('button')].find(x => /try it with/i.test(x.innerText)).click()`)
 const t0 = Date.now()

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { downsample, encodeWav } from './wav'
 import { accessHeaders } from './access'
+import { t } from './i18n'
 
 const TARGET_RATE = 16000
 const MAX_SECONDS = 20
@@ -42,7 +43,7 @@ export function useVoice(onText: (text: string) => void) {
     const total = chunks.reduce((n, c) => n + c.length, 0)
     if (total / rate < MIN_SECONDS) {
       setPhase('idle')
-      setError('That was too short. Hold the button a little longer and speak.')
+      setError(t('That was too short. Hold the button a little longer and speak.'))
       return
     }
     const all = new Float32Array(total)
@@ -53,12 +54,12 @@ export function useVoice(onText: (text: string) => void) {
       const wav = encodeWav(downsample(all, rate, TARGET_RATE), Math.min(rate, TARGET_RATE))
       const res = await fetch('/api/transcribe', { method: 'POST', headers: { 'Content-Type': 'audio/wav', ...accessHeaders() }, body: wav })
       const j = await res.json().catch(() => ({}))
-      if (!res.ok) throw new Error(typeof j.detail === 'string' ? j.detail : 'Speech recognition failed.')
-      if (!j.text) throw new Error('I could not hear any words. Try again, a bit closer to the microphone.')
+      if (!res.ok) throw new Error(typeof j.detail === 'string' ? j.detail : t('Speech recognition failed.'))
+      if (!j.text) throw new Error(t('I could not hear any words. Try again, a bit closer to the microphone.'))
       setHeard(j.text)
       onText(j.text)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Speech recognition failed.')
+      setError(e instanceof Error ? e.message : t('Speech recognition failed.'))
     } finally {
       setPhase('idle')
     }
@@ -68,7 +69,7 @@ export function useVoice(onText: (text: string) => void) {
     setError('')
     setHeard('')
     if (!navigator.mediaDevices?.getUserMedia) {
-      setError('This browser cannot use the microphone here (it needs a secure page).')
+      setError(t('This browser cannot use the microphone here (it needs a secure page).'))
       return
     }
     try {
@@ -84,7 +85,7 @@ export function useVoice(onText: (text: string) => void) {
       setPhase('recording')
     } catch (e) {
       const denied = e instanceof DOMException && (e.name === 'NotAllowedError' || e.name === 'SecurityError')
-      setError(denied ? 'Microphone access was blocked. Allow it in the browser and try again.' : 'No microphone could be opened.')
+      setError(denied ? t('Microphone access was blocked. Allow it in the browser and try again.') : t('No microphone could be opened.'))
     }
   }, [stop])
 

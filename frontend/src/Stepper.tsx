@@ -1,4 +1,5 @@
 import type { RunState } from './types'
+import { t } from './i18n'
 
 type StepState = 'done' | 'active' | 'todo'
 
@@ -32,11 +33,11 @@ export function stepStates(s: RunState): Record<string, StepState> {
 export default function Stepper({ state }: { state: RunState }) {
   const st = stepStates(state)
   return (
-    <ol className="stepper" aria-label="Agent progress">
+    <ol className="stepper" aria-label={t('Agent progress')}>
       {STEPS.map((step, i) => (
         <li key={step.key} className={st[step.key]}>
           <span className="bullet">{st[step.key] === 'done' ? '✓' : st[step.key] === 'active' ? <i className="spinner" /> : i + 1}</span>
-          <span className="label"><b>{step.label}</b><small>{step.who}</small></span>
+          <span className="label"><b>{t(step.label)}</b><small>{t(step.who)}</small></span>
         </li>
       ))}
     </ol>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
 import type { Problem, RunState, StreamEvent, Zone, XY } from './types'
 import { accessHeaders } from './access'
+import { t } from './i18n'
 
 export const initialState: RunState = { status: 'idle', stage: '', zones: [], warehouses: [], orders: [], orderTargets: [], iterations: [], log: [] }
 
@@ -59,11 +60,11 @@ function reduce(s: RunState, a: Action): RunState {
 async function streamRun(body: object, onEvent: (name: string, data: any) => void, signal: AbortSignal) {
   const res = await fetch('/api/run', { method: 'POST', headers: { 'Content-Type': 'application/json', ...accessHeaders() }, body: JSON.stringify(body), signal })
   if (!res.ok || !res.body) {
-    let detail = `The server answered ${res.status}.`
+    let detail = t('The server answered {status}.', { status: res.status })
     try {
       const j = await res.json()
       if (typeof j.detail === 'string') detail = j.detail
-      else if (Array.isArray(j.detail)) detail = 'Some input was not accepted (too many points, or a value is out of range).'
+      else if (Array.isArray(j.detail)) detail = t('Some input was not accepted (too many points, or a value is out of range).')
     } catch { /* keep the generic message */ }
     throw new Error(detail)
   }
@@ -156,7 +157,7 @@ export function useRun(paceMs = 420) {
         .catch((err: unknown) => {
           if (ctl.signal.aborted) return
           finished.current = true
-          queue.current.push({ kind: 'error', message: err instanceof Error ? err.message : 'Connection to the server was lost.' })
+          queue.current.push({ kind: 'error', message: err instanceof Error ? err.message : t('Connection to the server was lost.') })
           pump()
         })
     },
