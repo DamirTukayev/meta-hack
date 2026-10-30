@@ -8,6 +8,8 @@ import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Samp
 import { useRun } from './useRun'
 import AccessNote from './AccessNote'
 import ExposureCard from './ExposureCard'
+import { LANGS, setLang, t, useLang, zoneName } from './i18n'
+import type { Lang } from './i18n'
 import { adoptCodeFromLink, fetchAccess, setCode } from './access'
 import type { Access } from './access'
 
@@ -15,6 +17,24 @@ const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: 
 
 function fmtT(s: number) {
   return `${Math.max(s, 0).toFixed(1)}s`
+}
+
+const CHECK_TITLES: Record<string, string> = {
+  coverage: 'Every order is served exactly once', fleet: 'Fleet size is respected', capacity: 'Truck capacity is respected',
+  paths: 'Every leg follows real roads', deadline: 'All work finishes before the deadline', zones: 'Avoided zones are not entered',
+}
+
+/** The detail line of a check that passed, in the current language (the server writes it in English; a failed check keeps the server's words). */
+function checkDetail(passed: boolean, detail: string): string {
+  if (!passed) return detail
+  let m: RegExpMatchArray | null
+  if ((m = detail.match(/^(\d+)\/(\d+) orders served(?:, (\d+) excluded with reasons)?$/))) return t('{a}/{b} orders served', { a: m[1], b: m[2] }) + (m[3] ? t(', {n} excluded with reasons', { n: m[3] }) : '')
+  if ((m = detail.match(/^(\d+)\/(\d+) trucks used$/))) return t('{a}/{b} trucks used', { a: m[1], b: m[2] })
+  if ((m = detail.match(/^max load (\d+)\/(\d+)$/))) return t('max load {a}/{b}', { a: m[1], b: m[2] })
+  if (detail === 'all legs are connected road paths') return t('all legs are connected road paths')
+  if ((m = detail.match(/^last truck back at (\d\d:\d\d) \(deadline (\d\d:\d\d)\)$/))) return t('last truck back at {t} (deadline {d})', { t: m[1], d: m[2] })
+  if (detail === 'no avoided zone entered') return t('no avoided zone entered')
+  return detail
 }
 
 function RequestPanel(props: {
@@ -45,67 +65,67 @@ function RequestPanel(props: {
   const limited = props.offline || (props.access !== null && !props.access.live) // no live model calls for this visitor
   return (
     <section className="panel request">
-      <h2>Request</h2>
+      <h2>{t('Request')}</h2>
       {props.offline && (
         <p className="demo-note" role="note">
-          <b>Demo mode</b> (no API key): the bundled images and their example sentences run on recorded model answers. Your own sentences, new map areas and voice need a key, see the README.
+          <b>{t('Demo mode')}</b> {t('(no API key): the bundled images and their example sentences run on recorded model answers. Your own sentences, new map areas and voice need a key, see the README.')}
         </p>
       )}
       {!props.offline && props.access && !props.access.live && <AccessNote access={props.access} onUnlock={props.onUnlock} />}
-      <label>Satellite image</label>
+      <label>{t('Satellite image')}</label>
       <select value={sample?.name} onChange={(e) => props.onSample(e.target.value)} disabled={running}>
         {props.samples.map((s) => <option key={s.name} value={s.name}>{s.label}</option>)}
       </select>
-      <button className="link" onClick={props.onPickArea} disabled={running || limited} title={limited ? 'Live mode only: a new map area needs a Meta API key or the access code' : undefined}>＋ Choose another area on the map</button>
+      <button className="link" onClick={props.onPickArea} disabled={running || limited} title={limited ? t('Live mode only: a new map area needs a Meta API key or the access code') : undefined}>＋ {t('Choose another area on the map')}</button>
       <div className="field-row">
-        <label htmlFor="trucks">Trucks</label>
+        <label htmlFor="trucks">{t('Trucks')}</label>
         <div className="count">
-          <button type="button" onClick={() => props.onTrucks(Math.max(1, props.trucks - 1))} disabled={running || props.trucks <= 1} aria-label="Fewer trucks">−</button>
+          <button type="button" onClick={() => props.onTrucks(Math.max(1, props.trucks - 1))} disabled={running || props.trucks <= 1} aria-label={t('Fewer trucks')}>−</button>
           <input id="trucks" type="number" min={1} max={30} value={props.trucks} disabled={running} onChange={(e) => props.onTrucks(Math.max(1, Math.min(30, Number(e.target.value) || 1)))} />
-          <button type="button" onClick={() => props.onTrucks(Math.min(30, props.trucks + 1))} disabled={running || props.trucks >= 30} aria-label="More trucks">+</button>
+          <button type="button" onClick={() => props.onTrucks(Math.min(30, props.trucks + 1))} disabled={running || props.trucks >= 30} aria-label={t('More trucks')}>+</button>
         </div>
       </div>
       <div className="field-row">
-        <label htmlFor="capacity" title="How many orders one truck can carry. Auto: the agent assumes a default and lists it.">Capacity per truck</label>
+        <label htmlFor="capacity" title={t('How many orders one truck can carry. Auto: the agent assumes a default and lists it.')}>{t('Capacity per truck')}</label>
         <div className="count">
-          <button type="button" onClick={() => props.onCapacity(Math.max(0, props.capacity - 1))} disabled={running || props.capacity <= 0} aria-label="Lower capacity">−</button>
-          <input id="capacity" type="number" min={0} max={300} value={props.capacity || ''} placeholder="auto" disabled={running} onChange={(e) => props.onCapacity(Math.max(0, Math.min(300, Number(e.target.value) || 0)))} />
-          <button type="button" onClick={() => props.onCapacity(Math.min(300, props.capacity + 1))} disabled={running || props.capacity >= 300} aria-label="Higher capacity">+</button>
+          <button type="button" onClick={() => props.onCapacity(Math.max(0, props.capacity - 1))} disabled={running || props.capacity <= 0} aria-label={t('Lower capacity')}>−</button>
+          <input id="capacity" type="number" min={0} max={300} value={props.capacity || ''} placeholder={t('auto')} disabled={running} onChange={(e) => props.onCapacity(Math.max(0, Math.min(300, Number(e.target.value) || 0)))} />
+          <button type="button" onClick={() => props.onCapacity(Math.min(300, props.capacity + 1))} disabled={running || props.capacity >= 300} aria-label={t('Higher capacity')}>+</button>
         </div>
       </div>
-      <label>Time and what to avoid</label>
-      <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder="by 18:00, avoid the industrial zone" />
+      <label>{t('Time and what to avoid')}</label>
+      <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder={t('by 18:00, avoid the industrial zone')} />
       <div className="voice">
-        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || limited || voice.phase === 'sending' || !voice.supported} title={limited ? 'Live mode only: voice needs a Meta API key or the access code' : undefined} aria-pressed={voice.phase === 'recording'}>
-          {voice.phase === 'recording' ? '■ Stop' : voice.phase === 'sending' ? 'Listening to it…' : '🎙 Speak'}
+        <button type="button" className={'mic ' + voice.phase} onClick={voice.toggle} disabled={running || limited || voice.phase === 'sending' || !voice.supported} title={limited ? t('Live mode only: voice needs a Meta API key or the access code') : undefined} aria-pressed={voice.phase === 'recording'}>
+          {voice.phase === 'recording' ? `■ ${t('Stop')}` : voice.phase === 'sending' ? t('Listening to it…') : `🎙 ${t('Speak')}`}
         </button>
         <span className="voice-note">
-          {voice.phase === 'recording' ? 'Recording… say the time and what to avoid.' : voice.error ? <em className="err">{voice.error}</em> : voice.heard ? <>Heard: “{voice.heard}”</> : 'or say it — Muse Voice Transcribe'}
+          {voice.phase === 'recording' ? t('Recording… say the time and what to avoid.') : voice.error ? <em className="err">{voice.error}</em> : voice.heard ? <>{t('Heard:')} “{voice.heard}”</> : t('or say it — Muse Voice Transcribe')}
         </span>
       </div>
       <div className="examples">
         {sample?.examples.map((ex) => <button key={ex} className="example" onClick={() => props.onRequest(ex)} disabled={running}>{ex}</button>)}
       </div>
       <ul className="checklist-mini">
-        <li className={custom.depot ? 'ok' : ''}>{custom.depot ? '✓' : '○'} Depot {custom.depot ? 'placed' : 'not placed'}</li>
+        <li className={custom.depot ? 'ok' : ''}>{custom.depot ? '✓' : '○'} {custom.depot ? t('Depot placed') : t('Depot not placed')}</li>
         <li className={custom.orders.length > 0 || props.auto ? 'ok' : ''}>
-          {custom.orders.length > 0 || props.auto ? '✓' : '○'} {custom.orders.length > 0 ? `${custom.orders.length} order${custom.orders.length > 1 ? 's' : ''} placed ${props.agentPlaced ? 'by the agent (drag to move)' : 'by you'}` : props.auto ? `${props.autoCount} random orders (agent places them)` : 'Orders not placed'}
+          {custom.orders.length > 0 || props.auto ? '✓' : '○'} {custom.orders.length > 0 ? (props.agentPlaced ? t('Orders: {n}, placed by the agent (drag to move)', { n: custom.orders.length }) : t('Orders: {n}, placed by you', { n: custom.orders.length })) : props.auto ? t('{n} random orders (agent places them)', { n: props.autoCount }) : t('Orders not placed')}
         </li>
-        <li className={custom.zoneClosed ? 'ok' : 'opt'}>{custom.zoneClosed ? '✓ Your avoid-zone drawn' : '○ Zone to avoid (optional)'}</li>
+        <li className={custom.zoneClosed ? 'ok' : 'opt'}>{custom.zoneClosed ? `✓ ${t('Your avoid-zone drawn')}` : `○ ${t('Zone to avoid (optional)')}`}</li>
       </ul>
-      <button className="primary" onClick={props.onPlan} disabled={running || !props.canPlan}>{running ? 'Agent working…' : props.hasPlan ? 'Replan' : 'Plan route'}</button>
-      {!props.canPlan && !running && <p className="muted small">Place the depot and at least one order on the map, or tick “Place orders for me”.</p>}
+      <button className="primary" onClick={props.onPlan} disabled={running || !props.canPlan}>{running ? t('Agent working…') : props.hasPlan ? t('Replan') : t('Plan route')}</button>
+      {!props.canPlan && !running && <p className="muted small">{t('Place the depot and at least one order on the map, or tick “Place orders for me”.')}</p>}
       {state.problem && (
         <div className="understood">
-          <h3>What the agent understood</h3>
+          <h3>{t('What the agent understood')}</h3>
           <dl>
-            <dt>Orders</dt><dd>{state.problem.n_orders}</dd>
-            <dt>Trucks</dt><dd>{state.problem.n_vehicles} × {state.problem.capacity} units</dd>
-            <dt>Avoid</dt><dd>{state.problem.avoid_zone_kinds.join(', ') || 'nothing'}</dd>
+            <dt>{t('Orders')}</dt><dd>{state.problem.n_orders}</dd>
+            <dt>{t('Trucks')}</dt><dd>{t('{n} × {c} units', { n: state.problem.n_vehicles, c: state.problem.capacity })}</dd>
+            <dt>{t('Avoid')}</dt><dd>{state.problem.avoid_zone_kinds.map(zoneName).join(', ') || t('nothing')}</dd>
           </dl>
           {state.problem.assumptions.length > 0 && (
             <>
-              <h4>Assumed or adjusted</h4>
+              <h4>{t('Assumed or adjusted')}</h4>
               <ul>{state.problem.assumptions.map((a) => <li key={a}>{a}</li>)}</ul>
             </>
           )}
@@ -122,51 +142,52 @@ function AgentLog({ log, running }: { log: LogEntry[]; running: boolean }) {
   }, [log.length])
   return (
     <section className="panel log">
-      <h2>Agent log</h2>
-      {!log.length && <p className="muted">The agent's steps appear here: perceive, understand, solve, verify, repair.</p>}
+      <h2>{t('Agent log')}</h2>
+      {!log.length && <p className="muted">{t("The agent's steps appear here: perceive, understand, solve, verify, repair.")}</p>}
       <ol>
         {log.map((l) => (
           <li key={l.id} className={l.type}>
             <span className="icon">{ICONS[l.type] ?? '·'}</span>
             <span className="text">
-              {l.type === 'decision' && <em className="badge">{l.source === 'model' ? 'Muse Spark decides' : 'policy decides'}</em>}
+              {l.type === 'decision' && <em className="badge">{l.source === 'model' ? t('Muse Spark decides') : t('policy decides')}</em>}
               {l.text}
             </span>
             <span className="time">{fmtT(l.t)}</span>
           </li>
         ))}
       </ol>
-      {running && <div className="working"><span className="spinner" /> working…</div>}
+      {running && <div className="working"><span className="spinner" /> {t('working…')}</div>}
       <div ref={end} />
     </section>
   )
 }
 
-function Checklist({ report, title }: { report?: ReportGeo; title: string }) {
+function Checklist({ report, title, evidence, onEvidence }: { report?: ReportGeo; title: string; evidence: boolean; onEvidence: (v: boolean) => void }) {
   return (
     <section className="panel checklist">
-      <h2>Verification <small>{title}</small></h2>
-      {!report && <p className="muted">An independent verifier re-simulates every route on the road graph and checks six things.</p>}
+      <h2>{t('Verification')} <small>{title}</small></h2>
+      {!report && <p className="muted">{t('An independent verifier re-simulates every route on the road graph and checks six things.')}</p>}
       <ul>
         {report?.checks.map((c) => (
           <li key={c.kind} className={c.passed ? 'pass' : 'fail'}>
             <span className="mark">{c.passed ? '✓' : '✗'}</span>
-            <div><b>{c.title}</b><span>{c.detail}</span></div>
+            <div><b>{CHECK_TITLES[c.kind] ? t(CHECK_TITLES[c.kind]) : c.title}</b><span>{checkDetail(c.passed, c.detail)}</span></div>
           </li>
         ))}
       </ul>
       {report?.violations.map((v, i) => <p key={i} className="violation">{v.message}</p>)}
       {!!report?.metrics.flagged_m && (
         <p className="gap-note" role="note">
-          <b>Not confirmed by the photo:</b> {report.metrics.flagged_m} m ({Math.round((report.metrics.flagged_share ?? 0) * 100)}% of the driving) runs on map roads the photo does not confirm
-          {report.metrics.risk_m?.unseen ? <>: {report.metrics.risk_m.unseen} m not found in the road mask (trees, shadow or a real problem; the photo cannot tell)</> : null}
-          {report.metrics.risk_m?.water ? <>, {report.metrics.risk_m.water} m under water</> : null}
-          {report.metrics.risk_m?.blocked ? <>, {report.metrics.risk_m.blocked} m where Muse Spark saw standing water or debris and no way round was found</> : null}. The plan stays valid by the map.
+          <b>{t('Not confirmed by the photo:')}</b> {t('{m} m ({p}% of the driving) runs on map roads the photo does not confirm', { m: report.metrics.flagged_m, p: Math.round((report.metrics.flagged_share ?? 0) * 100) })}
+          {report.metrics.risk_m?.unseen ? <>{t(': {m} m not found in the road mask (trees, shadow or a real problem; the photo cannot tell)', { m: report.metrics.risk_m.unseen })}</> : null}
+          {report.metrics.risk_m?.water ? <>{t(', {m} m under water', { m: report.metrics.risk_m.water })}</> : null}
+          {report.metrics.risk_m?.blocked ? <>{t(', {m} m where Muse Spark saw standing water or debris and no way round was found', { m: report.metrics.risk_m.blocked })}</> : null}{t('. The plan stays valid by the map.')}{' '}
+          <button type="button" className="linkish" onClick={() => onEvidence(!evidence)}>{evidence ? t('Hide on the map') : t('Show on the map')}</button>
         </p>
       )}
       {!!report?.metrics.unconfirmed_m && (
         <p className="gap-note" role="note">
-          <b>Not confirmed by the photo:</b> {report.metrics.unconfirmed_m} m ({Math.round((report.metrics.unconfirmed_share ?? 0) * 100)}% of the driving) runs on links drawn across gaps in the roads found. The verifier counts them as roads; the photo does not show one there.
+          <b>{t('Not confirmed by the photo:')}</b> {t('{m} m ({p}% of the driving) runs on links drawn across gaps in the roads found. The verifier counts them as roads; the photo does not show one there.', { m: report.metrics.unconfirmed_m, p: Math.round((report.metrics.unconfirmed_share ?? 0) * 100) })}
         </p>
       )}
     </section>
@@ -176,32 +197,32 @@ function Checklist({ report, title }: { report?: ReportGeo; title: string }) {
 function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => void; relax: number | null }) {
   const { state } = props
   const r: Result | undefined = state.result
-  if (state.status === 'error') return <div className="result idle">No plan was made. The reason is in the red message above.</div>
-  if (!r) return <div className="result idle">{state.status === 'running' ? 'The agent is working on it…' : 'No plan yet.'}</div>
+  if (state.status === 'error') return <div className="result idle">{t('No plan was made. The reason is in the red message above.')}</div>
+  if (!r) return <div className="result idle">{state.status === 'running' ? t('The agent is working on it…') : t('No plan yet.')}</div>
   const total = state.problem?.n_orders ?? r.plan.served
   const shown = props.relax !== null ? r.relaxations[props.relax] : undefined
   const leftOut = Object.keys(shown ? shown.report.excluded : r.excluded)
   const excluded = leftOut.length
   const trucks = r.plan.routes.length
-  const label = r.status === 'verified' ? 'VERIFIED' : r.status === 'verified_partial' ? 'VERIFIED · PARTIAL' : r.status === 'needs_relaxation' ? 'CAN’T MEET AS STATED' : 'UNRESOLVED'
+  const label = r.status === 'verified' ? t('VERIFIED') : r.status === 'verified_partial' ? t('VERIFIED · PARTIAL') : r.status === 'needs_relaxation' ? t('CAN’T MEET AS STATED') : t('UNRESOLVED')
   return (
     <div className={`result ${r.status}`}>
       <div className="verdict">{label}</div>
       <div className="tiles">
-        <div className="tile"><b>{r.plan.served}<small>/{total}</small></b><span>orders served</span></div>
-        <div className="tile"><b>{trucks}</b><span>truck{trucks === 1 ? '' : 's'} used</span></div>
-        <div className="tile"><b>{r.report.metrics.last_return}</b><span>last truck back</span></div>
-        <div className="tile"><b>{r.report.metrics.total_km}<small> km</small></b><span>total driving</span></div>
+        <div className="tile"><b>{r.plan.served}<small>/{total}</small></b><span>{t('orders served')}</span></div>
+        <div className="tile"><b>{trucks}</b><span>{trucks === 1 ? t('truck used') : t('trucks used')}</span></div>
+        <div className="tile"><b>{r.report.metrics.last_return}</b><span>{t('last truck back')}</span></div>
+        <div className="tile"><b>{r.report.metrics.total_km}<small> {t('km')}</small></b><span>{t('total driving')}</span></div>
       </div>
-      <p className="run-meta">{r.seconds}s · ${r.cost_usd.toFixed(3)} · {r.paid_calls} model call{r.paid_calls === 1 ? '' : 's'}</p>
-      {excluded > 0 && <p className="note">{excluded} order{excluded > 1 ? 's' : ''} left out — they cannot be reached without entering an avoided zone: {leftOut.join(', ')}.</p>}
+      <p className="run-meta">{r.seconds}s · ${r.cost_usd.toFixed(3)} · {r.paid_calls} {r.paid_calls === 1 ? t('model call') : t('model calls')}</p>
+      {excluded > 0 && <p className="note">{t('Orders left out ({n}) — they cannot be reached without entering an avoided zone: {list}.', { n: excluded, list: leftOut.join(', ') })}</p>}
       {r.status === 'needs_relaxation' && (
         <div className="relax">
-          <p className="note">The request is not feasible as stated. Smallest changes that work (each one verified):</p>
+          <p className="note">{t('The request is not feasible as stated. Smallest changes that work (each one verified):')}</p>
           {r.relaxations.map((o, i) => (
             <button key={o.kind} className={'chip ' + (props.relax === i ? 'on' : '')} onClick={() => props.onShowRelax(props.relax === i ? null : i)}>{r.recommendation?.index === i ? '★ ' : ''}{o.description}</button>
           ))}
-          {r.recommendation && <p className="note rec">★ Recommended: {r.recommendation.reason} <small>({r.recommendation.source === 'model' ? 'Muse Spark' : 'rules'})</small></p>}
+          {r.recommendation && <p className="note rec">★ {t('Recommended:')} {r.recommendation.reason} <small>({r.recommendation.source === 'model' ? 'Muse Spark' : t('rules')})</small></p>}
         </div>
       )}
     </div>
@@ -209,6 +230,8 @@ function ResultBar(props: { state: RunState; onShowRelax: (i: number | null) => 
 }
 
 export default function App() {
+  const lang = useLang()
+  const [evidence, setEvidence] = useState(false) // the map roads the photo does not confirm are drawn on the routes only when asked for
   const [samples, setSamples] = useState<Sample[]>([])
   const [name, setName] = useState('columbus')
   const [request, setRequest] = useState('')
@@ -332,37 +355,40 @@ export default function App() {
   const relaxed = relax !== null ? state.result?.relaxations[relax] : undefined
   const plan: PlanGeo | undefined = relaxed?.plan ?? iteration?.plan
   const report: ReportGeo | undefined = relaxed?.report ?? iteration?.report
-  const title = useMemo(() => (relaxed ? 'relaxed plan' : iteration ? `plan #${iteration.n}` : ''), [relaxed, iteration])
+  const title = useMemo(() => (relaxed ? t('relaxed plan') : iteration ? t('plan #{n}', { n: iteration.n }) : ''), [relaxed, iteration, lang])
 
-  if (!sample) return <div className="boot">Loading…</div>
+  if (!sample) return <div className="boot">{t('Loading…')}</div>
   return (
     <div className="app">
       <header>
         <div className="brand"><svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" fill="none" stroke="#ffb000" strokeWidth="2" /><path d="M16 1v8M16 23v8M1 16h8M23 16h8" stroke="#ffb000" strokeWidth="2" /><circle cx="16" cy="16" r="2.5" fill="#ffb000" /></svg><b>OrbitRoute</b></div>
         <Stepper state={state} />
         <span className="powered">SAM 3.1 · Muse Spark · PyVRP</span>
+        <select className="lang" value={lang} onChange={(e) => setLang(e.target.value as Lang)} aria-label={t('Language')}>
+          {LANGS.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
+        </select>
       </header>
       <main>
         <RequestPanel access={access} onUnlock={async (code) => { setCode(code); setAccess(await fetchAccess()) }} samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} capacity={capacity} onCapacity={setCapacity} offline={offline} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">
-              <b>The agent could not run this.</b>
+              <b>{t('The agent could not run this.')}</b>
               <span>{state.error}</span>
-              <span className="hint">Your points are still on the map{state.errorPoint ? ' — the one with the red ring is the problem. The found roads are switched on so you can see where to move it' : ''}. Drag it (or add another), then press Replan.</span>
+              <span className="hint">{state.errorPoint ? t('Your points are still on the map — the one with the red ring is the problem. The found roads are switched on so you can see where to move it. Drag it (or add another), then press Replan.') : t('Your points are still on the map. Drag it (or add another), then press Replan.')}</span>
             </div>
           )}
           {state.sparseRoads !== undefined && state.status !== 'idle' && (
             <div className="banner warn" role="status">
-              <b>Few streets found here.</b>
-              <span>Only {state.sparseRoads} km of road per km² (open areas give 8–12). Dense buildings or tree cover hide streets from an aerial photo, so the plan can only use the streets that were found. The Graph layer shows them.</span>
+              <b>{t('Few streets found here.')}</b>
+              <span>{t('Only {n} km of road per km² (open areas give 8–12). Dense buildings or tree cover hide streets from an aerial photo, so the plan can only use the streets that were found. The Graph layer shows them.', { n: state.sparseRoads })}</span>
             </div>
           )}
           {stale && state.status === 'done' && (
             <div className="banner warn" role="status">
-              <b>You changed the inputs — the plan below is out of date.</b>
-              <span>Drag the depot or any order, add or remove points, then press <b>Replan</b>.</span>
-              <button className="primary inline" onClick={onPlan} disabled={!canPlan}>Replan</button>
+              <b>{t('You changed the inputs — the plan below is out of date.')}</b>
+              <span>{t('Drag the depot or any order, add or remove points, then press Replan.')}</span>
+              <button className="primary inline" onClick={onPlan} disabled={!canPlan}>{t('Replan')}</button>
             </div>
           )}
           <IterationTabs iterations={state.iterations} selected={relaxed ? -1 : sel} onSelect={(i) => { setPinned(i); setRelax(null) }} running={state.status === 'running'} />
@@ -377,17 +403,18 @@ export default function App() {
             auto={auto} autoCount={autoCount} onAuto={setAuto} onAutoCount={setAutoCount}
             stale={stale} onDrag={onDrag} onEditPlan={onEditPlan}
             onQuickStart={onQuickStart} onPickArea={() => setPicking(true)}
+            evidence={evidence} onEvidence={setEvidence}
           />
           <ResultBar state={state} relax={relax} onShowRelax={setRelax} />
         </div>
         <aside>
-          <Checklist report={report} title={title} />
+          <Checklist report={report} title={title} evidence={evidence} onEvidence={setEvidence} />
           {state.exposure && <ExposureCard x={state.exposure} running={state.status === 'running'} onUseDepot={(xy) => { edit({ ...custom, depot: xy }); setMode('browse') }} />}
           <AgentLog log={state.log} running={state.status === 'running'} />
         </aside>
       </main>
       {picking && <AreaPicker onClose={() => setPicking(false)} onChosen={onArea} />}
-      <footer>Imagery: USGS NAIP and NOAA Emergency Response Imagery (public domain). Built solo for the Meta Global AI Developer Hackathon.</footer>
+      <footer>{t('Imagery: USGS NAIP and NOAA Emergency Response Imagery (public domain). Built solo for the Meta Global AI Developer Hackathon.')}</footer>
     </div>
   )
 }

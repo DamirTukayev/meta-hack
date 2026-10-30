@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css'
 import { useEffect, useRef, useState } from 'react'
 import type { Sample } from './types'
 import { accessHeaders } from './access'
+import { t } from './i18n'
 
 const SPAN_M = 1500 // must match the server: the picked square is 1.5 km on a side
 const MIN_ZOOM = 14
@@ -74,10 +75,10 @@ export default function AreaPicker(props: { onClose: () => void; onChosen: (s: S
     try {
       const r = await fetch(`https://nominatim.openstreetmap.org/search?${new URLSearchParams({ format: 'json', limit: '1', countrycodes: 'us', q: query })}`)
       const j = (await r.json()) as { lat: string; lon: string }[]
-      if (!j.length) setError('No place found in the United States. Try a city name or an address.')
+      if (!j.length) setError(t('No place found in the United States. Try a city name or an address.'))
       else go(parseFloat(j[0].lat), parseFloat(j[0].lon))
     } catch {
-      setError('Search is unavailable right now. Use the presets or pan the map.')
+      setError(t('Search is unavailable right now. Use the presets or pan the map.'))
     } finally {
       setBusy('')
     }
@@ -87,31 +88,31 @@ export default function AreaPicker(props: { onClose: () => void; onChosen: (s: S
     if (!map.current) return
     const { lat, lng } = map.current.getCenter()
     setError('')
-    setBusy('Fetching the aerial image…')
+    setBusy(t('Fetching the aerial image…'))
     try {
       const r = await fetch('/api/areas', { method: 'POST', headers: { 'Content-Type': 'application/json', ...accessHeaders() }, body: JSON.stringify({ lat, lon: lng }) })
       const j = await r.json()
-      if (!r.ok) throw new Error(typeof j.detail === 'string' ? j.detail : 'This place could not be used.')
+      if (!r.ok) throw new Error(typeof j.detail === 'string' ? j.detail : t('This place could not be used.'))
       props.onChosen(j as Sample)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong.')
+      setError(err instanceof Error ? err.message : t('Something went wrong.'))
       setBusy('')
     }
   }
 
   return (
-    <div className="modal" role="dialog" aria-modal="true" aria-label="Choose an area" onMouseDown={(e) => e.target === e.currentTarget && props.onClose()}>
+    <div className="modal" role="dialog" aria-modal="true" aria-label={t('Choose an area')} onMouseDown={(e) => e.target === e.currentTarget && props.onClose()}>
       <div className="modal-card">
         <div className="modal-head">
           <div>
-            <h2>Choose an area</h2>
-            <p>Move the map so the square covers the streets you want to plan on. United States only (USGS aerial imagery).</p>
+            <h2>{t('Choose an area')}</h2>
+            <p>{t('Move the map so the square covers the streets you want to plan on. United States only (USGS aerial imagery).')}</p>
           </div>
-          <button className="icon-btn" onClick={props.onClose} aria-label="Close">✕</button>
+          <button className="icon-btn" onClick={props.onClose} aria-label={t('Close')}>✕</button>
         </div>
         <form className="picker-search" onSubmit={search}>
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search a US city or address" aria-label="Search a place" />
-          <button type="submit" className="chip" disabled={!!busy}>Search</button>
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('Search a US city or address')} aria-label={t('Search a place')} />
+          <button type="submit" className="chip" disabled={!!busy}>{t('Search')}</button>
         </form>
         <div className="presets">
           {PRESETS.map(([n, lat, lng]) => <button key={n} className="chip" onClick={() => go(lat, lng)}>{n}</button>)}
@@ -119,11 +120,11 @@ export default function AreaPicker(props: { onClose: () => void; onChosen: (s: S
         <div className="picker-map" ref={el} />
         <div className="modal-foot">
           <span className={error ? 'err' : 'muted'}>
-            {error || busy || (zoom < MIN_ZOOM ? 'Zoom in until the square is small enough to see streets.' : '1.5 km × 1.5 km square. Roads and buildings will be read from the imagery.')}
+            {error || busy || (zoom < MIN_ZOOM ? t('Zoom in until the square is small enough to see streets.') : t('1.5 km × 1.5 km square. Roads and buildings will be read from the imagery.'))}
           </span>
-          <button className="primary inline" onClick={choose} disabled={!!busy || zoom < MIN_ZOOM}>{busy && busy.startsWith('Fetching') ? 'Fetching…' : 'Use this area'}</button>
+          <button className="primary inline" onClick={choose} disabled={!!busy || zoom < MIN_ZOOM}>{busy && busy ? t('Fetching…') : t('Use this area')}</button>
         </div>
-        <p className="credit-line">Search © OpenStreetMap contributors (Nominatim). Imagery: USGS NAIP, public domain.</p>
+        <p className="credit-line">{t('Search © OpenStreetMap contributors (Nominatim). Imagery: USGS NAIP, public domain.')}</p>
       </div>
     </div>
   )

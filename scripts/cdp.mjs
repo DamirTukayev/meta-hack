@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-export async function launch(width = 1440, height = 900, profile = '/tmp/orbitroute-chrome-profile') {
+export async function launch(width = 1440, height = 900, profile = `/tmp/orbitroute-chrome-profile-${process.pid}`) { // a fresh profile every time: a language chosen in one capture must not stay in the next
   const proc = spawn(CHROME, ['--headless=new', '--remote-debugging-port=9333', `--user-data-dir=${profile}`, `--window-size=${width},${height}`, '--hide-scrollbars', '--force-device-scale-factor=1', '--no-first-run', 'about:blank'], { stdio: 'ignore' })
   let targets
   for (let i = 0; i < 50; i++) {

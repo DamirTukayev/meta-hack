@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Access } from './access'
+import { t } from './i18n'
 
 // Shown on a shared deployment while live mode is locked: the recorded demo works for everyone, the code opens the rest.
 export default function AccessNote(props: { access: Access; onUnlock: (code: string) => Promise<void> }) {
@@ -17,15 +18,15 @@ export default function AccessNote(props: { access: Access; onUnlock: (code: str
   }
   return (
     <div className="demo-note" role="note">
-      <b>Recorded demo</b>{' '}
+      <b>{t('Recorded demo')}</b>{' '}
       {access.window_open
-        ? 'The bundled images and their example sentences run on recorded model answers. Your own sentences, new map areas and voice are live and need the access code you were given.'
+        ? t('The bundled images and their example sentences run on recorded model answers. Your own sentences, new map areas and voice are live and need the access code you were given.')
         : access.message}
       {access.required && access.window_open && (
         <form className="access-form" onSubmit={submit}>
-          <input type="password" autoComplete="off" value={code} onChange={(e) => setCode(e.target.value)} placeholder="Access code" aria-label="Access code" disabled={busy} />
-          <button type="submit" disabled={busy || !code.trim()}>{busy ? 'Checking…' : 'Unlock'}</button>
-          {tried && !access.live && <span className="err" role="alert">{access.message.startsWith('Too many') ? access.message : 'That code did not work.'}</span>}
+          <input type="password" autoComplete="off" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t('Access code')} aria-label={t('Access code')} disabled={busy} />
+          <button type="submit" disabled={busy || !code.trim()}>{busy ? t('Checking…') : t('Unlock')}</button>
+          {tried && !access.live && <span className="err" role="alert">{access.message.startsWith('Too many') ? access.message : t('That code did not work.')}</span>}
         </form>
       )}
     </div>
