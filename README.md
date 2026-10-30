@@ -35,6 +35,30 @@ Limits, stated plainly: NOAA says this imagery is not intended for navigation, s
 
 ![Architecture: image and request go through SAM 3.1 and Muse Spark into a scenario, which is solved, verified and, on violations, repaired and solved again](docs/architecture.svg)
 
+The same system by what runs where (a C4 container view; the context, component and one-run views are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)):
+
+```mermaid
+flowchart LR
+  U([Dispatcher]) --> WEB
+  subgraph Browser
+    WEB[Web app<br/>React 19, SVG map]
+  end
+  subgraph Modal[Modal: one container]
+    API[Backend<br/>FastAPI, PyVRP, verifier]
+  end
+  VOL[(Modal Volume<br/>caches, spend counters)]
+  META[Meta Model API<br/>SAM 3.1, Muse Spark]
+  OPEN[Baseten, then Modal<br/>Muse Spark Open]
+  OSM[OpenStreetMap]
+  IMG[USGS NAIP, NOAA<br/>aerial photos]
+  WEB -- "HTTPS, server-sent events" --> API
+  API --- VOL
+  API -- "under the budget guard" --> META
+  API -- "tried first" --> OPEN
+  API --> OSM
+  API --> IMG
+```
+
 The agent returns **only plans that passed verification**, or an honest report: which orders cannot be reached, which constraint cannot be met, and the smallest changes that would work, each already solved and verified.
 
 ## Meta models used
@@ -119,7 +143,7 @@ Model calls cost money, so every one goes through a budget guard: required token
 
 ## Engineering, risks and plan
 
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): the components and how a run flows through them, the deployment as it is, three levels of scale from this MVP to about a thousand users a day (with the cost arithmetic and what breaks first), and why these technologies.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): the components and how a run flows through them (with the C4 views: context, containers, backend components and one run), the deployment as it is, three levels of scale from this MVP to about a thousand users a day (with the cost arithmetic and what breaks first), and why these technologies.
 - [`docs/SWOT.md`](docs/SWOT.md): strengths, weaknesses, opportunities and threats, looked at through the way the models are used, each tied to a measurement or marked as a judgement.
 - [`docs/ROADMAP.md`](docs/ROADMAP.md): who the product is for, what they get, and the steps from a demo to a service (their own imagery, their own orders, before and after, more regions, pilots), marked as plan.
 
