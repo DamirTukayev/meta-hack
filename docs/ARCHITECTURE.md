@@ -47,6 +47,128 @@ flowchart LR
   VER -.-> AUD
 ```
 
+### The same system at four levels of zoom (C4 model)
+
+The concept diagram above follows the data. These four views follow the structure instead, from outside in: who and what the system talks to, what runs where, what is inside the backend, and what happens in one run. Colours and shapes carry no meaning here; the arrows are labelled where the protocol matters.
+
+**Level 1, context.** One system, one kind of user, four kinds of outside service.
+
+```mermaid
+flowchart LR
+  U([Dispatcher<br/>photo and a sentence]) --> OR[OrbitRoute<br/>verified delivery plan]
+  OR --> META[Meta Model API<br/>SAM 3.1, Muse Spark]
+  OR --> OPEN[Baseten and Modal<br/>Muse Spark Open]
+  OR --> OSM[OpenStreetMap<br/>roads, places]
+  OR --> IMG[USGS NAIP, NOAA<br/>aerial photos]
+```
+
+**Level 2, containers.** What is deployed. The interface is static files built with Vite and served by the backend, but it runs in the browser, so it is drawn on its own. The volume is the only state.
+
+```mermaid
+flowchart LR
+  U([Dispatcher]) --> WEB
+  subgraph Browser
+    WEB[Web app<br/>React 19, SVG map<br/>Leaflet for the area picker]
+  end
+  subgraph Modal[Modal: one container]
+    API[Backend<br/>FastAPI, PyVRP, NetworkX]
+  end
+  VOL[(Modal Volume<br/>model answers, areas, spend counters)]
+  META[Meta Model API<br/>SAM 3.1, Muse Spark]
+  OPEN[Baseten, then Modal<br/>Muse Spark Open]
+  OSM[OpenStreetMap<br/>Overpass, Nominatim]
+  IMG[USGS NAIP, NOAA<br/>aerial photos]
+  WEB -- "HTTPS, server-sent events" --> API
+  API --- VOL
+  API -- "HTTPS, JSON, under the budget guard" --> META
+  API -- "HTTPS, JSON, tried first" --> OPEN
+  API -- "HTTPS, several mirrors at once" --> OSM
+  API -- "image download" --> IMG
+```
+
+**Level 3, components of the backend.** One process. Everything that calls a model goes through one gateway, which holds the budget guard and the provider order (Baseten, Modal, Meta).
+
+```mermaid
+flowchart TB
+  WEB[Web app] -- "server-sent events" --> API
+  subgraph Backend[Backend, one process]
+    API[API<br/>access gate, rate limits, run stream]
+    PIPE[Pipeline<br/>orders the steps of a run]
+    subgraph Read[Read the world]
+      ROADS[Road graph<br/>OSM ways, or the SAM mask]
+      EVID[Evidence<br/>seen, unseen, under water]
+      UNDER[Understanding<br/>sentence, land-use zones]
+      WATER[Water card<br/>buildings, shelters]
+    end
+    subgraph Plan[Plan, check, repair]
+      SOLVE[Solver<br/>PyVRP]
+      VER[Verifier<br/>six checks]
+      REP[Repair decider<br/>Muse Spark, rules as fallback]
+    end
+    LOOK[Second look<br/>Muse Spark on crops]
+    GW[Model gateway<br/>budget guard, provider order]
+  end
+  OSM[OpenStreetMap]
+  VOL[(Modal Volume)]
+  META[Meta Model API]
+  OPEN[Baseten, Modal]
+  API --> PIPE
+  PIPE --> ROADS --> EVID
+  PIPE --> UNDER
+  PIPE --> WATER
+  PIPE --> SOLVE --> VER
+  VER -- violation --> REP --> SOLVE
+  PIPE --> LOOK
+  ROADS --> OSM
+  EVID -- "road mask" --> GW
+  UNDER --> GW
+  WATER --> GW
+  REP --> GW
+  LOOK --> GW
+  GW --> META
+  GW --> OPEN
+  GW --- VOL
+```
+
+**Dynamic view, one run.** The order of the steps as `pipeline.py` runs them. The water card appears only when SAM finds standing water, and the second look only when the roads come from the map and the plan has already passed verification.
+
+```mermaid
+sequenceDiagram
+  actor U as Dispatcher
+  participant W as Web app
+  participant B as Backend
+  participant M as Models (SAM, Muse Spark)
+  participant O as OpenStreetMap
+  U->>W: photo, sentence, clicks
+  W->>B: start a run (event stream opens)
+  par See
+    B->>O: roads, cached
+    B->>M: SAM: road mask, water
+  and Understand
+    B->>M: Muse Spark: constraints, land-use zones
+  end
+  B->>B: evidence per road, then the scenario
+  B->>M: SAM: buildings (delivery addresses)
+  opt water in the photo
+    B->>M: Muse Spark names large dry buildings
+  end
+  loop at most 5 repairs
+    B->>B: PyVRP solves, verifier checks
+    opt violation
+      B->>M: Muse Spark chooses a repair, rules as fallback
+    end
+  end
+  opt roads from the map, plan verified
+    B->>M: second look at stretches the photo does not confirm
+    opt a stretch is water or debris
+      B->>B: ban it, plan again, verify again
+    end
+  end
+  B-->>W: verified plan, or verified alternatives
+```
+
+The code level (level 4 of the model) is not drawn: the functions that carry the design are `run_pipeline` (`pipeline.py`), `run_agent` and the deciders (`agent/loop.py`, `agent/repair.py`), `build_osm_graph` and `annotate` (`perception/`), `inspect_plan` (`agent/inspection.py`), `verify` (`verifier/checks.py`) and `audit_plan` (`verifier/independent.py`), and an IDE shows their relations better than a drawing that would go stale.
+
 ## 2. Components (built)
 
 | Component | Responsibility | Technology | If it fails |
