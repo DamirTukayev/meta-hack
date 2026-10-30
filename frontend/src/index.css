@@ -340,3 +340,6 @@ header .lang { margin-left: 12px; background: #000; color: var(--text, #e6e6e6);
 .truck-card .sequence li .row-pick time { margin-left: auto; }
 .truck-card .sequence li.chosen, .truck-card .sequence li:hover { background: rgba(255, 176, 0, .12); }
 .map svg .stop { cursor: pointer; }
+
+button.truck-head { width: 100%; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.truck-card.focused { box-shadow: 0 0 0 2px var(--amber, #ffb000); }
