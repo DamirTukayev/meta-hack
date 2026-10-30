@@ -268,4 +268,6 @@ export default {
   'other': 'outra',
   'flooded': 'alagada',
   'your zone': 'sua zona',
+  'Only truck {v} is shown: {n} stops, {km} km': 'Só o caminhão {v} é mostrado: {n} paradas, {km} km',
+  'Show only this truck on the map': 'Mostrar só este caminhão no mapa',
 } as Record<string, string>

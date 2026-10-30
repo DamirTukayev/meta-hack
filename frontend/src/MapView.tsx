@@ -70,6 +70,7 @@ export default function MapView(props: {
   const [progress, setProgress] = useState<number | null>(null)
   const [playing, setPlaying] = useState(false)
   const [hover, setHover] = useState<{ vehicle: number; stop: number } | null>(null)
+  const [focus, setFocus] = useState<number | null>(null) // one truck chosen: only its route stays on the map
   const [pick, setPick] = useState<{ vehicle: number; stop: number } | null>(null) // the order chosen from a list or on the map: its leg is shown, the rest is dimmed
   const geos = useMemo(() => (plan ? plan.routes.map(buildGeo) : []), [plan])
   const longest = Math.max(1, ...geos.map((g) => g.total))
@@ -79,6 +80,7 @@ export default function MapView(props: {
     setPlaying(false)
     setHover(null)
     setPick(null)
+    setFocus(null)
   }, [plan])
   useEffect(() => {
     if (!playing) return
@@ -149,7 +151,9 @@ export default function MapView(props: {
   const pickIdx = pick && plan ? plan.routes.findIndex((r) => r.vehicle === pick.vehicle) : -1
   const pickStop = pick && pickIdx >= 0 ? plan!.routes[pickIdx].stops[pick.stop] : undefined
   const pickKm = pick && pickIdx >= 0 && geos[pickIdx]?.legs[pick.stop] ? (lenPx(geos[pickIdx].legs[pick.stop]) * sample.m_per_px) / 1000 : 0
-  const choose = (vehicle: number, stop: number) => setPick((p) => (p && p.vehicle === vehicle && p.stop === stop ? null : { vehicle, stop }))
+  const focusTruck = (vehicle: number) => { setPick(null); setFocus((f) => (f === vehicle ? null : vehicle)) }
+  const focusRoute = focus !== null && plan ? plan.routes.find((r) => r.vehicle === focus) : undefined
+  const choose = (vehicle: number, stop: number) => { setFocus(null); setPick((p) => (p && p.vehicle === vehicle && p.stop === stop ? null : { vehicle, stop })) }
   const hasEvidence = (report?.flagged?.length ?? 0) > 0 || (report?.unconfirmed?.length ?? 0) > 0 || (state.inspections?.some((f) => f.verdict === 'blocked') ?? false)
   const toggle = (k: keyof Layers) => setLayers((l) => ({ ...l, [k]: !l[k] }))
   const names: [keyof Layers, string][] = [['roads', 'Road mask'], ['graph', 'Graph'], ['zones', 'Zones'], ['orders', 'Orders'], ['routes', 'Routes']]
@@ -212,12 +216,14 @@ export default function MapView(props: {
             plan?.routes.map((r, ri) => {
               const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
               const g = geos[ri]
-              if (!g) return null
+              if (!g || (focus !== null && focus !== r.vehicle)) return null
               const replay = progress !== null
               const faded = props.stale
               const cur = replay ? Math.min(dCur, g.total) : g.total
               return (
                 <g key={r.vehicle} opacity={faded ? 0.28 : 1}>
+                  {/* a wide invisible line to click: it chooses this truck */}
+                  {!props.stale && <polyline points={pts(g.flat)} fill="none" stroke="transparent" strokeWidth={20 * u} strokeLinejoin="round" pointerEvents="stroke" style={{ cursor: 'pointer' }} onClick={(e) => { e.stopPropagation(); focusTruck(r.vehicle) }}><title>{t('Show only this truck on the map')}</title></polyline>}
                   {/* the whole route, faded while replaying; the last leg (back to the depot) is dashed */}
                   {g.legs.map((leg, li) => {
                     const chosen = pick !== null && pick.vehicle === r.vehicle && pick.stop === li
@@ -303,7 +309,7 @@ export default function MapView(props: {
           })}
           {layers.orders && !props.stale &&
             plan?.routes.map((r, ri) =>
-              r.stops.map((st, k) => {
+              (focus !== null && focus !== r.vehicle ? [] : r.stops).map((st, k) => {
                 const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
                 const visited = progress === null || dCur >= (geos[ri]?.stopDist[k] ?? 0) - 0.5
                 const hot = hover?.vehicle === r.vehicle && hover.stop === k
@@ -382,6 +388,12 @@ export default function MapView(props: {
           </div>
         )}
       </div>
+      {focus !== null && !pick && focusRoute && (
+        <div className="pick-info" role="status">
+          <span>{t('Only truck {v} is shown: {n} stops, {km} km', { v: focus + 1, n: focusRoute.stops.length, km: (focusRoute.distance_m / 1000).toFixed(1) })}</span>
+          <button className="chip" onClick={() => setFocus(null)}>{t('Show all')}</button>
+        </div>
+      )}
       {pick && pickStop && (
         <div className="pick-info" role="status">
           <span>{t('Truck {v} → order #{o} (stop {k} of {n}) · arrives {time} · {km} km from the previous point', { v: pick.vehicle + 1, o: pickStop.order, k: pick.stop + 1, n: plan!.routes[pickIdx].stops.length, time: clock(pickStop.arrive_s), km: pickKm.toFixed(1) })}</span>
@@ -399,8 +411,8 @@ export default function MapView(props: {
             {plan.routes.map((r) => {
               const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
               return (
-                <div key={r.vehicle} className="truck-card" style={{ borderColor: color }}>
-                  <div className="truck-head"><i style={{ background: color }} /><b>{t('Truck')} {r.vehicle + 1}</b><span>{t('{n} stops', { n: r.stops.length })} · {(r.distance_m / 1000).toFixed(1)} {t('km')}</span></div>
+                <div key={r.vehicle} className={'truck-card' + (focus === r.vehicle ? ' focused' : '')} style={{ borderColor: color }}>
+                  <button type="button" className="truck-head" onClick={() => focusTruck(r.vehicle)} aria-pressed={focus === r.vehicle} title={t('Show only this truck on the map')}><i style={{ background: color }} /><b>{t('Truck')} {r.vehicle + 1}</b><span>{t('{n} stops', { n: r.stops.length })} · {(r.distance_m / 1000).toFixed(1)} {t('km')}</span></button>
                   <ol className="sequence">
                     <li className="end"><span className="dot depot">D</span> {t('Leaves the depot')} <time>{clock(r.start_s)}</time></li>
                     {r.stops.map((st, k) => (
