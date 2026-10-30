@@ -159,7 +159,6 @@ def main() -> None:
     for name in names:
         sm = get_sample(name)
         samples[name] = sm
-        W, H = sm.meta["width_px"], sm.meta["height_px"]
         x0, y0, x1, y1 = sm.meta["bbox_mercator"]
         osm = osm_polygons(fetch_landuse(name, sm.meta["bbox_lonlat"]))
 
@@ -220,7 +219,7 @@ def main() -> None:
         for k in KINDS:
             m = d["kinds"][k]
             lines.append(f"| {v} | {k} | {m['recall']:.0%} | {m['precision']:.0%} | {m['f1']:.2f} |")
-    lines += ["", f"Cost: a fresh scene call is about $0.01-0.02; the three versions on the 16 photos, three repeats each, cost about $1.8 in all (answers are cached, so a rerun is free). Limits: OSM land use is drawn by hand with its own idea of a boundary; it labels only part of every photo; a mapped park next to houses is a judgement call; one tile per place.", ""]
+    lines += ["", "Cost: a fresh scene call is about $0.01-0.02; the three versions on the 16 photos, three repeats each, cost about $1.8 in all (answers are cached, so a rerun is free). Limits: OSM land use is drawn by hand with its own idea of a boundary; it labels only part of every photo; a mapped park next to houses is a judgement call; one tile per place.", ""]
     (ROOT / "eval" / "SCENE_OSM.md").write_text("\n".join(lines))
     print("\n".join(lines))
 

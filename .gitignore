@@ -40,8 +40,10 @@ budget_state.json
 # Large local data (record sources in data/SOURCES.md instead)
 data/raw/
 
-# Planning (local only)
+# Planning and notes (local only)
 PLAN.md
+IDEA.md
+REQUIREMENTS.md
 
 # Cached model outputs
 data/cache/

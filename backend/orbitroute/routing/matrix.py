@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 import networkx as nx
 import numpy as np
 from orbitroute.perception.graph import RoadGraph
-from orbitroute.routing.zones import banned_edges, edge_key, inside_lengths
+from orbitroute.routing.zones import banned_edges, edge_key, inside_lengths  # noqa: F401  (edge_key is re-exported: the tests import it from here)
 from orbitroute.understanding.scene import Zone
 
 UNREACHABLE_S = 10**6  # large, still safe for PyVRP's integer arithmetic

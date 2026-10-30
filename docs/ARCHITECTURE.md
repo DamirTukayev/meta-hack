@@ -63,7 +63,7 @@ flowchart LR
 | Repair agent | Chooses the fix after a violation; recommends one alternative | Muse Spark with a deterministic policy as fallback | Policy decides |
 | Second look | Muse Spark looks at the longest stretches the photo does not confirm | Crops with the stretch marked, schema-constrained answers | Skipped; the plan stands as verified by the map |
 | Water card | Buildings in or beside the water, rough people range, large dry buildings reachable by dry roads | SAM buildings and water, Muse Spark names the buildings | Card is omitted |
-| Budget guard | Reserves every paid call before it is sent; caps per provider and per run; kill switch; deadline for live calls | Persistent counter file per provider | Refuses the call with a message |
+| Budget guard | Checks every paid call against the caps before it is sent and records it after; caps per provider and per run; kill switch; deadline for live calls | Persistent counter file per provider | Refuses the call with a message |
 | Access gate | Live calls only with an access code carried in the link fragment; everyone else gets the recorded demo | One header, constant-time compare, wrong-code limit | Falls back to the recorded demo |
 | State | Model answers, downloaded areas, spend counters | Files on a Modal volume (committed every 15 s) | A restart loses at most a few seconds of the counter |
 
@@ -105,4 +105,4 @@ The 1,000-a-day figure is arithmetic on measured per-run costs and an assumed 30
 
 ## 6. Safeguards in one place
 
-A paid call is reserved before it is sent and recorded after; every provider has its own cap and the shared copy a lower one; live calls need the access code and stop on a set date; a run is abandoned when the browser leaves; map areas and uploads are capped; keys exist only on the server; a kill switch (`DEMO_PAID_CALLS_ENABLED=false`) closes every paid path while the recorded demo keeps working.
+A paid call is checked against the caps before it is sent and recorded after (calls in flight at the same moment can together pass a cap by their own price); every provider has its own cap and the shared copy a lower one; live calls need the access code and stop on a set date; a run is abandoned when the browser leaves; map areas and uploads are capped; keys exist only on the server; a kill switch (`DEMO_PAID_CALLS_ENABLED=false`) closes every paid path while the recorded demo keeps working.

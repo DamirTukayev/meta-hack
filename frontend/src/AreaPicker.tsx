@@ -122,7 +122,7 @@ export default function AreaPicker(props: { onClose: () => void; onChosen: (s: S
           <span className={error ? 'err' : 'muted'}>
             {error || busy || (zoom < MIN_ZOOM ? t('Zoom in until the square is small enough to see streets.') : t('1.5 km × 1.5 km square. Roads and buildings will be read from the imagery.'))}
           </span>
-          <button className="primary inline" onClick={choose} disabled={!!busy || zoom < MIN_ZOOM}>{busy && busy ? t('Fetching…') : t('Use this area')}</button>
+          <button className="primary inline" onClick={choose} disabled={!!busy || zoom < MIN_ZOOM}>{busy ? t('Fetching…') : t('Use this area')}</button>
         </div>
         <p className="credit-line">{t('Search © OpenStreetMap contributors (Nominatim). Imagery: USGS NAIP, public domain.')}</p>
       </div>

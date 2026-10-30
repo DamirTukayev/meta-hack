@@ -24,7 +24,7 @@ from PIL import Image, ImageDraw
 from scipy import ndimage as ndi
 from skimage.measure import regionprops
 
-from orbitroute.config import CACHE_DIR, resolve_cached
+from orbitroute.config import CACHE_DIR, resolve_cached, write_atomic
 from orbitroute.llm.client import image_part
 from orbitroute.perception.buildings import building_points
 from orbitroute.perception.graph import RoadGraph
@@ -66,6 +66,7 @@ KIND_PROMPT = (
     "sports_or_event_hall; warehouse_or_factory (large flat roof, loading docks, yards); apartment_block (several residential blocks or rows of flats); "
     "houses (ordinary homes); other. Give your confidence from 0 to 1."
 )
+LOOK_PROMPT_VERSION = 1  # part of the name of a remembered answer from version 2 on
 MIN_LOOK_CONFIDENCE = 0.6
 MAX_LOOKS = 8  # buildings looked at per photo: about half a cent each
 
@@ -88,7 +89,8 @@ def building_crop(image: Image.Image, cx: float, cy: float, area_px: float) -> b
 
 def look_at_building(client, crop: bytes, *, run=None) -> dict:
     """What the model says the building is; remembered on disk by the crop, so the same photo costs nothing twice."""
-    path = resolve_cached(CACHE_DIR, f"shelterlook_{hashlib.sha256(crop).hexdigest()[:16]}.json")
+    stem = hashlib.sha256(crop).hexdigest()[:16]
+    path = resolve_cached(CACHE_DIR, f"shelterlook_{stem}.json" if LOOK_PROMPT_VERSION == 1 else f"shelterlook_v{LOOK_PROMPT_VERSION}_{stem}.json")
     if path.exists():
         return json.loads(path.read_text())
     messages = [{"role": "user", "content": [{"type": "text", "text": KIND_PROMPT}, image_part(crop)]}]
@@ -99,8 +101,7 @@ def look_at_building(client, crop: bytes, *, run=None) -> dict:
         except ValueError:
             if attempt == 2:
                 raise
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(answer))
+    write_atomic(CACHE_DIR / path.name, json.dumps(answer))
     return answer
 
 

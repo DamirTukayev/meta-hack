@@ -9,10 +9,10 @@ import os
 
 os.environ["OFFLINE_DEMO"] = "1"  # recorded answers only: no model call can happen
 
-from fastapi.testclient import TestClient  # noqa: E402
+from fastapi.testclient import TestClient
 
-import orbitroute.api as api  # noqa: E402
-from orbitroute.limits import RateLimiter  # noqa: E402
+import orbitroute.api as api
+from orbitroute.limits import RateLimiter
 
 api.run_limit_ip = RateLimiter(1000, 60)
 api.run_limit_day = RateLimiter(1000, 60)

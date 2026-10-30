@@ -15,7 +15,7 @@ from PIL import Image
 from shapely.geometry import Point, Polygon
 from shapely.prepared import prep
 
-from orbitroute.config import CACHE_DIR, resolve_cached
+from orbitroute.config import CACHE_DIR, resolve_cached, write_atomic
 from orbitroute.llm.budget import RunBudget
 from orbitroute import prompts
 from orbitroute.llm.client import MetaClient, image_part
@@ -128,6 +128,5 @@ def analyze_scene(
         label="scene",
     )
     if use_cache:
-        CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        cache.write_text(json.dumps(raw))
+        write_atomic(CACHE_DIR / cache.name, json.dumps(raw))
     return scene_from_raw(raw, width, height)

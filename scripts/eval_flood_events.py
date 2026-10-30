@@ -14,13 +14,11 @@ from __future__ import annotations
 import io
 import sys
 
-import numpy as np
 from PIL import Image, ImageDraw
 
 from orbitroute.config import ROOT, Settings
 from orbitroute.llm.budget import BudgetGuard
 from orbitroute.llm.client import MetaClient
-from orbitroute.naip import mercator_bbox
 from orbitroute.perception.flood import flood_zones, segment_floods
 from orbitroute.storm import fetch_storm_tile
 

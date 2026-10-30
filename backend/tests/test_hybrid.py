@@ -1,9 +1,6 @@
 """The roads come from the map and the photo says what it confirms: the OSM graph, the evidence per edge, the planner's preference
 for confirmed roads, the report of what a plan drives on without confirmation, and the model's look at those stretches."""
 
-import dataclasses
-import json
-import math
 
 import numpy as np
 import pytest
@@ -11,7 +8,7 @@ from shapely.geometry import box
 
 import orbitroute.agent.inspection as inspection
 from orbitroute.agent.inspection import inspect_plan, unconfirmed_runs, verdict_of
-from orbitroute.naip import EARTH_R, from_mercator
+from orbitroute.naip import from_mercator
 from orbitroute.perception import osm
 from orbitroute.perception.evidence import annotate
 from orbitroute.perception.graph import Edge, RoadGraph

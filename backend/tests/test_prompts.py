@@ -98,7 +98,7 @@ def test_vegetation_index_is_higher_for_green_cells():
 def test_committed_prewarmed_answers_cover_the_bundled_samples():
     import hashlib
 
-    from orbitroute.config import PREWARMED_DIR, ROOT, resolve_cached
+    from orbitroute.config import PREWARMED_DIR, ROOT
     import json
 
     from orbitroute.perception.buildings import building_cache_name

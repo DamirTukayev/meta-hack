@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 import httpx
 from PIL import Image
 
-from orbitroute.naip import DEFAULT_PX, DEFAULT_SPAN_M, EARTH_R, NoImagery, bbox_around, mercator_bbox, to_mercator
+from orbitroute.naip import DEFAULT_PX, DEFAULT_SPAN_M, EARTH_R, NoImagery, bbox_around, mercator_bbox
 
 CDN = "https://stormscdn.ngs.noaa.gov"
 ZOOM = 18  # about 0.52 m per pixel on the ground at 30 degrees north; the photos are 0.3 m
