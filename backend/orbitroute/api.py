@@ -39,6 +39,7 @@ EXAMPLES = {
     "memphis": ["by 12:00, avoid the industrial zone", "by 11:00, avoid the residential area"],
     "houston-harvey": ["by 14:00, avoid the flooded areas", "by 16:00, avoid the flooded areas and the residential streets"],
     "houston-harvey-b": ["by 14:00, avoid the flooded areas", "by 18:00, avoid the flooded areas"],
+    **{f"flood-{place}": ["by 15:00, avoid the flooded areas", "by 18:00, avoid the flooded areas"] for place in ("fort-myers-shores", "iona", "kerrville", "lumberton", "swannanoa")},
 }
 LABELS = {"columbus": "Columbus, OH — mixed commercial / residential", "memphis": "Memphis, TN — logistics district"}
 MAX_REQUEST_CHARS = 400

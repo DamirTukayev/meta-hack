@@ -1,0 +1,24 @@
+{
+ "source": "NOAA NGS Emergency Response Imagery",
+ "dataset": "20220930d-rgb",
+ "event": "Hurricane Ian",
+ "captured": "2022-09-30",
+ "label": "Iona FL after Hurricane Ian",
+ "credit": "Imagery: NOAA National Geodetic Survey, Emergency Response Imagery (public domain)",
+ "bbox_lonlat": [
+  -81.92752964473253,
+  26.513262437709617,
+  -81.91247035526747,
+  26.52673716694808
+ ],
+ "bbox_mercator": [
+  -9120130.88200245,
+  3062790.8280640314,
+  -9118454.489567492,
+  3064467.220498989
+ ],
+ "span_m": 1500,
+ "width_px": 1536,
+ "height_px": 1536,
+ "m_per_px": 0.9765625
+}

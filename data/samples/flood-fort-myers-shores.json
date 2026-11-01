@@ -1,0 +1,24 @@
+{
+ "source": "NOAA NGS Emergency Response Imagery",
+ "dataset": "20220930b-rgb",
+ "event": "Hurricane Ian",
+ "captured": "2022-09-30",
+ "label": "Fort Myers Shores FL after Hurricane Ian",
+ "credit": "Imagery: NOAA National Geodetic Survey, Emergency Response Imagery (public domain)",
+ "bbox_lonlat": [
+  -81.77753885958514,
+  26.653262436499165,
+  -81.76246114041487,
+  26.666737165737732
+ ],
+ "bbox_mercator": [
+  -9103433.984176159,
+  3080217.8612637627,
+  -9101755.540155802,
+  3081896.305284118
+ ],
+ "span_m": 1500,
+ "width_px": 1536,
+ "height_px": 1536,
+ "m_per_px": 0.9765625
+}

@@ -1,0 +1,442 @@
+[
+ {
+  "photo": "columbus",
+  "mapped": 500,
+  "points": 710,
+  "points_on_building": 502,
+  "buildings_reached": 264,
+  "mask_px": 270062,
+  "truth_px": 254383,
+  "both_px": 186239
+ },
+ {
+  "photo": "memphis",
+  "mapped": 308,
+  "points": 800,
+  "points_on_building": 708,
+  "buildings_reached": 261,
+  "mask_px": 496733,
+  "truth_px": 441411,
+  "both_px": 398046
+ },
+ {
+  "photo": "houston-harvey",
+  "mapped": 29,
+  "points": 886,
+  "points_on_building": 57,
+  "buildings_reached": 26,
+  "mask_px": 360689,
+  "truth_px": 26337,
+  "both_px": 24583
+ },
+ {
+  "photo": "houston-harvey-b",
+  "mapped": 14,
+  "points": 1298,
+  "points_on_building": 27,
+  "buildings_reached": 11,
+  "mask_px": 486167,
+  "truth_px": 12962,
+  "both_px": 9585
+ },
+ {
+  "photo": "area-2b7bd2fd44",
+  "mapped": 612,
+  "points": 633,
+  "points_on_building": 545,
+  "buildings_reached": 243,
+  "mask_px": 799111,
+  "truth_px": 912781,
+  "both_px": 630835
+ },
+ {
+  "photo": "area-3f2c15d0db",
+  "mapped": 5260,
+  "points": 1866,
+  "points_on_building": 1831,
+  "buildings_reached": 2763,
+  "mask_px": 872292,
+  "truth_px": 864478,
+  "both_px": 696661
+ },
+ {
+  "photo": "area-8a41f33f77",
+  "mapped": 972,
+  "points": 1015,
+  "points_on_building": 909,
+  "buildings_reached": 593,
+  "mask_px": 439671,
+  "truth_px": 444501,
+  "both_px": 310864
+ },
+ {
+  "photo": "area-6eac67ed60",
+  "mapped": 832,
+  "points": 1228,
+  "points_on_building": 991,
+  "buildings_reached": 581,
+  "mask_px": 516299,
+  "truth_px": 472166,
+  "both_px": 393817
+ },
+ {
+  "photo": "area-366ba9e30d",
+  "mapped": 618,
+  "points": 808,
+  "points_on_building": 436,
+  "buildings_reached": 273,
+  "mask_px": 295934,
+  "truth_px": 252294,
+  "both_px": 161722
+ },
+ {
+  "photo": "area-9cc45ae821",
+  "mapped": 757,
+  "points": 744,
+  "points_on_building": 628,
+  "buildings_reached": 367,
+  "mask_px": 559486,
+  "truth_px": 488892,
+  "both_px": 361014
+ },
+ {
+  "photo": "area-77dfffe425",
+  "mapped": 3153,
+  "points": 530,
+  "points_on_building": 472,
+  "buildings_reached": 380,
+  "mask_px": 144302,
+  "truth_px": 563600,
+  "both_px": 101788
+ },
+ {
+  "photo": "area-8e7464eff9",
+  "mapped": 802,
+  "points": 896,
+  "points_on_building": 825,
+  "buildings_reached": 492,
+  "mask_px": 821489,
+  "truth_px": 861044,
+  "both_px": 674008
+ },
+ {
+  "photo": "area-03b98a76bd",
+  "mapped": 564,
+  "points": 477,
+  "points_on_building": 407,
+  "buildings_reached": 280,
+  "mask_px": 864191,
+  "truth_px": 735695,
+  "both_px": 613033
+ },
+ {
+  "photo": "area-e44985ba7b",
+  "mapped": 775,
+  "points": 604,
+  "points_on_building": 568,
+  "buildings_reached": 477,
+  "mask_px": 803737,
+  "truth_px": 743852,
+  "both_px": 655577
+ },
+ {
+  "photo": "area-064928335b",
+  "mapped": 410,
+  "points": 337,
+  "points_on_building": 315,
+  "buildings_reached": 181,
+  "mask_px": 659138,
+  "truth_px": 883078,
+  "both_px": 535548
+ },
+ {
+  "photo": "area-37a8ff356c",
+  "mapped": 397,
+  "points": 588,
+  "points_on_building": 488,
+  "buildings_reached": 257,
+  "mask_px": 558776,
+  "truth_px": 529867,
+  "both_px": 400475
+ },
+ {
+  "photo": "area-6580ada27e",
+  "mapped": 2334,
+  "points": 439,
+  "points_on_building": 326,
+  "buildings_reached": 270,
+  "mask_px": 675280,
+  "truth_px": 1119573,
+  "both_px": 472937
+ },
+ {
+  "photo": "area-d3f03bfb7a",
+  "mapped": 2281,
+  "points": 1206,
+  "points_on_building": 1183,
+  "buildings_reached": 1019,
+  "mask_px": 902233,
+  "truth_px": 1006688,
+  "both_px": 789511
+ },
+ {
+  "photo": "area-d5ed9d28cf",
+  "mapped": 1213,
+  "points": 683,
+  "points_on_building": 599,
+  "buildings_reached": 519,
+  "mask_px": 851247,
+  "truth_px": 811932,
+  "both_px": 643729
+ },
+ {
+  "photo": "area-798875d3a9",
+  "mapped": 569,
+  "points": 329,
+  "points_on_building": 277,
+  "buildings_reached": 187,
+  "mask_px": 480225,
+  "truth_px": 699968,
+  "both_px": 350763
+ },
+ {
+  "photo": "area-79798b740d",
+  "mapped": 322,
+  "points": 285,
+  "points_on_building": 240,
+  "buildings_reached": 158,
+  "mask_px": 636119,
+  "truth_px": 612270,
+  "both_px": 438402
+ },
+ {
+  "photo": "area-fa3a6edb21",
+  "mapped": 428,
+  "points": 382,
+  "points_on_building": 309,
+  "buildings_reached": 213,
+  "mask_px": 669213,
+  "truth_px": 620625,
+  "both_px": 425542
+ },
+ {
+  "photo": "area-77be7575cd",
+  "mapped": 355,
+  "points": 524,
+  "points_on_building": 451,
+  "buildings_reached": 193,
+  "mask_px": 930973,
+  "truth_px": 683870,
+  "both_px": 586117
+ },
+ {
+  "photo": "area-50d7ebb50b",
+  "mapped": 365,
+  "points": 339,
+  "points_on_building": 305,
+  "buildings_reached": 186,
+  "mask_px": 703148,
+  "truth_px": 648806,
+  "both_px": 573588
+ },
+ {
+  "photo": "area-765d77e216",
+  "mapped": 434,
+  "points": 507,
+  "points_on_building": 428,
+  "buildings_reached": 213,
+  "mask_px": 636897,
+  "truth_px": 632020,
+  "both_px": 440794
+ },
+ {
+  "photo": "area-385464e372",
+  "mapped": 337,
+  "points": 340,
+  "points_on_building": 305,
+  "buildings_reached": 200,
+  "mask_px": 757050,
+  "truth_px": 500897,
+  "both_px": 404609
+ },
+ {
+  "photo": "area-5d4bdcef0e",
+  "mapped": 587,
+  "points": 681,
+  "points_on_building": 584,
+  "buildings_reached": 360,
+  "mask_px": 700553,
+  "truth_px": 587446,
+  "both_px": 503876
+ },
+ {
+  "photo": "area-cda7037f21",
+  "mapped": 973,
+  "points": 600,
+  "points_on_building": 467,
+  "buildings_reached": 276,
+  "mask_px": 902040,
+  "truth_px": 867025,
+  "both_px": 624374
+ },
+ {
+  "photo": "area-85bb9113ef",
+  "mapped": 429,
+  "points": 277,
+  "points_on_building": 235,
+  "buildings_reached": 166,
+  "mask_px": 627843,
+  "truth_px": 676001,
+  "both_px": 430378
+ },
+ {
+  "photo": "area-d667a79ffb",
+  "mapped": 416,
+  "points": 425,
+  "points_on_building": 361,
+  "buildings_reached": 206,
+  "mask_px": 800361,
+  "truth_px": 767465,
+  "both_px": 602582
+ },
+ {
+  "photo": "area-d05c5f98c7",
+  "mapped": 363,
+  "points": 393,
+  "points_on_building": 329,
+  "buildings_reached": 190,
+  "mask_px": 540200,
+  "truth_px": 444491,
+  "both_px": 346813
+ },
+ {
+  "photo": "area-3341200abb",
+  "mapped": 546,
+  "points": 911,
+  "points_on_building": 722,
+  "buildings_reached": 328,
+  "mask_px": 811428,
+  "truth_px": 672108,
+  "both_px": 572758
+ },
+ {
+  "photo": "area-674f2d85c5",
+  "mapped": 464,
+  "points": 805,
+  "points_on_building": 741,
+  "buildings_reached": 270,
+  "mask_px": 822791,
+  "truth_px": 835909,
+  "both_px": 704997
+ },
+ {
+  "photo": "area-c2af767899",
+  "mapped": 793,
+  "points": 422,
+  "points_on_building": 389,
+  "buildings_reached": 206,
+  "mask_px": 514562,
+  "truth_px": 580113,
+  "both_px": 388679
+ },
+ {
+  "photo": "area-e6a364366b",
+  "mapped": 832,
+  "points": 951,
+  "points_on_building": 817,
+  "buildings_reached": 470,
+  "mask_px": 906134,
+  "truth_px": 844957,
+  "both_px": 681446
+ },
+ {
+  "photo": "area-a2e97c458b",
+  "mapped": 874,
+  "points": 665,
+  "points_on_building": 603,
+  "buildings_reached": 447,
+  "mask_px": 777034,
+  "truth_px": 721032,
+  "both_px": 562606
+ },
+ {
+  "photo": "area-8eacccc1d8",
+  "mapped": 674,
+  "points": 614,
+  "points_on_building": 553,
+  "buildings_reached": 396,
+  "mask_px": 608502,
+  "truth_px": 585880,
+  "both_px": 486797
+ },
+ {
+  "photo": "area-e63b8ffd45",
+  "mapped": 1095,
+  "points": 989,
+  "points_on_building": 872,
+  "buildings_reached": 560,
+  "mask_px": 597884,
+  "truth_px": 579838,
+  "both_px": 455962
+ },
+ {
+  "photo": "area-6c1b3bc3ed",
+  "mapped": 967,
+  "points": 1099,
+  "points_on_building": 837,
+  "buildings_reached": 641,
+  "mask_px": 498742,
+  "truth_px": 435693,
+  "both_px": 363025
+ },
+ {
+  "photo": "area-2eb9067007",
+  "mapped": 894,
+  "points": 712,
+  "points_on_building": 679,
+  "buildings_reached": 528,
+  "mask_px": 556234,
+  "truth_px": 519648,
+  "both_px": 429962
+ },
+ {
+  "photo": "area-428c79b18b",
+  "mapped": 2384,
+  "points": 1485,
+  "points_on_building": 1457,
+  "buildings_reached": 1128,
+  "mask_px": 588538,
+  "truth_px": 714255,
+  "both_px": 484615
+ },
+ {
+  "photo": "area-8c25508f40",
+  "mapped": 1093,
+  "points": 941,
+  "points_on_building": 890,
+  "buildings_reached": 698,
+  "mask_px": 499951,
+  "truth_px": 497726,
+  "both_px": 409206
+ },
+ {
+  "photo": "area-030752634b",
+  "mapped": 764,
+  "points": 441,
+  "points_on_building": 397,
+  "buildings_reached": 295,
+  "mask_px": 141877,
+  "truth_px": 190759,
+  "both_px": 101236
+ },
+ {
+  "photo": "area-7a456b7b2f",
+  "mapped": 1659,
+  "points": 1045,
+  "points_on_building": 957,
+  "buildings_reached": 643,
+  "mask_px": 443636,
+  "truth_px": 524677,
+  "both_px": 328632
+ }
+]

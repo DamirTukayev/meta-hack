@@ -1,0 +1,24 @@
+{
+ "source": "NOAA NGS Emergency Response Imagery",
+ "dataset": "20180919c-rgb",
+ "event": "Hurricane Florence",
+ "captured": "2018-09-19",
+ "label": "Lumberton NC after Hurricane Florence",
+ "credit": "Imagery: NOAA National Geodetic Survey, Emergency Response Imagery (public domain)",
+ "bbox_lonlat": [
+  -79.01818696400375,
+  34.613262361907765,
+  -79.00181303599629,
+  34.6267370911533
+ ],
+ "bbox_mercator": [
+  -8796264.336240584,
+  4111448.4548973804,
+  -8794441.59891251,
+  4113271.1922254553
+ ],
+ "span_m": 1500,
+ "width_px": 1536,
+ "height_px": 1536,
+ "m_per_px": 0.9765625
+}
