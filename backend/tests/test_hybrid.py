@@ -68,6 +68,13 @@ def test_a_way_leaving_the_photo_is_cut_at_its_border():
     assert g.stats["road_km"] == pytest.approx(0.5, abs=0.02)  # 400 m inside the photo, the rest outside is dropped
 
 
+def test_a_vertex_overpass_did_not_return_is_skipped_not_a_crash():
+    broken = way(9, [(100, 300), (500, 300), (700, 300), (900, 300)], [21, 22, 23, 24], highway="residential")
+    broken["geometry"][2] = None  # Overpass sends null for a vertex it left out
+    g = osm.build_osm_graph({"elements": [broken]}, META)
+    assert g.stats["road_km"] == pytest.approx(0.4, abs=0.02)  # the 400 m between the two vertices on the left; the segments touching the gap are dropped
+
+
 def test_a_small_piece_not_connected_to_the_rest_is_dropped_and_a_big_one_kept():
     crumb = way(9, [(50, 50), (80, 50)], [20, 21], highway="residential")  # 30 m
     quarter = way(10, [(100, 200), (600, 200)], [30, 31], highway="residential")  # 500 m, joined to nothing

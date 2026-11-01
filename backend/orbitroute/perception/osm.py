@@ -221,9 +221,11 @@ def build_osm_graph(osm: dict, meta: dict, *, densify_px: float = 40.0, min_piec
         speed, w_m = CLASSES[tags["highway"]]
         speed = _speed(tags, speed)
         ids = el.get("nodes") or [None] * len(el["geometry"])
-        path = [px(p["lon"], p["lat"]) for p in el["geometry"]]
+        path = [px(p["lon"], p["lat"]) if p else None for p in el["geometry"]]  # Overpass sends null for a vertex it did not return
         used = False
         for (a, b), (ia, ib) in zip(zip(path, path[1:]), zip(ids, ids[1:])):
+            if a is None or b is None:
+                continue
             clipped = _clip(a, b, width, height)
             if clipped is None:
                 continue

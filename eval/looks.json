@@ -1,0 +1,1706 @@
+[
+ {
+  "photo": "columbus",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.8,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "columbus",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "columbus",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "memphis",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "memphis",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.7,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "memphis",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-harvey",
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.95,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.97,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.96,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-2b7bd2fd44",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.89,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-2b7bd2fd44",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.89,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-2b7bd2fd44",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.75,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-3f2c15d0db",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-3f2c15d0db",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-3f2c15d0db",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.86,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-8a41f33f77",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-8a41f33f77",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.75,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.65,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8a41f33f77",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.71,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-6eac67ed60",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-6eac67ed60",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-6eac67ed60",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-366ba9e30d",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.84,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-366ba9e30d",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-366ba9e30d",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.7,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-9cc45ae821",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-9cc45ae821",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.87,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-9cc45ae821",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.84,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-77dfffe425",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.72,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.83,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-77dfffe425",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-77dfffe425",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8e7464eff9",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8e7464eff9",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8e7464eff9",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-03b98a76bd",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.94,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-03b98a76bd",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-03b98a76bd",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.82,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e44985ba7b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.97,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e44985ba7b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.89,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e44985ba7b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-064928335b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-064928335b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-064928335b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-37a8ff356c",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "error",
+   "confidence": 0.0,
+   "verdict": "error",
+   "error": "JSONDecodeError"
+  }
+ },
+ {
+  "photo": "area-37a8ff356c",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.86,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-37a8ff356c",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-6580ada27e",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-6580ada27e",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-6580ada27e",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d3f03bfb7a",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-d3f03bfb7a",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d3f03bfb7a",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.87,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d5ed9d28cf",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d5ed9d28cf",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d5ed9d28cf",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-798875d3a9",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-798875d3a9",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-798875d3a9",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-79798b740d",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-79798b740d",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-79798b740d",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.84,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-fa3a6edb21",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-fa3a6edb21",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-fa3a6edb21",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-77be7575cd",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-77be7575cd",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-77be7575cd",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-50d7ebb50b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-50d7ebb50b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.72,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-50d7ebb50b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.93,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-765d77e216",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.93,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.94,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-765d77e216",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-765d77e216",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-385464e372",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-385464e372",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-385464e372",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-5d4bdcef0e",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-5d4bdcef0e",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-5d4bdcef0e",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.71,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-cda7037f21",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-cda7037f21",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.7,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-cda7037f21",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-85bb9113ef",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-85bb9113ef",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-85bb9113ef",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d667a79ffb",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-d667a79ffb",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d667a79ffb",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.68,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-d05c5f98c7",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d05c5f98c7",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-d05c5f98c7",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-3341200abb",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-3341200abb",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.72,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-3341200abb",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-674f2d85c5",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-674f2d85c5",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-674f2d85c5",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-c2af767899",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-c2af767899",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-c2af767899",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e6a364366b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e6a364366b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.84,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e6a364366b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.87,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-a2e97c458b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-a2e97c458b",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.65,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-a2e97c458b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8eacccc1d8",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.96,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-8eacccc1d8",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8eacccc1d8",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-e63b8ffd45",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.99,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-e63b8ffd45",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.84,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-e63b8ffd45",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-6c1b3bc3ed",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-6c1b3bc3ed",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-6c1b3bc3ed",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "area-2eb9067007",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.86,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-2eb9067007",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-2eb9067007",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-428c79b18b",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-428c79b18b",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-428c79b18b",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8c25508f40",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8c25508f40",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-8c25508f40",
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-030752634b",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.84,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-030752634b",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-030752634b",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-7a456b7b2f",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-7a456b7b2f",
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "area-7a456b7b2f",
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ }
+]

@@ -498,5 +498,876 @@
     "audit_failures": 0
    }
   }
+ },
+ {
+  "photo": "area-6580ada27e",
+  "sam_km": 3.85,
+  "osm_km": 60.94,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.17425,
+  "osm_covers": 0.999,
+  "seen": 0.16862891170471644,
+  "unseen": 0.8313710882952836,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified_partial": 1,
+    "verified": 4,
+    "needs_relaxation": 3,
+    "driven_m": 35280,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 4,
+    "verified_partial": 1,
+    "needs_relaxation": 3,
+    "driven_m": 48290,
+    "flagged_m": 37101,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-d3f03bfb7a",
+  "sam_km": 12.92,
+  "osm_km": 66.33,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.65675,
+  "osm_covers": 0.998,
+  "seen": 0.33667003854799055,
+  "unseen": 0.6633299614520095,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 2,
+    "verified_partial": 2,
+    "needs_relaxation": 4,
+    "driven_m": 39870,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 5,
+    "needs_relaxation": 2,
+    "verified_partial": 1,
+    "driven_m": 52890,
+    "flagged_m": 28082,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-d5ed9d28cf",
+  "sam_km": 11.05,
+  "osm_km": 51.52,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.496,
+  "osm_covers": 0.947,
+  "seen": 0.3809330628803245,
+  "unseen": 0.6190669371196755,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 4,
+    "verified": 4,
+    "driven_m": 42710,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "needs_relaxation": 2,
+    "verified": 6,
+    "driven_m": 59610,
+    "flagged_m": 30690,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-798875d3a9",
+  "sam_km": 13.83,
+  "osm_km": 59.83,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.51175,
+  "osm_covers": 0.94825,
+  "seen": 0.4395903432805634,
+  "unseen": 0.5604096567194367,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 6,
+    "needs_relaxation": 2,
+    "driven_m": 72140,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 6,
+    "verified_partial": 2,
+    "driven_m": 81840,
+    "flagged_m": 44115,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-79798b740d",
+  "sam_km": 8.54,
+  "osm_km": 36.14,
+  "osm_pieces": 3,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.39425,
+  "osm_covers": 0.92675,
+  "seen": 0.47183825503169985,
+  "unseen": 0.5281617449683003,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 5,
+    "verified": 1,
+    "verified_partial": 2,
+    "driven_m": 50750,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "unresolved": 1,
+    "verified_partial": 3,
+    "needs_relaxation": 4,
+    "driven_m": 38290,
+    "flagged_m": 17703,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-fa3a6edb21",
+  "sam_km": 3.16,
+  "osm_km": 52.95,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.13825,
+  "osm_covers": 0.926,
+  "seen": 0.1617939502901723,
+  "unseen": 0.8382060497098276,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 5,
+    "needs_relaxation": 3,
+    "driven_m": 26400,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 5,
+    "needs_relaxation": 3,
+    "driven_m": 51070,
+    "flagged_m": 40322,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-77be7575cd",
+  "sam_km": 14.11,
+  "osm_km": 37.79,
+  "osm_pieces": 3,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.70475,
+  "osm_covers": 0.94925,
+  "seen": 0.45668166181529507,
+  "unseen": 0.543318338184705,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 5,
+    "verified": 3,
+    "driven_m": 31420,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "needs_relaxation": 3,
+    "verified": 4,
+    "verified_partial": 1,
+    "driven_m": 47100,
+    "flagged_m": 21632,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-50d7ebb50b",
+  "sam_km": 5.53,
+  "osm_km": 41.11,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.22425,
+  "osm_covers": 0.9515,
+  "seen": 0.3677509438368427,
+  "unseen": 0.6322490561631572,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 7,
+    "needs_relaxation": 1,
+    "driven_m": 54770,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 6,
+    "verified_partial": 1,
+    "needs_relaxation": 1,
+    "driven_m": 91560,
+    "flagged_m": 49884,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-765d77e216",
+  "sam_km": 15.99,
+  "osm_km": 59.2,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.6125,
+  "osm_covers": 0.9975,
+  "seen": 0.3921965771971938,
+  "unseen": 0.6078034228028062,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 6,
+    "verified_partial": 1,
+    "needs_relaxation": 1,
+    "driven_m": 87140,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 7,
+    "needs_relaxation": 1,
+    "driven_m": 94480,
+    "flagged_m": 49697,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-385464e372",
+  "sam_km": 14.69,
+  "osm_km": 56.8,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.63825,
+  "osm_covers": 0.974,
+  "seen": 0.35281150519762233,
+  "unseen": 0.6471884948023776,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 2,
+    "verified": 4,
+    "verified_partial": 2,
+    "driven_m": 79650,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 5,
+    "verified_partial": 2,
+    "needs_relaxation": 1,
+    "driven_m": 77730,
+    "flagged_m": 41957,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-5d4bdcef0e",
+  "sam_km": 26.06,
+  "osm_km": 52.07,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.936,
+  "osm_covers": 0.97525,
+  "seen": 0.691966900503713,
+  "unseen": 0.30803309949628693,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 3,
+    "verified_partial": 2,
+    "verified": 3,
+    "driven_m": 69370,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "needs_relaxation": 1,
+    "verified": 6,
+    "verified_partial": 1,
+    "driven_m": 74370,
+    "flagged_m": 8677,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-cda7037f21",
+  "sam_km": 12.03,
+  "osm_km": 56.18,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.522,
+  "osm_covers": 0.9965,
+  "seen": 0.33576617647844176,
+  "unseen": 0.6642338235215582,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 4,
+    "needs_relaxation": 4,
+    "driven_m": 45490,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 6,
+    "needs_relaxation": 2,
+    "driven_m": 55710,
+    "flagged_m": 33033,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-85bb9113ef",
+  "sam_km": 9.64,
+  "osm_km": 48.31,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.44475,
+  "osm_covers": 0.96925,
+  "seen": 0.2714693767722973,
+  "unseen": 0.7285306232277027,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 5,
+    "verified_partial": 1,
+    "needs_relaxation": 2,
+    "driven_m": 67980,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 5,
+    "verified_partial": 1,
+    "needs_relaxation": 2,
+    "driven_m": 60830,
+    "flagged_m": 40272,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-d667a79ffb",
+  "sam_km": 6.74,
+  "osm_km": 37.82,
+  "osm_pieces": 6,
+  "osm_track_km": 0.04,
+  "sam_covers": 0.28775,
+  "osm_covers": 0.98875,
+  "seen": 0.4361585954335726,
+  "unseen": 0.5638414045664274,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 3,
+    "verified": 4,
+    "verified_partial": 1,
+    "driven_m": 60690,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "needs_relaxation": 2,
+    "verified_partial": 3,
+    "verified": 3,
+    "driven_m": 69890,
+    "flagged_m": 38024,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-d05c5f98c7",
+  "sam_km": 20.56,
+  "osm_km": 70.52,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.789,
+  "osm_covers": 0.98425,
+  "seen": 0.4445544273640025,
+  "unseen": 0.5554455726359976,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 5,
+    "verified_partial": 2,
+    "needs_relaxation": 1,
+    "driven_m": 90650,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 2,
+    "verified": 5,
+    "needs_relaxation": 1,
+    "driven_m": 66730,
+    "flagged_m": 30472,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-3341200abb",
+  "sam_km": 18.02,
+  "osm_km": 62.14,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.868,
+  "osm_covers": 0.99275,
+  "seen": 0.4974250943863839,
+  "unseen": 0.5025749056136161,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 4,
+    "verified_partial": 3,
+    "verified": 1,
+    "driven_m": 51220,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "needs_relaxation": 3,
+    "verified": 5,
+    "driven_m": 56470,
+    "flagged_m": 13186,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-674f2d85c5",
+  "sam_km": 19.78,
+  "osm_km": 40.7,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.84775,
+  "osm_covers": 0.975,
+  "seen": 0.5751287570521515,
+  "unseen": 0.4248712429478485,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 5,
+    "needs_relaxation": 3,
+    "driven_m": 91770,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 1,
+    "verified": 4,
+    "needs_relaxation": 2,
+    "unresolved": 1,
+    "driven_m": 55960,
+    "flagged_m": 17053,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-c2af767899",
+  "sam_km": 28.87,
+  "osm_km": 56.58,
+  "osm_pieces": 3,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.9735,
+  "osm_covers": 0.98725,
+  "seen": 0.6713401529825951,
+  "unseen": 0.3286598470174049,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 4,
+    "needs_relaxation": 4,
+    "driven_m": 52180,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 4,
+    "needs_relaxation": 4,
+    "driven_m": 41280,
+    "flagged_m": 6918,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-e6a364366b",
+  "sam_km": 7.06,
+  "osm_km": 50.12,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.305,
+  "osm_covers": 0.977,
+  "seen": 0.34720182607585237,
+  "unseen": 0.6527981739241476,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 2,
+    "needs_relaxation": 6,
+    "driven_m": 14670,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 5,
+    "needs_relaxation": 3,
+    "driven_m": 45220,
+    "flagged_m": 29782,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-a2e97c458b",
+  "sam_km": 12.42,
+  "osm_km": 44.11,
+  "osm_pieces": 4,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.472,
+  "osm_covers": 0.951,
+  "seen": 0.3750796389549555,
+  "unseen": 0.6249203610450444,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 5,
+    "verified_partial": 2,
+    "needs_relaxation": 1,
+    "driven_m": 95450,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 4,
+    "verified": 3,
+    "unresolved": 1,
+    "driven_m": 65650,
+    "flagged_m": 36855,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-8eacccc1d8",
+  "sam_km": 20.13,
+  "osm_km": 48.45,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.86075,
+  "osm_covers": 0.98525,
+  "seen": 0.43602609856936736,
+  "unseen": 0.5639739014306325,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 5,
+    "needs_relaxation": 3,
+    "driven_m": 83730,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 6,
+    "needs_relaxation": 2,
+    "driven_m": 58410,
+    "flagged_m": 24109,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-e63b8ffd45",
+  "sam_km": 33.76,
+  "osm_km": 56.55,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.99425,
+  "osm_covers": 0.9935,
+  "seen": 0.7244423537068247,
+  "unseen": 0.27555764629317525,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 6,
+    "needs_relaxation": 2,
+    "driven_m": 71840,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 2,
+    "verified": 4,
+    "needs_relaxation": 2,
+    "driven_m": 48350,
+    "flagged_m": 4176,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-6c1b3bc3ed",
+  "sam_km": 24.42,
+  "osm_km": 63.51,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.82825,
+  "osm_covers": 0.99175,
+  "seen": 0.46254221942290286,
+  "unseen": 0.5374577805770971,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 8,
+    "driven_m": 101300,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 8,
+    "driven_m": 81990,
+    "flagged_m": 29857,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-2eb9067007",
+  "sam_km": 1.73,
+  "osm_km": 48.35,
+  "osm_pieces": 4,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.08725,
+  "osm_covers": 0.805,
+  "seen": 0.1683039111875848,
+  "unseen": 0.8316960888124152,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 6,
+    "needs_relaxation": 2,
+    "driven_m": 29410,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 5,
+    "verified": 2,
+    "needs_relaxation": 1,
+    "driven_m": 62900,
+    "flagged_m": 53231,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-428c79b18b",
+  "sam_km": 8.66,
+  "osm_km": 30.32,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.4595,
+  "osm_covers": 0.8275,
+  "seen": 0.4272324932558554,
+  "unseen": 0.5727675067441447,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 5,
+    "verified": 2,
+    "verified_partial": 1,
+    "driven_m": 28910,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 1,
+    "verified": 5,
+    "needs_relaxation": 2,
+    "driven_m": 65120,
+    "flagged_m": 34662,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-8c25508f40",
+  "sam_km": 22.98,
+  "osm_km": 48.15,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.88725,
+  "osm_covers": 0.99925,
+  "seen": 0.5488085768344885,
+  "unseen": 0.4511914231655115,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 3,
+    "verified_partial": 3,
+    "needs_relaxation": 2,
+    "driven_m": 107610,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified": 5,
+    "needs_relaxation": 3,
+    "driven_m": 56230,
+    "flagged_m": 19012,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-030752634b",
+  "sam_km": 17.14,
+  "osm_km": 18.28,
+  "osm_pieces": 2,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.71875,
+  "osm_covers": 0.7135,
+  "seen": 0.7205203387234415,
+  "unseen": 0.2794796612765585,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "verified": 2,
+    "verified_partial": 3,
+    "needs_relaxation": 3,
+    "driven_m": 82700,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 5,
+    "needs_relaxation": 2,
+    "verified": 1,
+    "driven_m": 70150,
+    "flagged_m": 8418,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
+ },
+ {
+  "photo": "area-7a456b7b2f",
+  "sam_km": 22.44,
+  "osm_km": 33.2,
+  "osm_pieces": 1,
+  "osm_track_km": 0.0,
+  "sam_covers": 0.90625,
+  "osm_covers": 0.947,
+  "seen": 0.6636045467962195,
+  "unseen": 0.3363954532037806,
+  "water": 0.0,
+  "runs": {
+   "sam": {
+    "needs_relaxation": 4,
+    "verified": 3,
+    "verified_partial": 1,
+    "driven_m": 68470,
+    "flagged_m": 0,
+    "water_m": 0,
+    "audit_failures": 0
+   },
+   "osm": {
+    "verified_partial": 1,
+    "needs_relaxation": 3,
+    "verified": 4,
+    "driven_m": 44100,
+    "flagged_m": 9979,
+    "water_m": 0,
+    "audit_failures": 0
+   }
+  }
  }
 ]

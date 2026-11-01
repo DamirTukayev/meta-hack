@@ -1,0 +1,3779 @@
+{
+ "provider": "baseten",
+ "label": "Muse Spark Open (Baseten)",
+ "cases": 120,
+ "drawn": 185,
+ "seed": 7,
+ "rows": [
+  {
+   "id": "big-001",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-003",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-004",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-005",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-006",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-008",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-010",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-011",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-013",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-014",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 4,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 4
+  },
+  {
+   "id": "big-016",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-018",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-020",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-022",
+   "model_status": "verified_partial",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-025",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-026",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-027",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-030",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-032",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-033",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-034",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-037",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-038",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-041",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-044",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-045",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 5,
+   "policy_iterations": 3,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 5
+  },
+  {
+   "id": "big-046",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-048",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-049",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-050",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-051",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-052",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-053",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-054",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-056",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-057",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-058",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-060",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-061",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-062",
+   "model_status": "verified_partial",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-063",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-065",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 4,
+   "policy_iterations": 3,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 4
+  },
+  {
+   "id": "big-066",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-067",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-068",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-069",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-073",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-074",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-075",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-078",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-080",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-081",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-082",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-085",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-086",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-087",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-088",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-089",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 4,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-090",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-093",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-094",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-095",
+   "model_status": "verified_partial",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-096",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-097",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 4,
+   "policy_iterations": 3,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 4
+  },
+  {
+   "id": "big-098",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-100",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 4,
+   "policy_iterations": 4,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-101",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-102",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-103",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-104",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-105",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-106",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-108",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-110",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-111",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-112",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-113",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-115",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-119",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-121",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-122",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-123",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-124",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-125",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-126",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-128",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 4,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 4
+  },
+  {
+   "id": "big-129",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-130",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-131",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-132",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-134",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-135",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-138",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-139",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-140",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-141",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-143",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-146",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-150",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-151",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-153",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-154",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-157",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-158",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-159",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 3
+  },
+  {
+   "id": "big-160",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-164",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 1,
+   "policy_iterations": 1,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-165",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-166",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-168",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 4,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 4
+  },
+  {
+   "id": "big-170",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-171",
+   "model_status": "verified_partial",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 3,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-173",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-175",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-176",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-177",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 4,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 4
+  },
+  {
+   "id": "big-178",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-182",
+   "model_status": "verified",
+   "policy_status": "verified",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 1
+  },
+  {
+   "id": "big-183",
+   "model_status": "needs_relaxation",
+   "policy_status": "needs_relaxation",
+   "model_iterations": 2,
+   "policy_iterations": 2,
+   "returned": false,
+   "returned_fails_audit": false,
+   "decisions": 2
+  },
+  {
+   "id": "big-184",
+   "model_status": "verified_partial",
+   "policy_status": "verified_partial",
+   "model_iterations": 3,
+   "policy_iterations": 3,
+   "returned": true,
+   "returned_fails_audit": false,
+   "decisions": 2
+  }
+ ],
+ "decisions": [
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only used 16 segments inside the avoided zone, so forbidding just those segments is the cheapest fix to reroute it while keeping all 12 orders feasible."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Orders 2 and 8 cannot be reached without entering the avoided zone and excluding 2 of 12 orders (16.7%) stays within the 20% limit and should restore connected road paths for truck 1."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation - banning only the specific 48 road segments that cut through avoided zones is the cheapest targeted fix to reroute all three trucks while keeping all 15 orders deliverable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 15 orders (66%) are unreachable without entering the avoided zone, so the 80% service requirement and the strict zone avoidance cannot both be met and need relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0's 675m intrusion over 10 segments is a targeted zone violation, so we will forbid only those 10 segments and re-solve which can also re-balance the 53-unit overload."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding the 4 orders that require entering the avoided zone (7.5% of 53, under the 20% limit) is the cheapest targeted fix to restore connected paths before re-optimizing for capacity."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 needs 49 units but can only carry 25, so meeting capacity would require dropping ~45% of the 53 orders which exceeds the 20% limit, so the constraints are contradictory and need relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1's 536m zone incursion is limited to 15 segments, so blocking just those violating edges is the minimal targeted fix to force a compliant reroute while keeping all 45 orders deliverable."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Single 21m incursion on 1 segment is isolated, so banning just that segment is the minimal fix to avoid the zone while keeping all 29 orders deliverable."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only cut 254m through the zone on 8 segments, so banning just those segments is the cheapest targeted fix to re-route it around the avoided zone."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "propose_relaxation",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Total fleet capacity is 30 units for 50 orders, so fixing capacity needs dropping 40% of orders which exceeds the 20% limit, making constraints contradictory even before fixing the 519m and 1517m zone incursions."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation - applying the cheapest targeted fix by banning only the specific 46 violating segments to reroute trucks 0, 2 and 3 around avoided zones while keeping all 23 orders deliverable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 23 orders (43%) are unreachable without entering the avoided zone which exceeds the 20% limit, and truck 1 is still overloaded and has 7 disconnected legs, so no feasible plan exists without relaxing zone or capacity constraints."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only used 26 specific segments in the avoided zone, so banning just those will force a minimal detour without blocking the whole zone."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Excluding 10 of 13 orders to stay out of the avoided zone would drop 77% of deliveries, exceeding the 20% limit, so the avoid-zone constraint needs minimal relaxation to restore feasible connected paths."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only clipped the avoided zone on 14 segments, so blocking just those and re-solving is the cheapest targeted fix that can also clear the overload while keeping all 42 orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 1 exceeds capacity but no orders are fundamentally unreachable, so re-running the solver with more time and a new seed can rebalance load across trucks without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 2 is overloaded by 12 units but this looks like a solver packing failure that a longer run with a new random seed can rebalance across the fleet without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Total demand of 42 units exceeds fleet capacity of 20 and both trucks remain heavily overloaded after two longer solver runs, so the capacity constraints are contradictory as stated."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation is only 4 segments, so forbidding just those violating edges is the cheapest targeted fix to reroute truck 1 around the avoided zone."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "7 of 12 orders (58%) are unreachable without entering the avoided zone, which exceeds the 20% drop limit, so the constraints are contradictory and need the smallest feasible relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only uses 9 segments inside the avoided zone, so forbidding just those segments is the cheapest targeted fix while keeping all 31 orders deliverable."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 2 only needs a small detour to avoid the zone, so blocking just the 10 violating segments is the cheapest targeted fix."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding 6 orders (8, 21, 24, 28, 36, 43) that require entering the avoided zone is only 11.5% of all 52 orders, under the 20% limit, allowing compliant routing for the remaining orders."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only used 21 violating segments, so banning just those segments is the cheapest targeted fix to reroute it clear of the avoided zone."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 56 orders (17.9%) are unreachable without entering the avoided zone, which is under the 20% threshold, so excluding them is the cheapest targeted fix that keeps the remaining plan feasible."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is assigned 47 units with capacity 10, which would require dropping 37 of 47 orders (79%) to fit and exceeds the 20% omission limit, so constraints are contradictory and need relaxation to 5x capacity/trips."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "propose_relaxation",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Fleet capacity is 30 units but 56 orders are assigned, requiring dropping 46% of orders to meet capacity which exceeds the 20% limit, so no zone-only reroute can make the plan feasible without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Blocking only the specific violating road segments first to find the shortest detour that respects avoided zones while keeping all 33 orders deliverable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 33 orders (30%) are unreachable without entering the avoided zone exceeding the 20% omission limit, and truck 1 is severely overloaded with 7 disconnected legs after ban_violating_edges, so the zone, capacity and routing constraints are contradictory and require relaxation."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 needs 21 units but capacity is only 10, so meeting capacity would require dropping 52% of orders which exceeds the 20% limit \u2014 longer solve cannot fix a hard capacity shortfall."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Blocking only the 3 violating segments is the cheapest targeted fix for the 127m incursion and keeps all 16 orders routable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Orders 6 and 15 require entering the avoided zone and are only 2 of 16 orders (12.5% < 20% limit), so excluding them allows rebuilding connected routes for truck 1."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 cut 248m through the avoided zone on 7 segments and both trucks exceed 15-unit capacity, so banning just those violating segments and re-solving is the cheapest targeted fix to enforce zone avoidance while giving the solver another chance to respect capacity."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Total load of 59 units exceeds combined capacity of 30 for both trucks, so meeting capacity would require dropping about 49% of orders which exceeds the 20% limit and makes the request infeasible as stated."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only cut through 16 segments of the avoided zone, so forbidding just those segments should force a short detour with minimal impact on delivery routes."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding the 5 zone-blocked orders [4, 16, 19, 35, 36] is only 13% of 38 orders (under the 20% limit) and will remove the disconnected legs for truck 0."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0's 939m incursion covers only 25 road segments and no orders require zone entry, so a targeted ban is the cheapest effective fix."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Only 2 of 20 orders (10%) need the avoided zone so excluding orders 1 and 6 stays under the 20% limit and lets truck 2 be rerouted on connected roads."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 27 orders (37%) are unreachable without entering the avoided zone, exceeding the 20% limit, and truck 0 is overloaded 27/10 with disconnected route legs, so the zone and capacity constraints contradict delivery requirements."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only violated on 5 specific segments, so blocking just those is the cheapest targeted fix that keeps all 29 orders deliverable."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Combined demand of 52 units far exceeds the total fleet capacity of 20 units, so more than 60% of orders would have to be dropped exceeding the 20% limit and no re-solve will fix it."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "No orders require the zone and only 4 segments caused the 252m incursion, so forbidding just those edges is the minimal fix and re-solving can then re-split the 22 orders to respect truck capacity 15."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding the 4 zone-blocked orders 6, 17, 20 and 22 is only 18% of the 22 orders and within the 20% limit, which should resolve the disconnected legs and reduce the overload."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is 3 units over capacity, which a re-optimization with more time and a new seed can fix by rebalancing loads without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is only 3 units over 15 capacity with all 22 orders still reachable, so a longer run with a new random seed may rebalance loads and find a feasible assignment without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is still 3 units over capacity (18/15) after two longer solver runs with different seeds have already failed, so constraints appear infeasible and need minimal relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Targeted fix bans only the 27 violating segments to avoid the zone while keeping detours minimal."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Order 2 cannot be reached without entering the avoided zone, and excluding 1 of 10 orders (10%) is within the 20% limit so it is cheaper than a full relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation is only 5 segments/163m for truck 0, so banning just those violating edges is the cheapest targeted fix to reroute around the avoided zone."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Single 23m incursion on 1 segment - targeted ban is cheapest fix to keep truck 3 clear without broad rerouting."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 3 only clips the avoided zone for 157m on 5 segments, so forbidding just those segments is the cheapest targeted reroute."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is 5 units over capacity (20/15), so re-running the solver with more time may find a feasible rebalance without dropping any orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only violated 10 specific segments (754m), so banning just those is the cheapest targeted fix that keeps the rest of the network available."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding orders 2, 13, 19 and 23 affects only 4 of 26 orders (15.4%, under the 20% limit), so dropping them and replanning legs 21 and 25 is the cheapest targeted fix that avoids entering the zone."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid exactly the 12 road segments that cut through the avoided zones and re-solve to eliminate zone incursions while letting the optimizer rebalance trucks 0 and 2 back within their 10-unit capacity."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Both trucks are over capacity but no orders are blocked by the zone (0% > 20% threshold not met), so a longer re-optimization with a new seed should be tried to rebalance load before relaxing constraints."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only used 32 specific segments for 1796m in the avoided zone, so banning just those violating edges is the cheapest targeted fix to re-route around the zone while keeping all 49 orders serviceable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Excluding 10 of 49 orders is 20.4% and exceeds the 20% limit, and 8 legs remain disconnected after banning violating edges, so a minimal avoided-zone/time relaxation is required for a feasible route."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Both trucks exceed capacity but no orders are unreachable, so a longer solver run with a different seed should find a feasible rebalancing without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Three trucks exceed 10-unit capacity by 1-4 units - re-running the solver longer with a new seed can repack the 58 orders within limits without dropping any."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Trucks 2 and 4 remain over capacity after two longer solver runs with different seeds, so further re-runs are unlikely to fix it and the minimal relaxation is needed."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 is only 2 units over capacity and only used 8 specific avoided segments, so forbidding exactly those segments and re-solving is the cheapest targeted fix to find a compliant route."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is only 2 units over capacity (11.7% of 17 orders, below 20%), so a longer run with a different seed may find a feasible load split without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only used 39 specific segments to cut through the zone, so banning just those is the cheapest targeted fix that should force a compliant detour."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding the 10 flagged orders (12, 13, 21, 26, 31, 32, 34, 43, 49, 50) is only 16.7% of 60 orders, under the 20% limit, and should eliminate the disconnected legs for truck 0."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only used 6 segments inside the avoided zone, so banning just those edges is the cheapest targeted fix to force a clean reroute."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only clipped the avoided zone for 179m on 3 segments, so banning just those segments is the cheapest targeted fix to reroute it."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Order 5 is the only order requiring entry to the avoided zone (1 of 12 orders = 8% < 20% limit), so it can be excluded to restore a connected road path for truck 1."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning just the 42 violating segments is the cheapest targeted fix and keeps all 51 orders routable since no orders require entering the zone."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is at 34/26 and 7 legs are disconnected because 10 of 51 orders (19.6%) require entering the avoided zone - excluding them is under the 20% limit and will fix both overload and path violations."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Both trucks only briefly cut through avoided zones, so banning just the 38 violating segments is the cheapest targeted fix to force clean reroutes."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Excluding the 10 unreachable orders would drop 22.7% of all 44 orders exceeding the 20% limit and 8 legs remain disconnected after banning edges, so the avoided-zone constraint is contradictory and needs relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 is 17 units over capacity and cut 375m through avoided zone on 8 segments - forbidding just those 8 segments is the cheapest targeted fix and re-solving can find a zone-free route with feasible loads."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Orders 8, 10 and 20 cannot be served without entering the avoided zone, so we will exclude those 3 orders (11% of total) and report them while keeping the remaining plan feasible."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is over capacity (24/10) but all 27 orders are reachable, so a longer run with a new seed can rebalance loads without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 used 22 prohibited segments, so banning just those segments will force a compliant reroute with minimal network disruption."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Serving the plan without entering the avoided zone would require dropping 10 of 21 orders (48%), which exceeds the 20% limit and still leaves 5 disconnected legs, so the constraints are contradictory and need relaxation."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Trucks 0 and 2 are over capacity but this looks like a load-balancing issue that a longer solver run with a different seed can fix without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Total demand of 40 units exceeds the fleet's total capacity of 30 and a longer solver run already failed, so no re-optimization will fix the overload without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation is only 350 m on 9 segments, so banning just those segments is the cheapest targeted fix that keeps all 8 orders reachable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "No orders are unreachable without the zone, so forbidding just the 10 violating segments is the cheapest targeted fix and gives the solver a chance to re-balance all 29 orders within the 10-unit capacity on re-solve."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity",
+    "deadline",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Order 6 cannot be reached without entering the avoided zone and is likely causing the disconnected legs, and excluding 1/43 orders (2% < 20%) is the cheapest targeted fix before a broad re-solve for capacity and deadline."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "propose_relaxation",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Fleet capacity is 30 units for 43 orders so fixing overloads (17/15 and 26/15) would require dropping ~30% of orders which exceeds the 20% limit, making constraints contradictory and requiring relaxation even after rerouting truck 1 out of the avoided zone."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "All 49 orders remain reachable without the zone, so banning only the 50 violating segments is the cheapest targeted fix to keep routes compliant."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Excluding 10 of 49 zone-blocked orders exceeds the 20% limit and truck 0 is still over capacity with 7 disconnected legs, so the delivery request cannot be met as stated without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid only the 8 violating segments to fix the 279m zone incursion with minimal detour impact."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning only the 49 violating road segments is the cheapest targeted fix to reroute both trucks clear of avoided zones without over-restricting the network."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 23 orders (43%) are unreachable without entering the avoided zone, exceeding the 20% exclusion limit, and 6 legs have disconnected road paths, so the constraints are contradictory as stated and need the smallest relaxation."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is only 1 unit over its 15-unit capacity, so a longer solver run with a different seed may rebalance the 16 orders feasibly without needing to relax constraints."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is only 1 unit over capacity (1 of 16 orders = 6% < 20% limit), so re-running with more time/seed may rebalance or drop one order without needing a formal relaxation."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 still carries 16 units against a 15-unit capacity after two longer solver runs, so the 16-order demand is infeasible as stated and needs the smallest relaxation (e.g., +1 capacity)."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Targeted fix to block only the 10 violating segments for trucks 0 and 2 and reroute around avoided zones with minimal disruption."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Truck 0 legs 1, 4 and 5 have no connected road path without entering the avoided zone, and the 4 affected orders 4, 28, 32, 35 are only 9.8% of 41 total, so excluding them is the cheap targeted fix that restores connectivity while staying under the 20% limit."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbidding only the 12 violating segments will reroute truck 0 around the avoided zone with minimal disruption, since no orders require zone entry."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Truck 1 legs 1, 5 and 6 are disconnected because orders 3, 4, 12, 13 and 16 require entering the avoided zone, and excluding these 5 of 27 orders (18.5%) stays under the 20% limit."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid only the 35 violating segments to fix truck 0's 2051m zone breach with minimal detour while keeping all 25 orders deliverable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding orders 2,3,5,14,25 (5/25 = 20%) that require entering the avoided zone will remove the disconnected legs and keep omissions within the 20% limit."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning just the 17 violating segments gives truck 0 a targeted detour around the avoided zone while keeping all 9 orders fully reachable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Excluding 5 of 9 orders (56%) would exceed the 20% limit and path disconnections remain after banning edges, so the avoided-zone and coverage constraints are contradictory and need relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "policy",
+   "reason": "Some orders cannot be reached without entering an avoided zone. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "deadline",
+    "zones"
+   ],
+   "model": "resolve_longer",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 is already 13 minutes late at 11:12 despite a 580m shortcut through the avoided zone, so a longer search with a different seed should first try to find a faster ordering that meets the 11:00 deadline before adding detours that would only increase lateness."
+  },
+  {
+   "kinds": [
+    "deadline",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "No orders require entering the zone, so the cheapest targeted fix is to forbid just the 9 violating segments causing the 580m incursion and re-solve to see if the 12-minute deadline overrun can still be recovered."
+  },
+  {
+   "kinds": [
+    "deadline",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding the 7 zone-blocked orders (4,6,8,29,32,35,36 = 17.5% <20% limit) removes the forced zone entries causing legs 17/24 to disconnect and should allow a connected, on-time return."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 is only 1 unit over capacity and its zone violation is limited to 46 segments, so forbidding just those segments and re-solving is the cheapest targeted fix that can reroute around the zone and rebalance the load without dropping orders."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck is over capacity and has 5 disconnected legs, and 10 of 26 orders (38%) are unreachable without entering the avoided zone, exceeding the 20% drop limit so the zone/capacity constraints must be relaxed."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 2's incursion is small and localized (262 m over 7 segments), so forbidding just those violating segments is the cheapest targeted fix."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid just the 32 violating segments to reroute truck 0 around the avoided zone with minimal disruption and keep all 8 orders deliverable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "7 of 8 orders (87.5%) are unreachable without entering the avoided zone, so excluding them would violate the 20% limit and the request needs the smallest feasible relaxation instead."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Both trucks clipped avoided zones, so forbid just the 53 violating segments and re-solve for a low-cost detour that keeps all 57 orders."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 orders (17.5% <20% limit) are unreachable without entering the avoided zone and are causing the 7 disconnected legs and truck 0 overload (36/29), so excluding them restores feasible routing."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only violates 20 specific segments, so banning just those violating edges is the cheapest targeted fix to reroute without blocking all zone access."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Dropping the 4 zone-blocked orders is only 14% of 28 total, under the 20% limit, so we can exclude them and keep a feasible route without entering the avoided zone."
+  },
+  {
+   "kinds": [
+    "deadline",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "resolve_longer",
+   "policy": "resolve_longer",
+   "source": "model",
+   "reason": "Truck 0 is only 35 minutes past the 10:00 deadline starting at stop 29, so a longer run with a new seed may find a feasible reordering without dropping orders."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is 35 min over the 10:00 deadline at stop 29, so a longer run with a different seed may find a feasible rerouting without dropping orders."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is still 35 minutes past the 10:00 deadline after two extended solver runs, so the deadline must be relaxed or late stops removed."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is at 47/10 units (470% of capacity) - meeting capacity would require dropping 79% of orders, exceeding the 20% limit, so constraints are contradictory and need relaxation of capacity/fleet."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only clipped the avoided zone for 583m on 8 segments, so a targeted ban should enable a small local reroute without major disruption."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_all_zone_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Targeted ban failed and truck 1 still cut 616m across 9 segments, so we must forbid all zone segments to enforce compliance with zero orders at risk."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Only order 19 of 35 (2.9% < 20% limit) needs the avoided zone, so leave it out and reroute truck 1 legs 1-2 on connected roads outside the zone."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning only the 13 violating segments is the cheapest targeted fix to reroute truck 1 around the avoided zone while keeping all 17 orders reachable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Order 2 is the only order requiring entry into the avoided zone (1 of 17 = ~6% < 20% limit), so excluding it should restore connected road paths for truck 0 without excessive order loss."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Targeted block of the 33 violating segments is the cheapest fix to keep trucks out of the avoided zones without forcing big detours."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Leaving out 10 of 18 orders (55%) exceeds the 20% limit and 5 legs remain disconnected after ban_violating_edges, so the avoid-zone constraint must be relaxed to find a feasible route."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First iteration with no unreachable orders, so the cheapest targeted fix is to forbid only the 38 violating segments and re-solve before banning entire zones."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "8 of 12 orders (67%) are unreachable without entering the avoided zone which exceeds the 20% limit, so the constraints are contradictory and no feasible plan exists as stated."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbidding just the 9 violating segments is the cheapest targeted fix to reroute truck 0 around the avoided zone while keeping all 22 orders deliverable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "deadline"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is assigned 56 units against a 10-unit capacity and still finishes 24 min late, requiring dropping >80% of orders to become feasible, so the request as stated is contradictory and needs relaxed capacity/time or additional trucks."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0's 1455m incursion is limited to 22 segments, so banning just those edges is the minimal targeted fix with no orders at risk."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 23 orders (43%) are unreachable without entering the avoided zone, which exceeds the 20% limit for exclusion, and 6 truck 1 legs remain disconnected after banning edges, so the constraints are contradictory as stated."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only used 3 segments in the avoided zone, so banning just those is the minimal targeted fix to reroute around the zone."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Only 2 of 31 orders (10, 30 = 6.5%) are unreachable without entering the avoided zone, well under the 20% limit, so excluding them is the cheap targeted fix to allow valid connected re-routing of legs 22 and 24."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbidding only the 16 violating segments gives truck 3 a chance to reroute around the avoided zone with the smallest disruption."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Banning edges didn't fix the 3 disconnected legs, so excluding the 5 orders [1,13,22,24,39] that require entering the avoided zone (only 9% of 53 orders, under the 20% limit) is the cheapest targeted fix to restore connected paths."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Total demand is 49 units but fleet capacity is only 30 units, so at least 19 orders (39%) would have to be dropped which violates the 20% limit and no solver rerun can fix the overload."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only cut 685m through 10 segments and no orders require entering the zone, so banning just those violating edges is the cheapest targeted fix to reroute it."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Only 4 of 58 orders (2, 22, 32, 36 = 6.9%) are unreachable without entering the avoided zone, which is under the 20% limit, so excluding them allows compliant connected routes for the rest."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "deadline",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 is 32 units over capacity and 22 minutes late while cutting 2698m through the avoided zone, so banning just those 27 violating segments is the cheapest targeted fix to force a feasible reroute."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is still overloaded 42/10 and has 4 disconnected legs after banning edges, and 10 of 42 orders (24%) are unreachable without entering the avoided zone which exceeds the 20% allowed omission, so the zone/capacity constraints are contradictory and require a minimal relaxation."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 needs 21 units for 15 capacity, requiring dropping 6/21 orders (28%) which exceeds the 20% limit, so the request cannot be met as stated without a relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "No orders require entering the zone, so forbidding only the specific violating segments is the cheapest targeted fix that keeps all 53 orders routable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "33 of 53 orders can only be reached through the avoided zone; dropping that many would not be a plan. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "resolve_longer",
+   "policy": "resolve_longer",
+   "source": "model",
+   "reason": "Both trucks exceed the 10:00 deadline by only 4 and 31 minutes, so a longer search with a new seed may find faster routes that meet the deadline without dropping orders."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Both trucks miss the 10:00 deadline by only 6-30 minutes, so a longer run with a different seed is the cheapest fix to try before relaxing the deadline."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Both trucks still finish after the 10:00 deadline even after two longer solver runs, so no on-time feasible plan exists and the smallest deadline relaxation must be computed."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Targeted fix forbids only the 8 violating segments per truck to eliminate the zone incursions with minimal disruption to the 57-order plan."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First occurrence and no orders are forced through the zone, so forbidding only the 15-17 violating segments is the cheapest targeted fix to reroute trucks 1-3."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "7 of 8 orders (87.5%) are unreachable without entering the avoided zone, which exceeds the 20% limit and conflicts with capacity and routing, so the request cannot be met as stated and needs the smallest relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 2 has a minor 218m zone incursion on 4 segments - banning just those segments is the cheapest targeted fix to reroute it."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "9 of 59 orders (15%) are unreachable without entering the avoided zone, which is within the 20% limit, so excluding them keeps the plan feasible without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Only 11 specific road segments caused ~630m of avoided-zone driving and no orders require zone entry, so blocking just those segments is the cheapest targeted fix."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding orders 6, 12, 18 is only 7.5% of 40 orders (under the 20% limit) and will allow legs 1 and 4 to be rerouted on connected roads without entering the avoided zone."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid only the 6 violating road segments to eliminate current zone incursions with minimal disruption before trying broader bans."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Trucks 0 and 2 exceed capacity (13/10 and 24/10) but this looks like poor packing, not proven infeasibility, so re-running longer with a new seed may find a feasible split for all 47 orders without dropping >20%."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Trucks 0 and 2 still exceed 10-unit capacity after one extended run, so a second longer run with a different random seed may find a capacity-feasible distribution for the 47 orders without needing relaxation."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Both trucks are severely over capacity (13/10 and 24/10) and resolve_longer has already failed twice, so the constraints are contradictory and need relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbidding only the 54 specific road segments that cut through avoided zones will reroute both trucks cleanly with minimal network disruption."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 40 orders (25%) are unreachable without entering the avoided zone which exceeds the 20% allowed drop limit, and capacity/path violations remain, so constraints are contradictory and require a minimal zone relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0's 1455m intrusion is limited to 22 segments, so forbidding only those entering the avoided zone is the cheapest targeted fix to force a clean reroute."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Cannot exclude 10 of 32 orders (31% exceeds 20% limit) and truck 0 still has 7 disconnected legs after banning edges, so the avoided-zone constraint requires the smallest feasible relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "deadline"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "The trucks cannot carry all orders; look for the smallest relaxation. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only violates on 6 segments (360m), so forbidding just those segments is the cheapest targeted fix to keep all 17 orders deliverable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Orders 1, 4 and 9 cannot be reached without entering the avoided zone and are only 3/17 (17.6%), so excluding them keeps service above 80% and allows truck 2 legs 1 and 4 to be replanned as connected road paths."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 only used 40 specific zone segments for 2148m, so banning just those is the cheapest targeted fix that keeps all 26 orders deliverable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 26 orders (38%) cannot be reached without entering the avoided zone, which exceeds the 20% omission limit, so no feasible route can meet the current constraints without relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 is 1 unit over capacity and cut 1166m through an avoided zone, so forbidding just those 20 violating segments is the most targeted fix before trying broader bans."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "6 of 11 orders (54%) are unreachable without entering the avoided zone, exceeding the 20% drop limit, so zone-avoidance and delivery constraints are contradictory and require relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning only the 3 violating segments fixes the 92m zone incursion with minimal rerouting and keeps all 8 orders deliverable."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only cuts 1112m through the avoided zone on 19 segments with no orders trapped inside, so banning just those segments is the cheapest targeted fix."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "6 of 8 orders (75%) are unreachable without entering the avoided zone, exceeding the 20% exclusion limit, so the zone/time constraints must be relaxed to find a feasible route."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0's 839 m incursion is only 12 segments and no orders require entering the zone, so a targeted ban is the cheapest fix that keeps all 8 orders servable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Order 4 is the only zone-blocked order (1 of 8 = 12.5% under the 20% limit), so excluding it should fix truck 1's disconnected legs while keeping the avoided zone intact."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Cheapest targeted fix for limited incursions (286m/9 segs and 186m/3 segs) - forbids only the 12 violating segments while preserving all routes since no orders require zone entry."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Excluding 10 of 49 orders to avoid the zone exceeds the 20% limit and truck 2 is also overloaded and has disconnected legs, so the request is infeasible as stated and needs a minimal relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First offense on both trucks and all 14 orders are still reachable, so banning only the 30 violating segments is the cheapest targeted fix that should clear the zone violations without forcing long detours."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "9 of 14 orders (64%) are only reachable by entering the avoided zone which exceeds the 20% exclusion limit, so avoiding the zone while serving all orders and respecting capacity is contradictory and needs a minimal relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Total demand is 55 units but combined fleet capacity is only 30 units, so no feasible routing can serve all orders without dropping >20% and the constraints are contradictory as stated."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 cut through an avoided zone for only 6 segments, so banning just those violating edges is the cheapest targeted fix to get a compliant reroute."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 3 only clips the avoided zone for 25m on a single segment and no orders require zone entry, so a targeted ban fixes it with minimal detour."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Only orders 13 and 47 are blocked by the avoided zone - 2 of 56 orders (3.6%, well under the 20% limit) - so excluding them is the minimal targeted fix to rebuild connected road paths for truck 5."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 only clipped the avoided zone for 483m on 7 segments, so banning just those segments is the cheapest targeted reroute that keeps all 26 orders feasible."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Orders 2 and 5 cannot be reached without entering the avoided zone and are only 2 of 26 orders (7.7% < 20%), so excluding them is the cheapest targeted fix that may also relieve the capacity and path issues."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 violation is small and localized to 7 segments (219m), so forbidding just those segments is the cheapest targeted fix to force a clean re-route around the avoided zone."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0 drove 1.6km through the avoided zone on 31 segments - banning just those segments is the cheapest targeted fix to find a compliant reroute for all 14 orders."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "4 of 14 orders (28.6%) are unreachable without entering the avoided zone, which exceeds the 20% limit, and 3 legs remain disconnected after banning edges, so the constraints are contradictory and need the smallest feasible relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First-time zone violation - will forbid only the 29 violating segments to find clean detours while keeping routes efficient."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 21 orders (48%) are unreachable without entering the avoided zone, which exceeds the 20% exclusion limit, and the truck is still overloaded with 5 legs disconnected - constraints are contradictory and need relaxation."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "resolve_longer",
+   "policy": "resolve_longer",
+   "source": "model",
+   "reason": "Truck 0 is only 31 minutes over its deadline, so a longer optimization run with a different seed may find a feasible on-time route without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 is only ~31 minutes late and on-time through stop 52, so a second longer run with a different seed may still find a feasible 12:00 schedule before relaxing the deadline."
+  },
+  {
+   "kinds": [
+    "deadline"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 0 still finishes 28 minutes after the 12:00 deadline at stop 52 after two longer solver runs, so the deadline is infeasible and needs the smallest possible extension."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "policy",
+   "reason": "Cut exactly the segments that entered the zone and re-solve. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 49 orders (20.4%) are unreachable without entering the avoided zone which exceeds the 20% limit, and the truck is still 39 units over capacity with 7 disconnected legs after banning edges, so the request is contradictory as stated."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Total demand of 47 units far exceeds combined fleet capacity of 20 units, so both trucks remain overloaded by 2-3x and fixing it would require dropping 57% of orders which violates the 20% limit."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 3 used 25 segments inside the avoided zone, so forbidding just those violating segments is the cheapest targeted fix to reroute it cleanly."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "Excluding orders 1, 10 and 22 affects only 3/24 orders (12.5%), which is under the 20% limit, allowing remaining routes including truck 4 to be replanned without entering the avoided zone."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 1 used 35 avoided segments for 2091m, so forbidding just those violating edges is the cheapest targeted fix to reroute it while keeping the rest of the network usable."
+  },
+  {
+   "kinds": [
+    "paths",
+    "zones"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 25 orders (40%) are unreachable without entering the avoided zone, exceeding the 20% allow-to-exclude limit, so zone/time constraints are contradictory and need relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Truck 0's 243m breach is only 7 segments and all 55 orders are reachable without the zone, so banning just those segments and re-solving is the cheapest targeted fix to clear the zone violation and rebalance truck 1 from 30/25."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Both trucks are only slightly over capacity (3 and 2 units) and dropping 5 orders is 9% < 20% limit, so a longer solver run can rebalance loads to meet capacity without relaxing constraints."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "resolve_longer",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 1 is only 5 units over capacity and overall load can likely be rebalanced across the fleet with a longer solver run and new seed, so relaxation is not yet needed."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Truck 1 is still 5 units over its 25-unit capacity after two longer solver runs with different seeds, so a third identical retry is unlikely to help and we need the smallest relaxation like extra capacity or a second trip."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First iteration with only 24 violating segments and 0 orders dependent on the zone - a targeted ban is the cheapest fix that keeps all 34 orders servable."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 34 orders (29%) are unreachable without entering the avoided zone which exceeds the 20% exclusion limit, and 7 path legs remain disconnected after ban_violating_edges, so constraints are contradictory and require relaxation."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation with no unreachable orders, so banning only the specific violating road segments is the cheapest targeted fix to clear all zone intrusions without over-restricting the network."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 51 orders (19.6% < 20% limit) are unreachable without entering the avoided zone, so we can exclude them, report them, and re-plan to fix the truck 0 overload and disconnected legs."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "First violation is small (6 segments, 429m) and no orders are trapped inside the zone, so a targeted ban avoids the zone with minimal detour."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "All 25 orders are reachable without the zone, so a targeted ban on just the 49 violating segments is the cheapest fix to force clean detours."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 of 25 orders (40%) are unreachable without entering the avoided zone, which exceeds the 20% exclusion limit, and the plan is also overloaded (18/10) with 6 disconnected road legs, so the constraints cannot be met as stated without relaxation."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid just the 2 road segments that cut through the avoided zone and re-solve - the cheapest targeted fix to stop the 67m incursion while letting the solver rebalance the overloaded trucks back to capacity 10."
+  },
+  {
+   "kinds": [
+    "capacity"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "Fleet total capacity is 30 but 45 orders are required, so meeting capacity would force dropping 33% of orders which exceeds the 20% limit and longer solving cannot create capacity."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Forbid only the 36 segments that actually cut through avoided zones to find clean detours with minimal extra cost."
+  },
+  {
+   "kinds": [
+    "paths",
+    "zones"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "10 orders (4,5,12,16,17,19,21,24,26,28) cannot be reached without entering an avoided zone, which is 17% of 59 orders and under the 20% limit, so excluding them will allow re-solving for zone-free, connected routes for trucks 1 and 2."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_all_zone_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Targeted ban of violating segments already failed and both trucks still cut 1213m through avoided zones, so a full ban of all roads inside the zones is needed to force compliant routes with no orders at risk."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "policy",
+   "reason": "29 of 59 orders can only be reached through the avoided zone; dropping that many would not be a plan. (model answer unusable; policy used)"
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning only the 4 violating road segments is the cheapest targeted fix that removes current zone incursions while preserving all delivery options."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "No orders require entering the avoided zone, so banning just the 11 violating segments is the cheapest targeted fix to clear the 394m violation while keeping all 11 orders servable."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Banning just the 21 violating segments is the cheapest targeted fix to reroute truck 0 around the avoided zone without closing the whole area."
+  },
+  {
+   "kinds": [
+    "paths"
+   ],
+   "model": "propose_relaxation",
+   "policy": "propose_relaxation",
+   "source": "model",
+   "reason": "8 of 12 orders (67%) are unreachable without entering the avoided zone, exceeding the 20% exclusion limit, and truck 1 still has 5 disconnected legs after ban_violating_edges, so the constraints are contradictory as stated."
+  },
+  {
+   "kinds": [
+    "zones"
+   ],
+   "model": "ban_violating_edges",
+   "policy": "ban_violating_edges",
+   "source": "model",
+   "reason": "Blocks only the 5 violating segments for truck 1 to force a minimal detour while keeping all 30 orders reachable."
+  },
+  {
+   "kinds": [
+    "capacity",
+    "paths"
+   ],
+   "model": "exclude_unreachable",
+   "policy": "exclude_unreachable",
+   "source": "model",
+   "reason": "4 of 30 orders (13% < 20% limit) are unreachable without entering the avoided zone, so they can be excluded and reported while the remaining plan is re-optimized to fix the 1-unit capacity overage and disconnected legs."
+  }
+ ],
+ "recommendations": [
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "policy",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  },
+  {
+   "model": 0,
+   "policy": 0,
+   "source": "model",
+   "unsafe": false
+  }
+ ],
+ "cost_usd": 1.7464
+}
