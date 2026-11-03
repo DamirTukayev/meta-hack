@@ -1,0 +1,2643 @@
+[
+ {
+  "photo": "beaumont",
+  "length_m": 385,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "beaumont",
+  "length_m": 384,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.72,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.64,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "beaumont",
+  "length_m": 335,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "beaumont",
+  "length_m": 309,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.7,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "beaumont",
+  "length_m": 232,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "friendswood",
+  "length_m": 431,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.84,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "friendswood",
+  "length_m": 392,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "friendswood",
+  "length_m": 391,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.86,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "friendswood",
+  "length_m": 346,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "friendswood",
+  "length_m": 340,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-kingwood",
+  "length_m": 3925,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-kingwood",
+  "length_m": 369,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-kingwood",
+  "length_m": 166,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-kingwood",
+  "length_m": 123,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.72,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-kingwood",
+  "length_m": 122,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-northeast",
+  "length_m": 1201,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-northeast",
+  "length_m": 1025,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-northeast",
+  "length_m": 441,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-northeast",
+  "length_m": 82,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.96,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "orange-tx",
+  "length_m": 925,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.85,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.91,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "orange-tx",
+  "length_m": 761,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "orange-tx",
+  "length_m": 549,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "orange-tx",
+  "length_m": 480,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "orange-tx",
+  "length_m": 402,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.7,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.86,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-arthur",
+  "length_m": 971,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-arthur",
+  "length_m": 875,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-arthur",
+  "length_m": 752,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.85,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.88,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "port-arthur",
+  "length_m": 748,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.81,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-arthur",
+  "length_m": 670,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "vidor-tx",
+  "length_m": 646,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.88,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "vidor-tx",
+  "length_m": 438,
+  "wet_share": 0.107,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.95,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "vidor-tx",
+  "length_m": 268,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.68,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "vidor-tx",
+  "length_m": 234,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.75,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "vidor-tx",
+  "length_m": 220,
+  "wet_share": 0.037,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.64,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "conway-sc",
+  "length_m": 511,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.91,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "conway-sc",
+  "length_m": 360,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "conway-sc",
+  "length_m": 335,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "conway-sc",
+  "length_m": 332,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "conway-sc",
+  "length_m": 262,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.99,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "kinston-nc",
+  "length_m": 367,
+  "wet_share": 0.582,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.97,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "kinston-nc",
+  "length_m": 258,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "kinston-nc",
+  "length_m": 253,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "kinston-nc",
+  "length_m": 236,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.68,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "kinston-nc",
+  "length_m": 191,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "trenton-nc",
+  "length_m": 1141,
+  "wet_share": 0.702,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.95,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "trenton-nc",
+  "length_m": 1067,
+  "wet_share": 0.954,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.98,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "trenton-nc",
+  "length_m": 432,
+  "wet_share": 0.606,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.95,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.94,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "trenton-nc",
+  "length_m": 387,
+  "wet_share": 0.789,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.98,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "trenton-nc",
+  "length_m": 282,
+  "wet_share": 0.522,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.85,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "wilmington-nc",
+  "length_m": 467,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "wilmington-nc",
+  "length_m": 450,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "wilmington-nc",
+  "length_m": 382,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.84,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "wilmington-nc",
+  "length_m": 375,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.62,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "wilmington-nc",
+  "length_m": 359,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "bonita-springs",
+  "length_m": 323,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "bonita-springs",
+  "length_m": 282,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.72,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "bonita-springs",
+  "length_m": 216,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "bonita-springs",
+  "length_m": 184,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "bonita-springs",
+  "length_m": 149,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "naples-fl",
+  "length_m": 375,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.74,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "naples-fl",
+  "length_m": 315,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "naples-fl",
+  "length_m": 291,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "naples-fl",
+  "length_m": 275,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "naples-fl",
+  "length_m": 275,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.99,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "north-fort-myers",
+  "length_m": 2256,
+  "wet_share": 0.113,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.8,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "north-fort-myers",
+  "length_m": 195,
+  "wet_share": 0.043,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.86,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "north-fort-myers",
+  "length_m": 165,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.89,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "north-fort-myers",
+  "length_m": 163,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.8,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.94,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "north-fort-myers",
+  "length_m": 124,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.7,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-charlotte",
+  "length_m": 216,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-charlotte",
+  "length_m": 185,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-charlotte",
+  "length_m": 150,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "port-charlotte",
+  "length_m": 145,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.71,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "port-charlotte",
+  "length_m": 138,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "punta-gorda",
+  "length_m": 376,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "punta-gorda",
+  "length_m": 266,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.91,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "punta-gorda",
+  "length_m": 253,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.75,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.81,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "punta-gorda",
+  "length_m": 232,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "punta-gorda",
+  "length_m": 222,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "st-james-city",
+  "length_m": 108,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.89,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "biltmore-nc",
+  "length_m": 657,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "biltmore-nc",
+  "length_m": 652,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "biltmore-nc",
+  "length_m": 474,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "biltmore-nc",
+  "length_m": 471,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "biltmore-nc",
+  "length_m": 453,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "hot-springs-nc",
+  "length_m": 1013,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "hot-springs-nc",
+  "length_m": 756,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "hot-springs-nc",
+  "length_m": 647,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "hot-springs-nc",
+  "length_m": 514,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "hot-springs-nc",
+  "length_m": 263,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marshall-nc",
+  "length_m": 1024,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marshall-nc",
+  "length_m": 842,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marshall-nc",
+  "length_m": 738,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marshall-nc",
+  "length_m": 461,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marshall-nc",
+  "length_m": 425,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "gulf-shores",
+  "length_m": 318,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "gulf-shores",
+  "length_m": 263,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.75,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "gulf-shores",
+  "length_m": 197,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "gulf-shores",
+  "length_m": 195,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "gulf-shores",
+  "length_m": 173,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "pensacola",
+  "length_m": 600,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "pensacola",
+  "length_m": 388,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "pensacola",
+  "length_m": 381,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "pensacola",
+  "length_m": 347,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "pensacola",
+  "length_m": 308,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.7,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "perdido-key",
+  "length_m": 697,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "perdido-key",
+  "length_m": 129,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "perdido-key",
+  "length_m": 119,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.93,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "perdido-key",
+  "length_m": 88,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "perdido-key",
+  "length_m": 69,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.99,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "englewood-fl",
+  "length_m": 409,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "englewood-fl",
+  "length_m": 290,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.72,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "englewood-fl",
+  "length_m": 275,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "englewood-fl",
+  "length_m": 215,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.78,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.91,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "englewood-fl",
+  "length_m": 208,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.98,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "siesta-key",
+  "length_m": 504,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "siesta-key",
+  "length_m": 484,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "siesta-key",
+  "length_m": 476,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "debris",
+   "confidence": 0.88,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "siesta-key",
+  "length_m": 374,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "siesta-key",
+  "length_m": 324,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.75,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "st-petersburg-fl",
+  "length_m": 2200,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "st-petersburg-fl",
+  "length_m": 629,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "st-petersburg-fl",
+  "length_m": 626,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "st-petersburg-fl",
+  "length_m": 626,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "st-petersburg-fl",
+  "length_m": 599,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "venice-fl",
+  "length_m": 375,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "venice-fl",
+  "length_m": 266,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "venice-fl",
+  "length_m": 261,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.97,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "venice-fl",
+  "length_m": 258,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "venice-fl",
+  "length_m": 235,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "comfort-tx",
+  "length_m": 252,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "comfort-tx",
+  "length_m": 152,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.78,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.05,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "comfort-tx",
+  "length_m": 120,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.86,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "comfort-tx",
+  "length_m": 95,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.75,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.94,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "comfort-tx",
+  "length_m": 83,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "ingram-tx",
+  "length_m": 256,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.85,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.82,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "ingram-tx",
+  "length_m": 137,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "ingram-tx",
+  "length_m": 104,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "debris",
+   "confidence": 0.88,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "ingram-tx",
+  "length_m": 95,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.88,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "ingram-tx",
+  "length_m": 86,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.72,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marble-falls",
+  "length_m": 478,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.95,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.74,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "marble-falls",
+  "length_m": 467,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "marble-falls",
+  "length_m": 280,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "marble-falls",
+  "length_m": 263,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.6,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "marble-falls",
+  "length_m": 263,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-harvey",
+  "length_m": 923,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.94,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey",
+  "length_m": 358,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.8,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "length_m": 1460,
+  "wet_share": 0.259,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.96,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "length_m": 1250,
+  "wet_share": 0.859,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.96,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "length_m": 1140,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.77,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "length_m": 709,
+  "wet_share": 0.738,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.95,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.98,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "houston-harvey-b",
+  "length_m": 609,
+  "wet_share": 0.882,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.95,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "flood-lumberton",
+  "length_m": 413,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-lumberton",
+  "length_m": 413,
+  "wet_share": 0.938,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.9,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.96,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "flood-lumberton",
+  "length_m": 366,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-lumberton",
+  "length_m": 282,
+  "wet_share": 0.194,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.92,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.98,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "flood-lumberton",
+  "length_m": 278,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.71,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "flood-fort-myers-shores",
+  "length_m": 174,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.93,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "flood-fort-myers-shores",
+  "length_m": 161,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-fort-myers-shores",
+  "length_m": 130,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.96,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "flood-fort-myers-shores",
+  "length_m": 114,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.82,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-fort-myers-shores",
+  "length_m": 96,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.75,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "error",
+   "confidence": 0.0,
+   "verdict": "error",
+   "error": "ReadTimeout"
+  }
+ },
+ {
+  "photo": "flood-iona",
+  "length_m": 158,
+  "wet_share": 1.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.91,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "flood-iona",
+  "length_m": 107,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.92,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "flood-iona",
+  "length_m": 84,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.93,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-iona",
+  "length_m": 63,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "standing_water",
+   "confidence": 0.85,
+   "verdict": "blocked"
+  },
+  "baseten": {
+   "condition": "standing_water",
+   "confidence": 0.89,
+   "verdict": "blocked"
+  }
+ },
+ {
+  "photo": "flood-swannanoa",
+  "length_m": 790,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-swannanoa",
+  "length_m": 480,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.65,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.89,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-swannanoa",
+  "length_m": 372,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.95,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.96,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-swannanoa",
+  "length_m": 258,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.8,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-swannanoa",
+  "length_m": 220,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.8,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.88,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-kerrville",
+  "length_m": 579,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.8,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "flood-kerrville",
+  "length_m": 451,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.99,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.92,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-kerrville",
+  "length_m": 437,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "no_road_visible",
+   "confidence": 0.99,
+   "verdict": "unseen"
+  }
+ },
+ {
+  "photo": "flood-kerrville",
+  "length_m": 346,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  },
+  "baseten": {
+   "condition": "clear_road",
+   "confidence": 0.9,
+   "verdict": "clear"
+  }
+ },
+ {
+  "photo": "flood-kerrville",
+  "length_m": 273,
+  "wet_share": 0.0,
+  "meta": {
+   "condition": "no_road_visible",
+   "confidence": 0.9,
+   "verdict": "unseen"
+  },
+  "baseten": {
+   "condition": "hidden_by_trees_or_shadow",
+   "confidence": 0.85,
+   "verdict": "unseen"
+  }
+ }
+]
