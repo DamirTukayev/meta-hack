@@ -175,6 +175,7 @@ backend/orbitroute/
   storm.py       NOAA storm photos from web-map tiles
   understanding/ request parsing, zone grounding
   routing/       scenario, cost matrices, PyVRP solver
+                 quantum.py: optional QUBO polishing of segments (QAOA simulated on CPU, annealing)
   verifier/      the six checks, plus a second implementation used to audit it
   agent/         solve -> verify -> repair loop, relaxations
   llm/           Meta / Baseten client, budget guard
@@ -185,13 +186,25 @@ eval/            generated results (RESULTS.md, ROADS.md, CITIES.md, FLOOD.md, R
 data/            sample images, pre-computed answers, sources
 ```
 
+## Quantum polishing (experimental)
+
+Added after the hackathon (November 2026) for the author's master's thesis; it is not part of the hackathon submission and is off by default. With the "Quantum polishing" switch on, the verified plan is cut, route by route, into segments of at most four stops with both ends fixed (the anchored segmentation of the thesis's hybrid scheme). Each segment is re-ordered by a path QUBO (one-hot "stop × position", 16 qubits for four stops) solved by **QAOA simulated on CPU (state vector), not quantum hardware**, or by simulated annealing; a segment is replaced only when its travel cost goes down, and the result goes through the same verifier, which reverts it to the classical plan if any check fails. The polishing compares only the cost; deadlines and zones are the verifier's job.
+
+On the 42 scenarios of the evaluation suite that end in a verified plan (each also run with the objective switched to distance), the plans the agent ships are never improved: none of their 312 segments is replaced under either objective, by any solver, brute force included, because PyVRP already finds the best order inside every four-stop segment. From a deliberately weak start (each route re-ordered by nearest neighbour), brute force and annealing cut the travel time by 0.78% and the distance by 1.05%; QAOA at depth 2 gets 0.71% and 0.97%, with only 2.7% of its 16-qubit samples encoding a valid order. None of the 1,680 polished plans failed the verifier, and the verifier and the independent audit agreed on all of them.
+
+So on real plans there is nothing to outline: in every product run made for this (seven bundled photos, 20 to 40 orders, annealing and QAOA), the dashed outline the interface draws around a replaced segment never appeared, and the Quantum card reported 0 swaps. The weak start exists only inside the evaluation script, not in the product.
+
+![A real run with QAOA p=2: the Quantum card shows 6 segments of up to 16 qubits, 5 of 6 optima found, 0 swaps accepted, cost unchanged, no revert, and the note that QAOA is simulated on CPU](docs/quantum-card.jpg)
+
+Details, the method and the limits: [`eval/QUANTUM.md`](eval/QUANTUM.md) (`scripts/eval_quantum.py`, CPU only, no API key).
+
 ## Data sources and licenses
 
 See [data/SOURCES.md](data/SOURCES.md). Imagery: USGS NAIP and NOAA Emergency Response Imagery (both public domain). The map search uses OpenStreetMap's Nominatim and OpenStreetMap data is used only to measure road accuracy: © OpenStreetMap contributors (ODbL). Fonts: JetBrains Mono (OFL).
 
 ## What was built during the hackathon, and what was not
 
-The repository was created on 26 October 2026 at 12:25 ET, just after the kickoff, and every commit is dated from that day on; no code existed before it. The idea in my application was an earlier, somewhat different version of this; the project as it stands (the verified delivery plan, the agent, the flood story) took shape during the event. **Written here, during the event:** the whole agent (request parsing, the solver wrapper, the independent verifier and the second audit, the repair loop, the relaxation options and the recommendation), the road graph builder, the flood and building perception, the provider layer with the budget guard and failover, the API and the web interface, the evaluation suite and its measurements, and the README assets. **Not written here:** open-source libraries (PyVRP, FastAPI, React, Leaflet, shapely, scikit-image, scipy, networkx, JetBrains Mono), public data (USGS NAIP, NOAA Emergency Response Imagery; OpenStreetMap only as a yardstick), and Meta's models, used through the Meta Model API, Baseten and Modal. The code was written with AI coding assistants (Claude Code) under my direction.
+The repository was created on 26 October 2026 at 12:25 ET, just after the kickoff, and every commit is dated from that day on; no code existed before it. The idea in my application was an earlier, somewhat different version of this; the project as it stands (the verified delivery plan, the agent, the flood story) took shape during the event. **Written here, during the event:** the whole agent (request parsing, the solver wrapper, the independent verifier and the second audit, the repair loop, the relaxation options and the recommendation), the road graph builder, the flood and building perception, the provider layer with the budget guard and failover, the API and the web interface, the evaluation suite and its measurements, and the README assets. **Not written here:** open-source libraries (PyVRP, FastAPI, React, Leaflet, shapely, scikit-image, scipy, networkx, JetBrains Mono), public data (USGS NAIP, NOAA Emergency Response Imagery; OpenStreetMap only as a yardstick), and Meta's models, used through the Meta Model API, Baseten and Modal. The code was written with AI coding assistants (Claude Code) under my direction. The experimental quantum polishing (above) was added after the event, in November 2026, and is not part of the submission.
 
 ## License
 

@@ -343,3 +343,13 @@ header .lang { margin-left: 12px; background: #000; color: var(--text, #e6e6e6);
 
 button.truck-head { width: 100%; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .truck-card.focused { box-shadow: 0 0 0 2px var(--amber, #ffb000); }
+
+/* Quantum polishing (experimental) */
+.request select.quantum-select { width: auto; min-width: 0; flex: 0 1 190px; padding: 6px 8px; }
+.panel.quantum .q-note { margin: 0 0 10px; padding: 6px 8px; border-left: 2px solid var(--accent); color: var(--text); font-size: 12px; }
+.q-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0 0 8px; font-size: 13px; }
+.q-grid dt { color: var(--muted); }
+.q-grid dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.q-grid dd small { color: var(--muted); }
+.q-grid dd.fail { color: var(--bad); }
+.tab .q-tag { font-style: normal; margin-left: 6px; padding: 0 4px; border: 1px solid var(--accent); color: var(--accent); font-size: 10px; text-transform: uppercase; }

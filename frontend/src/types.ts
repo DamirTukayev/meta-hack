@@ -40,6 +40,23 @@ export interface Problem {
 }
 export interface Relaxation { kind: string; amount: number; description: string; plan: PlanGeo; report: ReportGeo; depot?: XY }
 export interface Recommendation { index: number; reason: string; source: string }
+export interface QuantumSegment {
+  vehicle: number; orders: number[]; orders_after: number[]; start: number; end: number; qubits: number
+  feasible_share: number; found_optimum: boolean; cost_before: number; cost_after: number; accepted: boolean; seconds: number
+  polyline?: XY[] // road path of a replaced segment, from its fixed start to its fixed end
+}
+/** The optional quantum polishing of the verified plan (QAOA simulated on CPU, or simulated annealing). */
+export interface QuantumInfo {
+  solver: 'qaoa_p1' | 'qaoa_p2' | 'sa' | 'exact'
+  m_seg: number; segments: number; qubits: number[]; qubits_max: number
+  p_feas: number | null // mean share of samples that encode a valid order
+  optimum_found: number; accepted: number; cost_before: number; cost_after: number
+  objective: 'min_time' | 'min_distance'; unit: 's' | 'm'
+  params_transfer: boolean; reverted: boolean; failed_checks: string[]; seconds: number
+  note: string // "QAOA simulated on CPU (state vector), not quantum hardware"
+  segments_detail: QuantumSegment[]
+}
+export type QuantumMode = 'off' | 'qaoa_p1' | 'qaoa_p2' | 'sa'
 export interface Result {
   status: string
   plan: PlanGeo
@@ -50,6 +67,7 @@ export interface Result {
   seconds: number
   cost_usd: number
   paid_calls: number
+  quantum?: QuantumInfo | null
 }
 export interface Iteration {
   n: number
@@ -58,6 +76,8 @@ export interface Iteration {
   action?: string
   reason?: string
   source?: string
+  quantum?: boolean // the plan after quantum polishing
+  reverted?: boolean // ... which the verifier rejected, so the classical plan was kept
 }
 export interface LogEntry { id: number; type: string; text: string; t: number; source?: string }
 export interface Shelter { xy: XY; area_m2: number; capacity: number; minutes: number; kind: string | null; name: string | null; guess?: string }
@@ -85,6 +105,7 @@ export interface RunState {
   iterations: Iteration[]
   log: LogEntry[]
   result?: Result
+  quantum?: QuantumInfo
   error?: string
   errorPoint?: { kind: 'depot' | 'order'; index: number } // the placed point the error is about
 }

@@ -297,6 +297,7 @@ class RunRequest(BaseModel):
     auto_orders: int | None = Field(default=None, ge=1, le=100)  # "place the orders for me": how many
     trucks: int | None = Field(default=None, ge=1, le=30)  # the Trucks field; overrides the text
     capacity: int | None = Field(default=None, ge=1, le=300)  # the Capacity field (orders per truck); without it a default is assumed
+    quantum: Literal["off", "qaoa_p1", "qaoa_p2", "sa"] = "off"  # experimental polishing of the verified plan (CPU simulation, no model calls)
 
 
 @app.post("/api/run")
@@ -319,7 +320,7 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
         if _active["n"] >= settings.max_concurrent_runs:  # another run took the last place in the meantime
             raise HTTPException(429, "The agent is busy with other runs. Try again in a few seconds.", headers={"Retry-After": "10"})
         _active["n"] += 1
-    request, seed, decider, custom, auto_orders, trucks, capacity = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks, body.capacity
+    request, seed, decider, custom, auto_orders, trucks, capacity, quantum = body.request, body.seed, body.decider, body.custom, body.auto_orders, body.trucks, body.capacity, body.quantum
     q: queue.Queue = queue.Queue()
     done = object()
     stopped = threading.Event()  # set when the browser goes away: the run stops at its next step instead of spending money for nobody
@@ -336,7 +337,7 @@ async def run(body: RunRequest, request: Request) -> StreamingResponse:
             text_client = get_text_client() if live else client
             run_pipeline(
                 smp, request, client=client, text_client=text_client, guard=guard, run_cap_usd=settings.run_cap_usd,
-                seed=seed, use_model_decider=decider == "model" and live, custom=custom, auto_orders=auto_orders, trucks=trucks, capacity=capacity, emit=emit,
+                seed=seed, use_model_decider=decider == "model" and live, custom=custom, auto_orders=auto_orders, trucks=trucks, capacity=capacity, quantum=quantum, emit=emit,
             )
         except OfflineDemo as exc:
             q.put(("failure", {"message": str(exc)}))

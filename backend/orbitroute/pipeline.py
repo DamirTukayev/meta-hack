@@ -9,7 +9,7 @@ from pathlib import Path
 
 from orbitroute.agent.events import Emit, Event
 from orbitroute.agent.inspection import describe, inspect_plan
-from orbitroute.agent.loop import AgentResult, run_agent
+from orbitroute.agent.loop import AgentResult, Quantum, run_agent
 from orbitroute.agent.repair import Decider, ModelDecider, PolicyDecider
 from orbitroute.config import ROOT
 from orbitroute.custom import CustomInputs, apply_custom
@@ -25,7 +25,7 @@ from orbitroute.perception.roads import build_roads
 from orbitroute.routing.scenario import make_scenario
 from orbitroute.routing.zones import banned_edges, inside_lengths
 from orbitroute.verifier.checks import verify
-from orbitroute.serialize import graph_json, mask_png, plan_json, report_json, scenario_json, scene_json
+from orbitroute.serialize import graph_json, mask_png, plan_json, quantum_json, report_json, scenario_json, scene_json
 from orbitroute.understanding.constraints import with_capacity
 from orbitroute.understanding.request import parse_request, parse_request_cached
 from orbitroute.understanding.scene import Scene, analyze_scene
@@ -108,7 +108,7 @@ def assess_exposure(building_mask, scene, scenario, sample, image_bytes: bytes, 
         return None
 
 
-def look_at_unconfirmed(result: AgentResult, decider: Decider, client, image_bytes: bytes, run: RunBudget, emit: Emit, agent_emit: Emit) -> AgentResult:
+def look_at_unconfirmed(result: AgentResult, decider: Decider, client, image_bytes: bytes, run: RunBudget, emit: Emit, agent_emit: Emit, quantum: Quantum = "off") -> AgentResult:
     """Muse Spark looks at the longest stretches the plan drives on that the photo does not confirm. A stretch it finds blocked makes
     the agent plan again around it; one it finds drivable stops being a doubt. Without a model to ask (demo mode, no budget) nothing changes."""
     scenario = result.scenario
@@ -127,7 +127,7 @@ def look_at_unconfirmed(result: AgentResult, decider: Decider, client, image_byt
     ]}))
     if any(f.verdict == "blocked" for f in findings):
         zone_edges = banned_edges(inside_lengths(g, scenario.scene.zones_of(scenario.problem.avoid_zone_kinds)))  # already known: no need to rediscover them
-        again = run_agent(scenario, decider=decider, emit=agent_emit, iteration_offset=len(result.iterations), initial_banned=zone_edges)
+        again = run_agent(scenario, decider=decider, emit=agent_emit, iteration_offset=len(result.iterations), initial_banned=zone_edges, quantum=quantum)
         again.iterations = [*result.iterations, *again.iterations]
         result = again
     inside = inside_lengths(g, result.scenario.scene.zones_of(result.scenario.problem.avoid_zone_kinds))
@@ -153,6 +153,7 @@ def run_pipeline(
     auto_orders: int | None = None,
     trucks: int | None = None,
     capacity: int | None = None,
+    quantum: Quantum = "off",
     emit: Emit,
 ) -> AgentResult:
     run: RunBudget = guard.new_run(run_cap_usd)
@@ -243,6 +244,10 @@ def run_pipeline(
         if e.type == "solve":
             plan, matrix = e.obj
             data["plan"] = plan_json(scenario, plan, matrix)
+        elif e.type == "quantum":
+            qrep, polished, matrix = e.obj
+            data["plan"] = plan_json(scenario, polished, matrix)
+            data["detail"] = quantum_json(scenario, qrep, matrix)
         elif e.type == "verify":
             data["report"] = report_json(scenario, e.obj)
             data.pop("checks", None)
@@ -250,9 +255,9 @@ def run_pipeline(
         emit(Event(e.type, e.message, data, e.t))
 
     decider: Decider = ModelDecider(text, run) if use_model_decider else PolicyDecider()
-    result = run_agent(scenario, decider=decider, emit=agent_emit)
+    result = run_agent(scenario, decider=decider, emit=agent_emit, quantum=quantum)
     if roads.source == "osm" and result.status in ("verified", "verified_partial"):
-        result = look_at_unconfirmed(result, decider, text, image_bytes, run, emit, agent_emit)
+        result = look_at_unconfirmed(result, decider, text, image_bytes, run, emit, agent_emit, quantum)
 
     emit(
         Event(
@@ -268,6 +273,7 @@ def run_pipeline(
                     for o in result.relaxations
                 ],
                 "recommendation": {"index": result.recommendation.index, "reason": result.recommendation.reason, "source": result.recommendation.source} if result.recommendation else None,
+                "quantum": quantum_json(result.scenario, result.quantum, result.matrix) if result.quantum else None,
                 "seconds": round(result.seconds, 1),
                 "cost_usd": round(run.spent, 4),
                 "paid_calls": run.calls,

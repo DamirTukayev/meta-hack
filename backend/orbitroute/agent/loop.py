@@ -4,18 +4,21 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
+from typing import Literal
 
 from orbitroute.agent.events import Emit, Event, silent
 from orbitroute.agent.relax import RelaxationOption, find_relaxations
 from orbitroute.agent.repair import Decider, DecisionContext, PolicyDecider, Recommendation
 from orbitroute.llm.budget import BudgetExceeded
 from orbitroute.routing.matrix import CostMatrix, build_matrix
+from orbitroute.routing.quantum import HARDWARE_NOTE, QuantumReport, polish_plan, summary
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan, solve_vrp
 from orbitroute.routing.zones import banned_edges, inside_lengths
 from orbitroute.verifier.checks import Report, verify
 
 MAX_ITERATIONS = 5
+Quantum = Literal["off", "qaoa_p1", "qaoa_p2", "sa"]
 
 
 @dataclass
@@ -40,6 +43,7 @@ class AgentResult:
     relaxations: list[RelaxationOption] = field(default_factory=list)
     seconds: float = 0.0
     recommendation: Recommendation | None = None  # which relaxation option the agent recommends, and why
+    quantum: QuantumReport | None = None  # the optional quantum polishing of the verified plan (None when it was off)
 
 
 def run_agent(
@@ -52,8 +56,11 @@ def run_agent(
     verify_plan: bool = True,
     iteration_offset: int = 0,
     initial_banned: set[tuple[int, int]] | None = None,
+    quantum: Quantum = "off",
 ) -> AgentResult:
-    """verify_plan=False is the 'no verifier' ablation: one solve, returned as is."""
+    """verify_plan=False is the 'no verifier' ablation: one solve, returned as is.
+    quantum != "off" re-orders short segments of the verified plan by a QUBO (experimental); the polished plan goes through the
+    same verifier, and the classical verified plan is returned when it fails."""
     decider = decider or PolicyDecider()
     t0 = time.perf_counter()
     p = scenario.problem
@@ -83,8 +90,11 @@ def run_agent(
         emit(Event("verify", f"verification: {sum(c.passed for c in report.checks)}/{len(report.checks)} checks passed", {"ok": report.ok, "checks": [c.__dict__ for c in report.checks], "violations": [v.message for v in report.violations]}, obj=report))
         if report.ok:
             status = "verified_partial" if excluded else "verified"
+            qrep = None
+            if quantum != "off":
+                plan, report, qrep = _polish(scenario, plan, report, matrix, quantum, excluded, inside, iterations, emit, it + 2 + iteration_offset)
             emit(Event("final", f"plan verified{' (some orders excluded)' if excluded else ''}", {"status": status, "metrics": report.metrics}))
-            return AgentResult(status, scenario, plan, report, matrix, iterations, excluded, seconds=time.perf_counter() - t0)
+            return AgentResult(status, scenario, plan, report, matrix, iterations, excluded, seconds=time.perf_counter() - t0, quantum=qrep)
         if it == max_iterations:
             break
 
@@ -125,3 +135,25 @@ def run_agent(
             break
 
     return AgentResult("unresolved", scenario, plan, report, matrix, iterations, excluded, seconds=time.perf_counter() - t0)
+
+
+def _polish(scenario: Scenario, plan: Plan, report: Report, matrix: CostMatrix, solver: str, excluded: dict[int, str], inside, iterations: list[Iteration], emit: Emit, n: int):
+    """Quantum polishing of a verified plan, then the same verifier. Returns the plan and report to keep, and the polishing report."""
+    polished, qrep = polish_plan(plan, scenario, matrix, solver=solver, seed=0)
+    s = summary(qrep)
+    unit = qrep.unit
+    p_feas = f", mean P_feas {s['p_feas']:.2f}" if s["p_feas"] is not None else ""
+    emit(Event("quantum", f"quantum polishing ({solver}, {HARDWARE_NOTE}): {s['segments']} segments of up to {s['qubits_max']} qubits{p_feas}, {s['accepted']} replaced, cost {qrep.cost_before} -> {qrep.cost_after} {unit}", s, obj=(qrep, polished, matrix)))
+    report_q = verify(scenario, polished, excluded=excluded, inside=inside)
+    emit(Event("verify", f"verification of the polished plan: {sum(c.passed for c in report_q.checks)}/{len(report_q.checks)} checks passed", {"ok": report_q.ok, "checks": [c.__dict__ for c in report_q.checks], "violations": [v.message for v in report_q.violations], "quantum": True}, obj=report_q))
+    if qrep.accepted:
+        iterations.append(Iteration(n, polished, report_q))
+    if report_q.ok:
+        return polished, report_q, qrep
+    failed = [c.kind for c in report_q.checks if not c.passed]
+    qrep.reverted, qrep.failed_checks = True, failed
+    reason = f"the polished plan failed {', '.join(failed)}; the classical verified plan is kept"
+    if iterations and iterations[-1].plan is polished:
+        iterations[-1].action, iterations[-1].reason, iterations[-1].decided_by = "revert_quantum", reason, "verifier"
+    emit(Event("repair", f"reverting quantum segments: {', '.join(failed)} failed", {"action": "revert_quantum", "failed": failed}))
+    return plan, report, qrep

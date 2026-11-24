@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
-import type { Problem, RunState, StreamEvent, Zone, XY } from './types'
+import type { Problem, QuantumInfo, RunState, StreamEvent, Zone, XY } from './types'
 import { accessHeaders } from './access'
 import { t } from './i18n'
 
@@ -36,7 +36,14 @@ function reduce(s: RunState, a: Action): RunState {
       return { ...s, depot: d.depot, orders: d.orders, orderTargets: d.order_targets ?? [], log: add(e.message) }
     case 'solve':
       return { ...s, stage: 'Verifying the plan independently', iterations: [...s.iterations, { n: d.iteration, plan: d.plan }], log: add(e.message) }
+    case 'quantum': {
+      const q = d.detail as QuantumInfo
+      const last = s.iterations[s.iterations.length - 1]
+      const its = q.accepted > 0 && last ? [...s.iterations, { n: last.n + 1, plan: d.plan, quantum: true }] : s.iterations
+      return { ...s, stage: 'Verifying the polished plan', quantum: q, iterations: its, log: add(e.message) }
+    }
     case 'verify': {
+      if (d.quantum && !s.iterations[s.iterations.length - 1]?.quantum) return { ...s, log: add(e.message, d.ok ? 'verify_ok' : 'verify_fail') } // nothing was replaced: the plan is the one already verified
       const its = s.iterations.slice()
       its[its.length - 1] = { ...its[its.length - 1], report: d.report }
       return { ...s, stage: d.ok ? 'Plan verified' : 'Deciding how to repair the plan', iterations: its, log: add(e.message, d.ok ? 'verify_ok' : 'verify_fail') }
@@ -46,10 +53,16 @@ function reduce(s: RunState, a: Action): RunState {
       its[its.length - 1] = { ...its[its.length - 1], action: d.action, reason: d.reason, source: d.source }
       return { ...s, iterations: its, log: add(`${d.action.replaceAll('_', ' ')} — ${d.reason}`, 'decision', d.source) }
     }
-    case 'repair':
+    case 'repair': {
+      if (d.action === 'revert_quantum') {
+        const its = s.iterations.slice()
+        its[its.length - 1] = { ...its[its.length - 1], reverted: true, action: 'revert_quantum', reason: e.message, source: 'verifier' }
+        return { ...s, iterations: its, quantum: s.quantum && { ...s.quantum, reverted: true, failed_checks: d.failed }, log: add(e.message) }
+      }
       return { ...s, stage: 'Re-solving', log: add(e.message) }
+    }
     case 'result':
-      return { ...s, result: d as RunState['result'], log: s.log }
+      return { ...s, result: d as RunState['result'], quantum: d.quantum ?? s.quantum, log: s.log }
     case 'matrix':
       return s
     default:

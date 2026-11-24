@@ -9,7 +9,7 @@ from typing import Any, Callable
 
 @dataclass
 class Event:
-    type: str  # start | matrix | solve | verify | decision | repair | relaxation | final
+    type: str  # start | matrix | solve | verify | decision | repair | relaxation | quantum | final
     message: str
     data: dict = field(default_factory=dict)
     t: float = field(default_factory=time.time)

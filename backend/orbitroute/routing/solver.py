@@ -122,3 +122,32 @@ def solve_vrp(
         cost=int(result.cost()) if result.is_feasible() else -1,
         unserved=[i for i in included if i not in served],
     )
+
+
+def rebuild_route(route: Route, new_order: list[int], scenario: Scenario, matrix: CostMatrix) -> Route:
+    """The same truck driving `new_order` (matrix rows) instead: times from the shift start over `matrix.time_s` plus the service
+    time at each stop, distances from `matrix.dist_m`, legs from `matrix.paths`. `time_warp_s` adds up how far stops finish after the
+    deadline and how late the truck is back; whether that is acceptable is for the verifier to say, not for this function."""
+    p = scenario.problem
+    seq = [0, *new_order, 0]
+    t = p.shift_start_s
+    warp = 0
+    dist = 0
+    stops: list[Stop] = []
+    for a, b in zip(seq, seq[1:]):
+        t += int(matrix.time_s[a, b])
+        dist += int(matrix.dist_m[a, b])
+        if b != 0:
+            stops.append(Stop(order=b, node=matrix.nodes[b], arrive_s=t, leave_s=t + p.service_s))
+            warp += max(0, t - (p.deadline_s - p.service_s))
+            t += p.service_s
+    warp += max(0, t - p.deadline_s)
+    return Route(
+        vehicle=route.vehicle,
+        stops=stops,
+        start_s=p.shift_start_s,
+        end_s=t,
+        distance_m=dist,
+        time_warp_s=warp,
+        legs=[matrix.paths.get((a, b), []) for a, b in zip(seq, seq[1:])],
+    )

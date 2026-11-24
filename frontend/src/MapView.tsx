@@ -49,6 +49,7 @@ export default function MapView(props: {
   depotOverride?: XY // a relaxation that moves the depot: where it goes
   evidence: boolean // draw the map roads the photo does not confirm on the routes
   onEvidence: (v: boolean) => void
+  polished?: XY[][] // road paths of the segments the quantum polishing re-ordered: outlined with a dashed line
 }) {
   const { sample, state, plan, report, mode, custom } = props
   const svgRef = useRef<SVGSVGElement>(null)
@@ -212,6 +213,9 @@ export default function MapView(props: {
             edges.map((e, i) => (
               <line key={i} x1={e.a[0]} y1={e.a[1]} x2={e.b[0]} y2={e.b[1]} stroke={e.risk === 'water' ? RISK_COLORS.water : e.risk === 'blocked' ? RISK_COLORS.blocked : e.risk === 'unseen' ? RISK_COLORS.unseen : e.bridge ? '#e879f9' : e.speed >= 50 ? '#fb7185' : e.speed >= 40 ? '#fbbf24' : '#67e8f9'} strokeWidth={3 * u} strokeLinecap="round" strokeDasharray={e.risk === 'unseen' ? `${5 * u} ${5 * u}` : undefined} />
             ))}
+          {layers.routes && !props.stale && props.polished?.map((p, i) => (
+            <polyline key={'qp' + i} className="polished" points={pts(p)} fill="none" stroke="#ffffff" strokeWidth={19 * u} strokeOpacity={0.95} strokeLinejoin="round" strokeLinecap="butt" strokeDasharray={`${7 * u} ${6 * u}`}><title>{t('Re-ordered by quantum polishing')}</title></polyline>
+          ))}
           {layers.routes &&
             plan?.routes.map((r, ri) => {
               const color = ROUTE_COLORS[r.vehicle % ROUTE_COLORS.length]
@@ -464,7 +468,7 @@ export function IterationTabs(props: { iterations: Iteration[]; selected: number
         const state = !it.report ? 'checking' : it.report.ok ? 'ok' : 'fail'
         return (
           <button key={it.n} className={`tab ${state} ${i === props.selected ? 'active' : ''}`} onClick={() => props.onSelect(i)}>
-            {t('Plan #{n}', { n: it.n })} <b>{state === 'ok' ? `✓ ${t('verified')}` : state === 'fail' ? `✗ ${t('{n} violations', { n: it.report!.violations.length })}` : `… ${t('checking')}`}</b>
+            {t('Plan #{n}', { n: it.n })}{it.quantum && <em className="q-tag">{t('quantum')}</em>} <b>{it.reverted ? `↺ ${t('reverted')}` : ''} {state === 'ok' ? `✓ ${t('verified')}` : state === 'fail' ? `✗ ${t('{n} violations', { n: it.report!.violations.length })}` : `… ${t('checking')}`}</b>
           </button>
         )
       })}

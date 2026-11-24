@@ -4,16 +4,17 @@ import Stepper from './Stepper'
 import { useVoice } from './useVoice'
 import MapView, { IterationTabs } from './MapView'
 import { emptyCustom } from './types'
-import type { Custom, LogEntry, Mode, PlanGeo, ReportGeo, Result, RunState, Sample, XY } from './types'
+import type { Custom, LogEntry, Mode, PlanGeo, QuantumMode, ReportGeo, Result, RunState, Sample, XY } from './types'
 import { useRun } from './useRun'
 import AccessNote from './AccessNote'
 import ExposureCard from './ExposureCard'
+import QuantumCard, { QUANTUM_MODES } from './QuantumCard'
 import { LANGS, setLang, t, useLang, zoneName } from './i18n'
 import type { Lang } from './i18n'
 import { adoptCodeFromLink, fetchAccess, setCode } from './access'
 import type { Access } from './access'
 
-const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', relaxation: '≈', recommendation: '★', final: '■' }
+const ICONS: Record<string, string> = { error: '⚠', stage: '◌', perception: '▦', scene: '◫', problem: '☰', scenario: '⌖', start: '▶', solve: '◆', verify_ok: '✓', verify_fail: '✗', decision: '?', repair: '↻', quantum: '⟁', relaxation: '≈', recommendation: '★', final: '■' }
 
 function fmtT(s: number) {
   return `${Math.max(s, 0).toFixed(1)}s`
@@ -55,6 +56,8 @@ function RequestPanel(props: {
   onTrucks: (n: number) => void
   capacity: number // orders per truck; 0 = let the agent assume one
   onCapacity: (n: number) => void
+  quantum: QuantumMode
+  onQuantum: (q: QuantumMode) => void
   offline: boolean // demo mode: no API key, only recorded answers
   access: Access | null // shared deployment: is live mode unlocked for this browser?
   onUnlock: (code: string) => Promise<void>
@@ -92,6 +95,12 @@ function RequestPanel(props: {
           <input id="capacity" type="number" min={0} max={300} value={props.capacity || ''} placeholder={t('auto')} disabled={running} onChange={(e) => props.onCapacity(Math.max(0, Math.min(300, Number(e.target.value) || 0)))} />
           <button type="button" onClick={() => props.onCapacity(Math.min(300, props.capacity + 1))} disabled={running || props.capacity >= 300} aria-label={t('Higher capacity')}>+</button>
         </div>
+      </div>
+      <div className="field-row">
+        <label htmlFor="quantum" title={t('Experimental: re-orders short stretches of the verified plan by solving a QUBO, then the same verifier checks it again. Runs on the CPU; no model calls.')}>{t('Quantum polishing')}</label>
+        <select id="quantum" className="quantum-select" value={props.quantum} disabled={running} onChange={(e) => props.onQuantum(e.target.value as QuantumMode)}>
+          {QUANTUM_MODES.map((m) => <option key={m.value} value={m.value}>{t(m.label)}</option>)}
+        </select>
       </div>
       <label>{t('Time and what to avoid')}</label>
       <textarea value={props.request} onChange={(e) => props.onRequest(e.target.value)} rows={4} maxLength={400} disabled={running} placeholder={t('by 18:00, avoid the industrial zone')} />
@@ -243,6 +252,7 @@ export default function App() {
   const [autoCount, setAutoCount] = useState(20)
   const [trucks, setTrucks] = useState(3)
   const [capacity, setCapacity] = useState(0) // 0 = auto
+  const [quantum, setQuantum] = useState<QuantumMode>('off') // experimental polishing of the verified plan
   const [stale, setStale] = useState(false) // inputs changed after a plan was made: the plan on the map is out of date
   const [picking, setPicking] = useState(false)
   const [offline, setOffline] = useState(false)
@@ -297,8 +307,9 @@ export default function App() {
     setRelax(null)
     setStale(false)
     setMode('browse')
-    const body: { sample: string; request: string; trucks: number; capacity?: number; custom?: object; auto_orders?: number } = { sample: name, request, trucks }
+    const body: { sample: string; request: string; trucks: number; capacity?: number; custom?: object; auto_orders?: number; quantum?: QuantumMode } = { sample: name, request, trucks }
     if (capacity) body.capacity = capacity
+    if (quantum !== 'off') body.quantum = quantum
     if (custom.depot || custom.orders.length > 0 || custom.zoneClosed) {
       body.custom = { depot: custom.depot, orders: custom.orders, zone: custom.zoneClosed ? custom.zone : [] }
     }
@@ -321,7 +332,7 @@ export default function App() {
     setRelax(null)
     setStale(false)
     setMode('browse')
-    start({ sample: name, request: req, trucks, auto_orders: 20, ...(capacity ? { capacity } : {}) })
+    start({ sample: name, request: req, trucks, auto_orders: 20, ...(capacity ? { capacity } : {}), ...(quantum !== 'off' ? { quantum } : {}) })
   }
   const onDrag = (kind: 'depot' | 'order', i: number, xy: XY) => {
     if (kind === 'depot') edit({ ...custom, depot: xy })
@@ -350,7 +361,10 @@ export default function App() {
     }
   }
 
-  const sel = pinned !== null && pinned < state.iterations.length ? pinned : state.iterations.length - 1
+  // By default the latest plan is shown, except a polished plan the verifier rejected: the classical plan before it is the one kept.
+  const lastIt = state.iterations[state.iterations.length - 1]
+  const latest = state.iterations.length - 1 - (lastIt?.quantum && lastIt.reverted ? 1 : 0)
+  const sel = pinned !== null && pinned < state.iterations.length ? pinned : latest
   const iteration = state.iterations[sel]
   const relaxed = relax !== null ? state.result?.relaxations[relax] : undefined
   const plan: PlanGeo | undefined = relaxed?.plan ?? iteration?.plan
@@ -369,7 +383,7 @@ export default function App() {
         </select>
       </header>
       <main>
-        <RequestPanel access={access} onUnlock={async (code) => { setCode(code); setAccess(await fetchAccess()) }} samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} capacity={capacity} onCapacity={setCapacity} offline={offline} />
+        <RequestPanel access={access} onUnlock={async (code) => { setCode(code); setAccess(await fetchAccess()) }} samples={samples} sample={sample} onSample={onSample} onPickArea={() => setPicking(true)} request={request} onRequest={setRequest} onPlan={onPlan} state={state} custom={custom} agentPlaced={agentPlaced} auto={auto} autoCount={autoCount} canPlan={canPlan} hasPlan={state.status === 'done' || state.status === 'error'} trucks={trucks} onTrucks={setTrucks} capacity={capacity} onCapacity={setCapacity} quantum={quantum} onQuantum={setQuantum} offline={offline} />
         <div className="center">
           {state.status === 'error' && (
             <div className="banner error" role="alert">
@@ -404,11 +418,13 @@ export default function App() {
             stale={stale} onDrag={onDrag} onEditPlan={onEditPlan}
             onQuickStart={onQuickStart} onPickArea={() => setPicking(true)}
             evidence={evidence} onEvidence={setEvidence}
+            polished={!relaxed && iteration?.quantum ? state.quantum?.segments_detail.filter((s) => s.accepted && s.polyline).map((s) => s.polyline!) : undefined}
           />
           <ResultBar state={state} relax={relax} onShowRelax={setRelax} />
         </div>
         <aside>
           <Checklist report={report} title={title} evidence={evidence} onEvidence={setEvidence} />
+          {state.quantum && <QuantumCard q={state.quantum} running={state.status === 'running'} />}
           {state.exposure && <ExposureCard x={state.exposure} running={state.status === 'running'} onUseDepot={(xy) => { edit({ ...custom, depot: xy }); setMode('browse') }} />}
           <AgentLog log={state.log} running={state.status === 'running'} />
         </aside>

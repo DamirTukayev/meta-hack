@@ -10,6 +10,7 @@ from PIL import Image
 
 from orbitroute.perception.graph import RoadGraph
 from orbitroute.routing.matrix import CostMatrix
+from orbitroute.routing.quantum import QuantumReport, summary
 from orbitroute.routing.scenario import Scenario
 from orbitroute.routing.solver import Plan
 from orbitroute.understanding.scene import Scene
@@ -94,3 +95,24 @@ def report_json(sc: Scenario, report: Report) -> dict:
         "unconfirmed": [[_xy(g.nodes[a]), _xy(g.nodes[b])] for a, b in report.unconfirmed],  # driven links the photo does not show
         "flagged": [[_xy(g.nodes[a]), _xy(g.nodes[b]), r] for a, b, r in report.flagged],  # driven map roads the photo does not confirm
     }
+
+
+def quantum_json(sc: Scenario, rep: QuantumReport, matrix: CostMatrix) -> dict:
+    """The polishing summary, every segment, and the road path of each replaced segment (start, new order, end) for the map."""
+    g = sc.graph
+    segments = []
+    for s in rep.segments:
+        item = {
+            "vehicle": s.vehicle, "orders": s.orders, "orders_after": s.orders_after, "start": s.start, "end": s.end, "qubits": s.qubits,
+            "feasible_share": round(s.feasible_share, 3), "found_optimum": s.found_optimum, "cost_before": s.cost_before,
+            "cost_after": s.cost_after, "accepted": s.accepted, "seconds": round(s.seconds, 3),
+        }
+        if s.accepted:
+            seq = [s.start, *s.orders_after, s.end]
+            poly: list[list[float]] = []
+            for a, b in zip(seq, seq[1:]):
+                pts = [_xy(g.nodes[n]) for n in matrix.paths.get((a, b), [])]
+                poly.extend(pts if not poly else pts[1:])
+            item["polyline"] = poly
+        segments.append(item)
+    return {**summary(rep), "segments_detail": segments}
